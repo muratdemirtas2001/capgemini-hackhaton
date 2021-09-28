@@ -9,3 +9,18 @@
 .message:hover {
 	background-color: yellow;
 }
+
+nav {
+	height: 70px;
+	background-color: purple;
+	display: flex;
+	justify-content: space-between;
+	padding: 15px 30px;
+	color: #fff;
+
+}
+button{
+	margin-left:7px;
+	font-size: 20px;
+	font-weight: 500;
+}
