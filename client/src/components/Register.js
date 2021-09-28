@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useGlobalContext } from "../../Context";
 export default function Register() {
     const { registedPeople } = useGlobalContext();
-
+    const [warning, setWarning] = useState(false);
     const [signup, setSignUp] = useState({
         "firstname": "",
         "lastname": "",
@@ -14,21 +14,23 @@ export default function Register() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        const requestOptions = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(signup),
-        };
-        fetch("/api/signup", requestOptions)
-            .then((response) => response.json())
-            .then((data) => {
-                setSignUp(registedPeople.concat(data));
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-            });
-
+        if (!signup.email && !signup.password && !signup.firstname && !signup.lastname && !signup.cohort && !signup.usertype) {
+            setWarning(true);
+        } else {
+            const requestOptions = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(signup),
+            };
+            fetch("/api/signup", requestOptions)
+                .then((response) => response.json())
+                .then((data) => {
+                    setSignUp(registedPeople.concat(data));
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
+        }
         setSignUp({
             "firstname": "",
             "lastname": "",
@@ -45,37 +47,39 @@ export default function Register() {
     };
     return (
         <div className="justify-content-center align-bottom d-flex flex-wrap  bg-primary p-3">
+            {warning ? <div className="p-3 mb-2 bg-danger text-white">*Please make sure you fill all fields of the form.</div> : null}
+            <h1 className="col-12 text-center admin-heading">Homework Club Login</h1>
             <form onSubmit={handleSubmit}>
-                <div className="input-group input-group-sm mb-3">
+                <div className="input-group input-group-md mb-3">
                     <label htmlFor="firstname" className="form-label" >
                         FirstName:
                         <input
-                        type="text"
-                        name="firstname"
-                        id="firstname"
-                        placeholder="FirstName"
-                        value={signup.firstname}
-                        onChange={handleSignUp}
-                        className="form-control form-control-lg"
+                            type="text"
+                            name="firstname"
+                            id="firstname"
+                            placeholder="FirstName"
+                            value={signup.firstname}
+                            onChange={handleSignUp}
+                            className="form-control form-control-md"
                         />
                     </label>
                 </div>
-                <div className="input-group input-group-sm mb-3">
-                    <label htmlFor="lastname" className="form-label" >
+                <div className="input-group input-group-md mb-3">
+                    <label htmlFor="lastname"  >
                         LastName:
                         <input
-                        type="text"
-                        name="lastname"
-                        id="lastname"
-                        placeholder="LastName"
-                        value={signup.lastname}
-                        onChange={handleSignUp}
-                        className="form-control form-control-lg" />
+                            type="text"
+                            name="lastname"
+                            id="lastname"
+                            placeholder="LastName"
+                            value={signup.lastname}
+                            onChange={handleSignUp}
+                            className="form-control form-control-md" />
                     </label>
                 </div>
 
-                <div className="input-group input-group-sm mb-3">
-                    <label htmlFor="email" className="form-label" >
+                <div className="input-group input-group-md mb-3">
+                    <label htmlFor="email"  >
                         E-mail:
                         <input
                             type="email"
@@ -84,11 +88,11 @@ export default function Register() {
                             placeholder="name@example.com"
                             value={signup.email}
                             onChange={handleSignUp}
-                            className="form-control form-control-lg" />
+                            className="form-control form-control-md" />
                     </label>
                 </div>
 
-                <div className="input-group input-group-sm mb-3">
+                <div className="input-group input-group-md mb-3">
                     <label htmlFor="password" className="form-label" >
                         Password:
                         <input
@@ -98,13 +102,13 @@ export default function Register() {
                             placeholder="Password"
                             value={signup.password}
                             onChange={handleSignUp}
-                            className="form-control form-control-lg"
-                             />
+                            className="form-control form-control-md"
+                        />
                     </label>
 
                 </div>
 
-                <div className="input-group input-group-sm mb-3">
+                <div className="input-group input-group-md mb-3">
                     <select onBlur={handleSignUp} className="form-select" aria-label="select example" name="cohort" >
                         <option defaultValue>What is your cohort ?</option>
                         <option value="London-8">London-8</option>
@@ -113,7 +117,7 @@ export default function Register() {
                     </select>
                 </div>
 
-                <div className="input-group input-group-sm mb-3">
+                <div className="input-group input-group-md mb-3">
                     <select onBlur={handleSignUp} className="form-select" aria-label="select example" name="usertype">
                         <option defaultValue>Usertype ?</option>
                         <option value="student" >student</option>
@@ -121,7 +125,10 @@ export default function Register() {
                     </select>
                 </div>
 
-                <input className="btn btn-secondary" type="submit" value="Sign Up" />
+                <input
+                    className="btn btn-secondary"
+                    type="submit"
+                    value="Sign Up" />
             </form>
         </div>
     );
