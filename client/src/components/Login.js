@@ -41,8 +41,8 @@ export default function Login() {
     return (
         <div className="row justify-content-center">
             <h1 className="col-12 text-center admin-heading">Homework Club Login</h1>
-            {warning ? <div className="p-3 mb-2 bg-danger text-white"> *Please make sure you write your email and password.</div> : null}
             <div className="col-6 col-md-5 col-lg-3">
+            {warning ? <div className="p-3 mb-2 bg-danger text-white"> *Please make sure you write your email and password.</div> : null}
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="email" className="form-label" >
