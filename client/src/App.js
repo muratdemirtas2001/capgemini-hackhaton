@@ -13,11 +13,11 @@ const App = () => (
 		<Route path="/about/this/site">
 			<About />
 		</Route>
-		<Route>
-			<Register path="/register" />
+		<Route path="/register">
+			<Register  />
 		</Route>
-		<Route>
-			<Login path="/login" />
+		<Route path="/login">
+			<Login  />
 		</Route>
 	</Switch>
 );
