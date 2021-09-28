@@ -85,5 +85,52 @@ router.post("/signup", (req, res) => {
 	}
 });
 
+router.post("/signin", (req, res) => {
+	//take email and password from front end
+	const { email, password } = req.body;
+
+	//hash and salt the password
+	const hashedPassword = SHA256(password).toString();
+	const saltedPassword = SHA256(
+		hashedPassword + process.env.PASSWORD_SALT
+	).toString();
+	//check hashed password in database and return token if passwords match
+	if (email && password) {
+		pool
+			.query("SELECT * FROM users WHERE email=$1 and password=$2", [
+				email,
+				saltedPassword,
+			])
+			.then((result) => {
+				if (result.rows.length > 0) {
+					//create token and return as a json object
+					const user = {
+						email: email,
+						userid: result.rows[0].id,
+						usertype: "user",
+					};
+					const token = jwt.sign(user, process.env.TOKEN_SECRET, {
+						expiresIn: "7 days",
+					});
+					return res.json({ token: token, auth: "success" });
+				} else {
+					return res.status(400).json({
+						auth: "error",
+						errors: {
+							email: "Incorrect Email and/or Password!",
+						},
+					});
+				}
+			})
+			.catch((e) => res.send(JSON.stringify(e)));
+	} else {
+		return res.status(400).json({
+			auth: "error",
+			errors: { email: "Please enter Email and Password!" },
+		});
+	}
+});
+
+
 
 export default router;
