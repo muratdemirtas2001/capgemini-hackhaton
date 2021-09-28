@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { useGlobalContext } from "../../Context";
 export default function Login() {
+    const { loginPerson } = useGlobalContext();
     const [login, setLogin] = useState({
         "email": "",
         "password": "",
     });
-    const { loginPerson } = useGlobalContext();
-
+    const handleLogin = (e) => {
+        const newRegistration = { ...Login, [e.target.name]: e.target.value };
+        setLogin(newRegistration);
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -31,21 +34,37 @@ export default function Login() {
         });
     };
     return (
-        <div className="">
+        <div className="justify-content-center align-bottom d-flex flex-wrap  bg-primary p-3">
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="email" >
+                    <label htmlFor="email" className="form-label" >
                         E-mail:
-                        <input type="email" name="email" id="email" placeholder="E-mail" />
+                        <input
+                            type="email"
+                            name="email"
+                            id="email"
+                            placeholder="name@example.com"
+                            value={login.email}
+                            onChange={handleLogin} />
                     </label>
                 </div>
                 <div>
-                    <label htmlFor="password" >
+                    <label htmlFor="password" className="form-label" >
                         Password:
-                        <input type="password" name="password" id="password" placeholder="Password" required />
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            placeholder="Password"
+                            onChange={handleLogin}
+                            value={login.password}
+                            required />
                     </label>
                 </div>
-                <input className="btn btn-secondary" type="submit" value="login" />
+                <input
+                    className="btn btn-secondary"
+                    type="submit"
+                    value="login" />
             </form>
         </div>
     );

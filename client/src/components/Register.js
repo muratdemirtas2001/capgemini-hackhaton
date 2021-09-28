@@ -44,32 +44,62 @@ export default function Register() {
         setSignUp(newRegistration);
     };
     return (
-        <div className="justify-content-center align-bottom d-flex flex-wrap  bg-primary">
+        <div className="justify-content-center align-bottom d-flex flex-wrap  bg-primary p-3">
             <form onSubmit={handleSubmit}>
                 <div className="input-group input-group-sm mb-3">
-                    <label htmlFor="firstname" >
+                    <label htmlFor="firstname" className="form-label" >
                         FirstName:
-                        <input type="text" name="firstname" id="firstname" placeholder="FirstName" value={signup.firstname} onChange={handleSignUp} />
+                        <input
+                        type="text"
+                        name="firstname"
+                        id="firstname"
+                        placeholder="FirstName"
+                        value={signup.firstname}
+                        onChange={handleSignUp}
+                        className="form-control form-control-lg"
+                        />
                     </label>
                 </div>
                 <div className="input-group input-group-sm mb-3">
-                    <label htmlFor="lastname" >
+                    <label htmlFor="lastname" className="form-label" >
                         LastName:
-                        <input type="text" name="lastname" id="lastname" placeholder="LastName" value={signup.lastname} onChange={handleSignUp} />
+                        <input
+                        type="text"
+                        name="lastname"
+                        id="lastname"
+                        placeholder="LastName"
+                        value={signup.lastname}
+                        onChange={handleSignUp}
+                        className="form-control form-control-lg" />
                     </label>
                 </div>
 
                 <div className="input-group input-group-sm mb-3">
-                    <label htmlFor="email" >
+                    <label htmlFor="email" className="form-label" >
                         E-mail:
-                        <input type="email" name="email" id="email" placeholder="E-mail" value={signup.email} onChange={handleSignUp} />
+                        <input
+                            type="email"
+                            name="email"
+                            id="email"
+                            placeholder="name@example.com"
+                            value={signup.email}
+                            onChange={handleSignUp}
+                            className="form-control form-control-lg" />
                     </label>
                 </div>
 
                 <div className="input-group input-group-sm mb-3">
-                    <label htmlFor="password" >
+                    <label htmlFor="password" className="form-label" >
                         Password:
-                        <input type="password" name="password" id="password" placeholder="Password" value={signup.password} onChange={handleSignUp} />
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            placeholder="Password"
+                            value={signup.password}
+                            onChange={handleSignUp}
+                            className="form-control form-control-lg"
+                             />
                     </label>
 
                 </div>
@@ -91,7 +121,7 @@ export default function Register() {
                     </select>
                 </div>
 
-                <input className="btn btn-secondary" type="submit" value="SignUp" />
+                <input className="btn btn-secondary" type="submit" value="Sign Up" />
             </form>
         </div>
     );
