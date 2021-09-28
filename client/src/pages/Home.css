@@ -10,6 +10,11 @@
 	background-color: yellow;
 }
 
+*{
+	margin: 0;
+	padding: 0;
+}
+
 nav {
 	height: 70px;
 	background-color: purple;
