@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useGlobalContext } from "../../Context";
+import Footer from "./Footer";
 import Navbar from "./Navbar";
 
 export default function Register() {
@@ -48,10 +49,11 @@ export default function Register() {
         setSignUp(newRegistration);
     };
     return (
-        <div className="justify-content-center align-bottom d-flex flex-wrap bg-white p-3">
+        <div className="justify-content-center bg-dark p-3 text-white ">
             <Navbar />
             {warning ? <div className="p-3 mb-2 bg-danger text-white">*Please make sure you fill all fields of the form.</div> : null}
-            <h1 className="col-12 text-center admin-heading">Homework Club Login</h1>
+            <fieldset className="justify-content-center align-center d-flex flex-wrap bg-dark p-1">
+            <legend className="col-12 text-center">Homework Club Sign-in</legend>
             <form onSubmit={handleSubmit}>
                 <div className="input-group input-group-md mb-3">
                     <label htmlFor="firstname" className="form-label" >
@@ -68,7 +70,7 @@ export default function Register() {
                     </label>
                 </div>
                 <div className="input-group input-group-md mb-3">
-                    <label htmlFor="lastname"  >
+                    <label htmlFor="lastname">
                         LastName:
                         <input
                             type="text"
@@ -108,7 +110,6 @@ export default function Register() {
                             className="form-control form-control-md"
                         />
                     </label>
-
                 </div>
 
                 <div className="input-group input-group-md mb-3">
@@ -133,6 +134,8 @@ export default function Register() {
                     type="submit"
                     value="Sign Up" />
             </form>
+            </fieldset>
+            <Footer />
         </div>
     );
 }

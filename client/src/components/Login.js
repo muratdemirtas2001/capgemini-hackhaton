@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Footer from "./Footer";
 // import { useGlobalContext } from "../../Context";
 import Navbar from "./Navbar";
 export default function Login() {
@@ -42,48 +43,51 @@ export default function Login() {
     return (
         <div>
             <Navbar />
-            <div className="row justify-content-center">
-                <fieldset>
-                    <legend>Homework Club Login</legend>
-                    <div className="col-6 col-md-5 col-lg-3">
-                        {warning ? <div className="p-3 mb-2 bg-danger text-white"> *Please make sure you write your email and password.</div> : null}
-                        <form onSubmit={handleSubmit}>
-                            <div>
-                                <label htmlFor="email" className="form-label" >
-                                    E-mail:
+            <section className="bg-dark text-light p-5 p-lg-0 pt-lg-5 text-center text-sm-start">
+                <div className="container">
+                        <fieldset className="align-items-center">
+                            <div className="justify-content-center align-center d-flex flex-wrap bg-dark p-3">
+                            <legend className="col-12 text-center" >Homework Club Login</legend>
+                                {warning ? <div className="p-3 mb-2 bg-danger text-white"> *Please make sure you write your email and password.</div> : null}
+                                <form onSubmit={handleSubmit}>
+                                    <div>
+                                        <label htmlFor="email" className="form-label" >
+                                            E-mail:
+                                            <input
+                                                type="email"
+                                                name="email"
+                                                id="email"
+                                                placeholder="name@example.com"
+                                                value={login.email}
+                                                onChange={handleLogin}
+                                                className="form-control form-control-lg" />
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <label htmlFor="password" className="form-label" >
+                                            Password:
+                                            <input
+                                                type="password"
+                                                name="password"
+                                                id="password"
+                                                placeholder="Password"
+                                                onChange={handleLogin}
+                                                value={login.password}
+                                                required
+                                                className="form-control form-control-lg" />
+                                        </label>
+                                    </div>
                                     <input
-                                        type="email"
-                                        name="email"
-                                        id="email"
-                                        placeholder="name@example.com"
-                                        value={login.email}
-                                        onChange={handleLogin}
-                                        className="form-control form-control-lg" />
-                                </label>
+                                        className="btn btn-secondary"
+                                        type="submit"
+                                        value="Login"
+                                    />
+                                </form>
                             </div>
-                            <div>
-                                <label htmlFor="password" className="form-label" >
-                                    Password:
-                                    <input
-                                        type="password"
-                                        name="password"
-                                        id="password"
-                                        placeholder="Password"
-                                        onChange={handleLogin}
-                                        value={login.password}
-                                        required
-                                        className="form-control form-control-lg" />
-                                </label>
-                            </div>
-                            <input
-                                className="btn btn-secondary"
-                                type="submit"
-                                value="Login"
-                            />
-                        </form>
-                    </div>
-                </fieldset>
-            </div>
+                        </fieldset>
+                </div>
+            </section>
+        <Footer />
         </div>
     );
 }
