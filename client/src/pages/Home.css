@@ -1,29 +1,26 @@
 .logo {
-	width: 100px;
+	width: 50px;
 }
 
 .message {
 	color: blue;
 }
 
-.message:hover {
-	background-color: yellow;
-}
-
 *{
 	margin: 0;
 	padding: 0;
+	
 }
 
-nav {
-	height: 70px;
-	background-color: purple;
-	display: flex;
-	justify-content: space-between;
-	padding: 15px 30px;
-	color: #fff;
-
+body {
+	box-sizing: border-box;
+	background-color:#212529;
 }
+body::before {
+	display: block;
+	content: '';
+	height: 60px;
+  }
 button{
 	margin-left:7px;
 	font-size: 20px;

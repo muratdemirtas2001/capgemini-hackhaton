@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { useGlobalContext } from "../../Context";
+import Footer from "./Footer";
+import Navbar from "./Navbar";
+
 export default function Register() {
     const { registedPeople } = useGlobalContext();
-
-    const [login, setLogin] = useState({
+    const [warning, setWarning] = useState(false);
+    const [signup, setSignUp] = useState({
         "firstname": "",
         "lastname": "",
         "email": "",
@@ -14,22 +17,24 @@ export default function Register() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        const requestOptions = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(login),
-        };
-        fetch("/api/questions", requestOptions)
-            .then((response) => response.json())
-            .then((data) => {
-                setLogin(registedPeople.concat(data));
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-            });
-
-        setLogin({
+        if (!signup.email && !signup.password && !signup.firstname && !signup.lastname && !signup.cohort && !signup.usertype) {
+            setWarning(true);
+        } else {
+            const requestOptions = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(signup),
+            };
+            fetch("/api/signup", requestOptions)
+                .then((response) => response.json())
+                .then((data) => {
+                    setSignUp(registedPeople.concat(data));
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
+        }
+        setSignUp({
             "firstname": "",
             "lastname": "",
             "email": "",
@@ -40,41 +45,74 @@ export default function Register() {
     };
 
     const handleSignUp = (e) => {
-        const newRegistration = { ...login, [e.target.name]: e.target.value };
-        setLogin(newRegistration);
+        const newRegistration = { ...signup, [e.target.name]: e.target.value };
+        setSignUp(newRegistration);
     };
     return (
-        <div className="justify-content-center p-3 d-flex flex-wrap align-items-center bg-primary">
+        <div className="justify-content-center bg-dark p-3 text-white ">
+            <Navbar />
+            {warning ? <div className="p-3 mb-2 bg-danger text-white">*Please make sure you fill all fields of the form.</div> : null}
+            <fieldset className="justify-content-center align-center d-flex flex-wrap bg-dark p-1">
+            <legend className="col-12 text-center">Homework Club Sign-in</legend>
             <form onSubmit={handleSubmit}>
-                <div className="col-6 col-md-5 col-lg-3">
-                    <label htmlFor="firstname" >
+                <div className="input-group input-group-md mb-3">
+                    <label htmlFor="firstname" className="form-label" >
                         FirstName:
-                        <input type="text" name="firstname" id="firstname" placeholder="FirstName" value={login.firstname} onChange={handleSignUp} />
+                        <input
+                            type="text"
+                            name="firstname"
+                            id="firstname"
+                            placeholder="FirstName"
+                            value={signup.firstname}
+                            onChange={handleSignUp}
+                            className="form-control form-control-md"
+                        />
                     </label>
                 </div>
-                <div className="col-6 col-md-5 col-lg-3">
-                    <label htmlFor="lastname" >
+                <div className="input-group input-group-md mb-3">
+                    <label htmlFor="lastname">
                         LastName:
-                        <input type="text" name="lastname" id="lastname" placeholder="LastName" value={login.lastname} onChange={handleSignUp} />
+                        <input
+                            type="text"
+                            name="lastname"
+                            id="lastname"
+                            placeholder="LastName"
+                            value={signup.lastname}
+                            onChange={handleSignUp}
+                            className="form-control form-control-md" />
                     </label>
                 </div>
 
-                <div className="col-6 col-md-5 col-lg-3">
-                    <label htmlFor="email" >
+                <div className="input-group input-group-md mb-3">
+                    <label htmlFor="email"  >
                         E-mail:
-                        <input type="email" name="email" id="email" placeholder="E-mail" value={login.email} onChange={handleSignUp} />
+                        <input
+                            type="email"
+                            name="email"
+                            id="email"
+                            placeholder="name@example.com"
+                            value={signup.email}
+                            onChange={handleSignUp}
+                            className="form-control form-control-md" />
                     </label>
                 </div>
 
-                <div className="col-6 col-md-5 col-lg-3">
-                    <label htmlFor="password" >
+                <div className="input-group input-group-md mb-3">
+                    <label htmlFor="password" className="form-label" >
                         Password:
-                        <input type="password" name="password" id="password" placeholder="Password" value={login.password} onChange={handleSignUp} />
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            placeholder="Password"
+                            value={signup.password}
+                            onChange={handleSignUp}
+                            className="form-control form-control-md"
+                        />
                     </label>
-
                 </div>
 
-                <div className="col-12 col-md-5 col-lg-12">
+                <div className="input-group input-group-md mb-3">
                     <select onBlur={handleSignUp} className="form-select" aria-label="select example" name="cohort" >
                         <option defaultValue>What is your cohort ?</option>
                         <option value="London-8">London-8</option>
@@ -83,7 +121,7 @@ export default function Register() {
                     </select>
                 </div>
 
-                <div className="col-6 col-md-5 col-lg-12">
+                <div className="input-group input-group-md mb-3">
                     <select onBlur={handleSignUp} className="form-select" aria-label="select example" name="usertype">
                         <option defaultValue>Usertype ?</option>
                         <option value="student" >student</option>
@@ -91,8 +129,13 @@ export default function Register() {
                     </select>
                 </div>
 
-                <input type="submit" value="Sign Up" />
+                <input
+                    className="btn btn-secondary"
+                    type="submit"
+                    value="Sign Up" />
             </form>
+            </fieldset>
+            <Footer />
         </div>
     );
 }
