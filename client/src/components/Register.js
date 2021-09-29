@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useGlobalContext } from "../../Context";
+import Navbar from "./Navbar";
+
 export default function Register() {
     const { registedPeople } = useGlobalContext();
     const [warning, setWarning] = useState(false);
@@ -46,7 +48,8 @@ export default function Register() {
         setSignUp(newRegistration);
     };
     return (
-        <div className="justify-content-center align-bottom d-flex flex-wrap  bg-primary p-3">
+        <div className="justify-content-center align-bottom d-flex flex-wrap bg-white p-3">
+            <Navbar />
             {warning ? <div className="p-3 mb-2 bg-danger text-white">*Please make sure you fill all fields of the form.</div> : null}
             <h1 className="col-12 text-center admin-heading">Homework Club Login</h1>
             <form onSubmit={handleSubmit}>

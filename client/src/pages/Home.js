@@ -1,52 +1,39 @@
 // import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import showcase from "../assets/showcase.svg";
 import "./Home.css";
-// import logo from "./logo.svg";
-
+import Footer from "../components/Footer";
 export function Home() {
-	// const [message, setMessage] = useState("Loading...");
-
-	// useEffect(() => {
-	// 	fetch("/api")
-	// 		.then((res) => {
-	// 			if (!res.ok) {
-	// 				throw new Error(res.statusText);
-	// 			}
-	// 			return res.json();
-	// 		})
-	// 		.then((body) => {
-	// 			setMessage(body.message);
-	// 		})
-	// 		.catch((err) => {
-	// 			console.error(err);
-	// 		});
-	// }, []);
-
 	return (
 		<main role="main">
-			<nav>
-				<div>CYF LOGO</div>
-				<div>
-					<Link to="/register">
-						<button className="btn btn-primary">Register</button>
-					</Link>
-					<Link to="/login">
-						<button className="btn btn-primary">Login</button>
-					</Link>
+			<Navbar />
+			<section className="bg-dark text-light p-5 p-lg-0 pt-lg-5 text-center text-sm-start">
+				<div className="container">
+					<div className="d-sm-flex align-items-center justify-content-between">
+						<div>
+							<h1>Become a <span className="text-warning"> Web Developer </span></h1>
+							<p className="lead my-4">
+								We focus on teaching our students the fundamentals of the latest
+								and greatest technologies to prepare them for their first dev role
+							</p>
+							<Link to="/register" className="nav-link">
+								<button
+									className="btn btn-primary btn-lg"
+									data-bs-toggle="modal"
+									data-bs-target="#enroll"
+								>Start The Enrollment
+								</button></Link>
+						</div>
+						<img
+							className="img-fluid w-50 d-none d-sm-block"
+							src={showcase}
+							alt=""
+						/>
+					</div>
 				</div>
-			</nav>
-			{/* <div>
-				<img
-					className="logo"
-					data-qa="logo"
-					src={logo}
-					alt="Just the React logo"
-				/>
-				<h1 className="message" data-qa="message">
-					{message}
-				</h1>
-				<Link to="/about/this/site">About</Link>
-			</div> */}
+			</section>
+			<Footer />
 		</main>
 	);
 }
