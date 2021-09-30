@@ -52,7 +52,7 @@ router.post("/signup", (req, res) => {
 			email: email,
 			password: saltedPassword,
 			cohort:cohort,
-			usertype:usertype
+			usertype:usertype,
 		};
 		pool.query(
 			"SELECT * FROM users where email=$1",
@@ -131,6 +131,37 @@ router.post("/signin", (req, res) => {
 	}
 });
 
+//verify token middleware
+function authenticateToken(req, res, next) {
+	const authHeader = req.headers["authorization"];
+	const token = authHeader && authHeader.split(" ")[1];
+	console.log("TOKEN IS" + token);
+	if (token == null) {
+		return res.sendStatus(401);
+	}
+	//verify token if it is verified contunie with end point otherwise send a forbidden 403 message to front end
+	jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+		if (err) {
+			res.sendStatus(403);
+		}
+		req.user = user;
+		next();
+	});
+}
+
+
+router.get("/dashboard", authenticateToken, (req, res) => {
+	const userID = req.user.userid;
+	pool
+		.query("SELECT firstname,lastname,email,cohort FROM users WHERE id=$1", [
+			userID,
+		])
+		.then((result) => {
+			res.json(result.rows);
+					})
+
+		.catch((e) => res.send(JSON.stringify(e)));
+				});
 
 
 export default router;
