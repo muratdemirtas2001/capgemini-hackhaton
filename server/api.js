@@ -88,7 +88,7 @@ router.post("/signup", (req, res) => {
 router.post("/signin", (req, res) => {
 	//take email and password from front end
 	const { email, password } = req.body;
-
+    console.log("sign in called");
 	//hash and salt the password
 	const hashedPassword = SHA256(password).toString();
 	const saltedPassword = SHA256(
@@ -133,9 +133,11 @@ router.post("/signin", (req, res) => {
 
 //verify token middleware
 function authenticateToken(req, res, next) {
+	console.log("authenticate function called")
 	const authHeader = req.headers["authorization"];
+	console.log("AUTHEADER IS____"+authHeader);
 	const token = authHeader && authHeader.split(" ")[1];
-	console.log("TOKEN IS" + token);
+	// console.log("TOKEN IS" + token);
 	if (token == null) {
 		return res.sendStatus(401);
 	}
@@ -151,7 +153,10 @@ function authenticateToken(req, res, next) {
 
 
 router.get("/dashboard", authenticateToken, (req, res) => {
+	// console.log(req);
+	console.log("dashboard called");
 	const userID = req.user.userid;
+
 	pool
 		.query("SELECT firstname,lastname,email,cohort FROM users WHERE id=$1", [
 			userID,
