@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import Footer from "./Footer";
+import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 // import { useGlobalContext } from "../../Context";
 import Navbar from "./Navbar";
 export default function Login() {
+    let history = useHistory();
     // const { loginPerson } = useGlobalContext();
     const [login, setLogin] = useState({
         "email": "",
@@ -34,7 +37,7 @@ export default function Login() {
             //         console.error("Error:", error);
             //     });
         }
-
+        history.push("/profile");
         setLogin({
             "email": "",
             "password": "",
@@ -44,50 +47,55 @@ export default function Login() {
         <div>
             <Navbar />
             <section className="bg-dark text-light p-5 p-lg-0 pt-lg-5 text-center text-sm-start">
-                <div className="container">
-                        <fieldset className="align-items-center">
-                            <div className="justify-content-center align-center d-flex flex-wrap bg-dark p-3">
+                <div className="container border border-white w-25">
+                    <fieldset className="align-items-center ">
+                        <div className="justify-content-center align-center d-flex flex-wrap bg-dark p-3">
                             <legend className="col-12 text-center" >Homework Club Login</legend>
-                                {warning ? <div className="p-3 mb-2 bg-danger text-white"> *Please make sure you write your email and password.</div> : null}
-                                <form onSubmit={handleSubmit}>
-                                    <div>
-                                        <label htmlFor="email" className="form-label" >
-                                            E-mail:
-                                            <input
-                                                type="email"
-                                                name="email"
-                                                id="email"
-                                                placeholder="name@example.com"
-                                                value={login.email}
-                                                onChange={handleLogin}
-                                                className="form-control form-control-lg" />
-                                        </label>
-                                    </div>
-                                    <div>
-                                        <label htmlFor="password" className="form-label" >
-                                            Password:
-                                            <input
-                                                type="password"
-                                                name="password"
-                                                id="password"
-                                                placeholder="Password"
-                                                onChange={handleLogin}
-                                                value={login.password}
-                                                required
-                                                className="form-control form-control-lg" />
-                                        </label>
-                                    </div>
-                                    <input
-                                        className="btn btn-secondary"
-                                        type="submit"
-                                        value="Login"
-                                    />
-                                </form>
-                            </div>
-                        </fieldset>
+                            {warning ? <div className="p-3 mb-2 bg-danger text-white"> *Please make sure you write your email and password.</div> : null}
+                            <form onSubmit={handleSubmit}>
+                                <div>
+                                    <label htmlFor="email" className="form-label" >
+                                        E-mail:
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            id="email"
+                                            placeholder="name@example.com"
+                                            value={login.email}
+                                            onChange={handleLogin}
+                                            className="form-control form-control-lg" />
+                                    </label>
+                                </div>
+                                <div>
+                                    <label htmlFor="password" className="form-label" >
+                                        Password:
+                                        <input
+                                            type="password"
+                                            name="password"
+                                            id="password"
+                                            placeholder="Password"
+                                            onChange={handleLogin}
+                                            value={login.password}
+                                            required
+                                            className="form-control form-control-lg" />
+                                    </label>
+                                </div>
+                                <input
+                                    className="btn btn-primary form-control form-control-lg"
+                                    type="submit"
+                                    value="Login"
+                                />
+                            </form>
+                            <span className="mt-2 text-center text-primary">Forgot Password?</span>
+                        </div>
+                    </fieldset>
+                </div>
+                <div className="d-flex justify-content-center text-center mt-3 ">
+                    <p>Need an account?</p>
+                    <Link to="/register" style={{ listStyle: "none", textDecoration: "none", marginLeft: "10px" }}>Sign Up</Link>
                 </div>
             </section>
-        <Footer />
+            <Footer />
         </div>
     );
 }
