@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useGlobalContext } from "../../Context";
+import { Link } from "react-router-dom";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 
@@ -130,11 +131,15 @@ export default function Register() {
                 </div>
 
                 <input
-                    className="btn btn-secondary"
+                    className="btn btn-primary form-control form-control-lg"
                     type="submit"
                     value="Sign Up" />
             </form>
             </fieldset>
+            <div className="d-flex justify-content-center text-center mt-3 ">
+                    <p>Already have an account?</p>
+                    <Link to="/login" style={{ listStyle:"none", textDecoration:"none", marginLeft:"10px" }}>Log In</Link>
+                </div>
             <Footer />
         </div>
     );
