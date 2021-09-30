@@ -90,7 +90,7 @@ export default function Login() {
                 </div>
                 <div className="d-flex justify-content-center text-center mt-3 ">
                     <p>Need an account?</p>
-                    <Link to="/register" style={{ listStyle:"none", textDecoration:"none", marginLeft:"10px" }}>Sign Up</Link>
+                    <Link to="/register" style={{ listStyle: "none", textDecoration: "none", marginLeft: "10px" }}>Sign Up</Link>
                 </div>
             </section>
             <Footer />
