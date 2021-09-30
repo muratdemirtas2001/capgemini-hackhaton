@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import Footer from "./Footer";
 import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 // import { useGlobalContext } from "../../Context";
 import Navbar from "./Navbar";
 export default function Login() {
+    let history = useHistory();
     // const { loginPerson } = useGlobalContext();
     const [login, setLogin] = useState({
         "email": "",
@@ -35,7 +37,7 @@ export default function Login() {
             //         console.error("Error:", error);
             //     });
         }
-
+        history.push("/profile");
         setLogin({
             "email": "",
             "password": "",
