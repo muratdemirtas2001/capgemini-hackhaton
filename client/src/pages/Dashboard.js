@@ -15,8 +15,6 @@ export default function Dashboard() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-	console.log("use eff is practice test:");
-	console.log(data);
 				if (data.error) {
 					setIsPracticed(true);
 				}
@@ -25,10 +23,8 @@ export default function Dashboard() {
 
 
     return (
-        <nav className="navbar navbar-expand-lg bg-dark navbar-dark py-3 fixed-top">
-			<div className="container">
-            <Logout />
-            </div>
-		</nav>
+        <>
+        <Logout />
+        </>
     );
 }
