@@ -7,51 +7,76 @@ import Navbar from "./Navbar";
 export default function Login() {
     let history = useHistory();
     // const { loginPerson } = useGlobalContext();
+    const [error, setError] = useState("");
+    const [warning, setWarning] = useState(false);
     const [login, setLogin] = useState({
         "email": "",
         "password": "",
     });
-    const [warning, setWarning] = useState(false);
     const handleLogin = (e) => {
         const newRegistration = { ...login, [e.target.name]: e.target.value };
+        if (login.email && login.password) {
+            setError("");
+            setWarning(false);
+        }
         setLogin(newRegistration);
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!login.email || !login.password) {
+        if (!login.email && !login.password) {
             setWarning(true);
+            setError("The fields cannot be empty");
+        } else if (!login.email) {
+            setWarning(true);
+            setError("Please enter an email");
+        } else if (!login.password) {
+            setWarning(true);
+            setError("Please enter a password");
         } else {
             // I am not sure how we are going to match with the password in our database.
-            // const requestOptions = {
-            //     method: "POST",
-            //     headers: { "Content-Type": "application/json" },
-            //     body: JSON.stringify(login),
-            // };
-            // fetch("/api/login", requestOptions)
-            //     .then((response) => response.json())
-            //     .then((data) => {
-            //         setLogin(loginPerson.concat(data));
-            //     })
-            //     .catch((error) => {
-            //         console.error("Error:", error);
-            //     });
+            let result = fetch("/api/signin", {
+                method: "POST",
+                body: JSON.stringify(login),
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log(data.token);
+                    if (data.auth === "success") {
+                        console.log(data);
+                        history.push("/dashboard");
+                    } else if (data.auth === "error") {
+                        console.log(data);
+
+                        setError(data.errors.email);
+
+                        history.push("/login");
+                    }
+
+                    localStorage.setItem("users", data.token);
+                });
+
+            localStorage.setItem("users", result);
         }
-        history.push("/profile");
+
         setLogin({
-            "email": "",
-            "password": "",
+            "email": login.email ? login.email : "",
+            "password": login.password ? login.password : "",
         });
     };
     return (
         <div>
             <Navbar />
-            <section className="bg-dark text-light p-5 p-lg-0 pt-lg-5 text-center text-sm-start">
-                <div className="container border border-white w-25">
+            <section className="bg-dark text-light p-5 pt-lg-5 text-center text-sm-start">
+                <div className="container">
                     <fieldset className="align-items-center ">
                         <div className="justify-content-center align-center d-flex flex-wrap bg-dark p-3">
                             <legend className="col-12 text-center" >Homework Club Login</legend>
-                            {warning ? <div className="p-3 mb-2 bg-danger text-white"> *Please make sure you write your email and password.</div> : null}
+                            {warning ? <div className="p-3 mb-2 bg-danger text-white">{error}</div> : null}
                             <form onSubmit={handleSubmit}>
                                 <div>
                                     <label htmlFor="email" className="form-label" >
@@ -76,8 +101,8 @@ export default function Login() {
                                             placeholder="Password"
                                             onChange={handleLogin}
                                             value={login.password}
-                                            required
-                                            className="form-control form-control-lg" />
+                                            className="form-control form-control-lg"
+                                        />
                                     </label>
                                 </div>
                                 <input
@@ -86,7 +111,6 @@ export default function Login() {
                                     value="Login"
                                 />
                             </form>
-                            <span className="mt-2 text-center text-primary">Forgot Password?</span>
                         </div>
                     </fieldset>
                 </div>

@@ -11,7 +11,7 @@ import { pool } from "./db";
 const uuid = require("uuid");
 const passwordValidator = require("password-validator");
 const jwt = require("jsonwebtoken");
-const moment = require("moment");
+// const moment = require("moment");
 // const moment = require("moment-timezone");
 const router = new Router();
 
@@ -52,7 +52,7 @@ router.post("/signup", (req, res) => {
 			email: email,
 			password: saltedPassword,
 			cohort:cohort,
-			usertype:usertype
+			usertype:usertype,
 		};
 		pool.query(
 			"SELECT * FROM users where email=$1",
