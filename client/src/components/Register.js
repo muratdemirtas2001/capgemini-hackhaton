@@ -147,7 +147,7 @@ export default function Register() {
                         </div>
                         <div className="input-group input-group-md mb-3">
                             <label htmlFor="passwordcheck" className="form-label" >
-                                Password:
+                                Confirm Your Password:
                                 <input
                                     type="password"
                                     name="passwordCheck"

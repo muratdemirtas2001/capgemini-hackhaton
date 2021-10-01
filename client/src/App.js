@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./pages/Home";
 import Register from "./components/Register";
 import Login from "./components/Login";
+import Dashboard from "./pages/Dashboard";
 
 const App = () => (
 	<Switch>
@@ -14,6 +15,9 @@ const App = () => (
 		</Route>
 		<Route path="/login">
 			<Login  />
+		</Route>
+		<Route path="/dashboard">
+			<Dashboard  />
 		</Route>
 	</Switch>
 );
