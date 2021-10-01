@@ -20,7 +20,7 @@ const AppProvider = ({ children }) => {
                 console.error(err);
             });
 
-            fetch("/api/login")
+            fetch("/api/signin")
             .then((res) => {
                 if (!res.ok) {
                     throw new Error(res.statusText);
