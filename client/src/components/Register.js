@@ -23,7 +23,7 @@ export default function Register() {
     const handleSubmit = (e) => {
         e.preventDefault();
         let regValue = /(?=.*[0-9].*)(?=.*[a-z].*)(?=.*[A-Z].*)(.{8,})/;
-        const  { firstname, lastname, passwordCheck, password, cohort, usertype, email } = signup;
+        const { firstname, lastname, passwordCheck, password, cohort, usertype, email } = signup;
 
         // Validation
         if (!email && !password) {
@@ -34,13 +34,13 @@ export default function Register() {
             setError("Email address is invalid");
         } else if (!password) {
             setWarning(true);
-             setError("Password is required");
+            setError("Password is required");
         } else if (password !== passwordCheck) {
             setWarning(true);
-             setError("Passwords must match");
+            setError("Passwords must match");
         } else if (!regValue.test(password)) {
             setWarning(true);
-             setError("Passwords must contain a number and at least 8 characters");
+            setError("Passwords must contain a number, a capital letter and  at least 8 characters");
         } else {
             const requestOptions = {
                 method: "POST",
@@ -56,6 +56,7 @@ export default function Register() {
                         history.push("/dashboard");
                     } else if (data.register === "error" || data.register === "error-registereduser") {
                         setError("User already exists");
+                        setWarning(true);
                         history.push("/register");
                     }
                 }).catch((error) => {
@@ -63,21 +64,21 @@ export default function Register() {
                 });
         }
         setSignUp({
-            "firstname":firstname ? firstname:  "",
-            "lastname":lastname ? lastname : "",
-            "email":email ? email : "",
-            "password":password ? password : "",
-            "cohort":cohort ? cohort : "",
-            "usertype":usertype ? usertype: "",
-            "passwordCheck":passwordCheck ? passwordCheck : "",
+            "firstname": firstname ? firstname : "",
+            "lastname": lastname ? lastname : "",
+            "email": email ? email : "",
+            "password": password ? password : "",
+            "cohort": cohort ? cohort : "",
+            "usertype": usertype ? usertype : "",
+            "passwordCheck": passwordCheck ? passwordCheck : "",
         });
     };
-
+    console.log(error);
     const handleSignUp = (e) => {
-       const  { firstname, lastname, passwordCheck, password, cohort, usertype } = signup;
-       if(firstname || lastname || password || passwordCheck || cohort || usertype){
-           setWarning(false);
-       }
+        const { firstname, lastname, passwordCheck, password, cohort, usertype } = signup;
+        if (firstname || lastname || password || passwordCheck || cohort || usertype) {
+            setWarning(false);
+        }
         const newRegistration = { ...signup, [e.target.name]: e.target.value };
         setSignUp(newRegistration);
     };
@@ -86,7 +87,7 @@ export default function Register() {
             <Navbar />
             <div className="justify-content-center bg-dark p-3 text-white">
                 <fieldset className="justify-content-center align-center d-flex flex-wrap bg-dark p-1">
-                {warning ? <div className=" justify-content-center align-center  p-3 mb-2 bg-danger text-center  text-white">{error}</div> : null}
+                    {warning ? <div className=" justify-content-center align-center  p-3 mb-2 bg-danger text-center  text-white">{error}</div> : null}
                     <legend className="col-12 text-center">Homework Club Sign Up</legend>
                     <form onSubmit={handleSubmit}>
                         <div className="input-group input-group-md mb-3">
