@@ -3,8 +3,11 @@ import Logout from "../components/Logout";
 
 export default function Dashboard() {
     const token = localStorage.getItem("users");
+	console.log(token);
     const [isPracticed, setIsPracticed] = useState(false);
-    console.log(isPracticed);
+	// const [users, setUsers] = useState([]);
+    // console.log("users", users);
+	console.log("is practiced", isPracticed);
     useEffect(() => {
 		fetch("/api/practise", {
 			method: "GET",
@@ -19,6 +22,20 @@ export default function Dashboard() {
 					setIsPracticed(true);
 				}
 			});
+
+			// fetch("/api/login")
+            // .then((res) => {
+            //     if (!res.ok) {
+            //         throw new Error(res.statusText);
+            //     }
+            //     return res.json();
+            // })
+            // .then((body) => {
+            //     setUsers(body);
+            // })
+            // .catch((err) => {
+            //     console.error(err);
+            // });
 	}, [token]);
 
 
