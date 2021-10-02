@@ -158,7 +158,7 @@ router.get("/dashboard", authenticateToken, (req, res) => {
 	const userID = req.user.userid;
 
 	pool
-		.query("SELECT firstname,lastname,email,cohort FROM users WHERE id=$1", [
+		.query("SELECT firstname,lastname,email,cohort,user_type FROM users WHERE id=$1", [
 			userID,
 		])
 		.then((result) => {
