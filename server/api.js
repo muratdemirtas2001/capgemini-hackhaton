@@ -11,7 +11,7 @@ import { pool } from "./db";
 const uuid = require("uuid");
 const passwordValidator = require("password-validator");
 const jwt = require("jsonwebtoken");
-const moment = require("moment");
+// const moment = require("moment");
 // const moment = require("moment-timezone");
 const router = new Router();
 
