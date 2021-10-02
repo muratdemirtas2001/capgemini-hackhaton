@@ -45,7 +45,8 @@ export default function Login() {
             })
                 .then((res) => res.json())
                 .then((data) => {
-                    console.log(data.token);
+                    localStorage.setItem("users", data.token);
+                    console.log("login recived data.token is", data.token);
                     if (data.auth === "success") {
                         console.log(data);
                         history.push("/dashboard");
@@ -57,10 +58,10 @@ export default function Login() {
                         history.push("/login");
                     }
 
-                    localStorage.setItem("users", data.token);
+                    console.log("login localstoragedaki token is",localStorage.users);
                 });
-
-            localStorage.setItem("users", result);
+            // console.log(result);
+            // localStorage.setItem("users", result);
         }
 
         setLogin({
