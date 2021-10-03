@@ -35,7 +35,8 @@ export default function Login() {
             setError("Please enter a password");
         } else {
             // I am not sure how we are going to match with the password in our database.
-            let result = fetch("/api/signin", {
+            // let result =
+            fetch("/api/signin", {
                 method: "POST",
                 body: JSON.stringify(login),
                 headers: {
@@ -52,7 +53,7 @@ export default function Login() {
                         history.push("/dashboard");
                     } else if (data.auth === "error") {
                         console.log(data);
-
+                        setWarning(true);
                         setError(data.errors.email);
 
                         history.push("/login");
@@ -74,10 +75,10 @@ export default function Login() {
             <Navbar />
             <section className="bg-dark text-light p-5 pt-lg-5 text-center text-sm-start">
                 <div className="container">
-                    <fieldset className="align-items-center ">
+                    <fieldset className="align-items-center  ">
+                    {warning ? <div className="col-lg-12 p-3 mb-2 bg-danger text-white text-center">{error}</div> : null}
                         <div className="justify-content-center align-center d-flex flex-wrap bg-dark p-3">
                             <legend className="col-12 text-center" >Homework Club Login</legend>
-                            {warning ? <div className="p-3 mb-2 bg-danger text-white">{error}</div> : null}
                             <form onSubmit={handleSubmit}>
                                 <div>
                                     <label htmlFor="email" className="form-label" >
