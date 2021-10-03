@@ -1,15 +1,6 @@
-.logo {
-	width: 50px;
-}
-
-.message {
-	color: blue;
-}
-
 *{
 	margin: 0;
 	padding: 0;
-	
 }
 
 body {
@@ -19,7 +10,7 @@ body {
 body::before {
 	display: block;
 	content: '';
-	height: 60px;
+	height: 70px;
   }
 button{
 	margin-left:7px;
