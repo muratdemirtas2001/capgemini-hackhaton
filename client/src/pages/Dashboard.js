@@ -7,7 +7,6 @@ export default function Dashboard() {
 	// console.log("TOKEN IN DASHBOARD IS",token);
 	const [isPracticed, setIsPracticed] = useState(false);
 	const [users, setUsers] = useState([]);
-	// console.log("users", users);
 	console.log("is practiced", isPracticed);
 	useEffect(() => {
 		fetch("/api/dashboard", {
@@ -20,9 +19,7 @@ export default function Dashboard() {
 			.then((res) => res.json())
 			.then((data) => {
 				setUsers(data);
-				if (data.error) {
-					setIsPracticed(true);
-				}
+				setIsPracticed(true);
 			});
 
 		// fetch("/api/login")
@@ -40,7 +37,7 @@ export default function Dashboard() {
 		// });
 	}, [token]);
 	console.log("TOKEN IN DASHBOARD IS", token);
-	console.log(users);
+	console.log(isPracticed ? users[0].firstname : "hello world");
 
 	const handlesubmit = () => {
 		return "hello world!";
@@ -48,12 +45,15 @@ export default function Dashboard() {
 	return (
 		<>
 			<Logout />
-			<div className="container-md mt-2 px-4">
+			<div className="container-md mt-2 px-3 overflow-hidden">
 				<div className="row p-2 m-2">
 					<div className="col-9 text-white">
-						<span>HW Session 5 </span>
-						<span>17:00 - 19:00 </span>
-						<span> 01/10/2021</span>
+						{isPracticed ? <div>
+							<p>Welcome {users[0].firstname} {users[0].lastname} </p>
+							<span>{users[0].cohort} - </span>
+							<span>17:00 - 19:00 </span>
+							<span> 01/10/2021</span>
+						</div> : null}
 					</div>
 					<div className="col-3">
 						<button className="btn btn-danger pl-3">Join now</button>
@@ -84,27 +84,29 @@ export default function Dashboard() {
 							</div>
 						</div>
 						<form onSubmit={handlesubmit}>
-						<div className="row mt-2 border align-item">
-							<div className="col-3 border-white text-white ">
-								<span>HW Session 6 - 04/10/2021 - 17:00 - 19:00</span>
+							<div className="row row gy-3 p-3 mt-2 border align-items-center text-center">
+								<div className="col-sm-12 col-md-12 col-lg-3 border-white text-white d-flex flex-column">
+									<span>HW Session 6</span>
+									<span>Date : 04/10/2021 </span>
+									<span>Time :17:00 - 19:00</span>
+								</div>
+								<div className=" col-sm-12 col-md-12 col-lg-3 ">
+									<select>
+										<option defaultChecked>Topic Choice</option>
+										<option value="javascript1">javascript core 1</option>
+										<option value="javascript2">javascript core 2</option>
+									</select>
+								</div>
+								<div className="col-sm-12 col-md-12 col-lg-3  text-white " >
+									<label htmlFor="question">
+										<textarea id="question" name="question" cols="20" rows="5"
+											placeholder="please give us some information about your question.">
+										</textarea></label>
+								</div>
+								<div className="col-sm-12 col-md-12 col-lg-3  border-white ">
+									<button className="btn btn-primary">Register</button>
+								</div>
 							</div>
-							<div className="col-3">
-								<select>
-									<option defaultChecked>Topic Choice</option>
-									<option value="javascript1">javascript core 1</option>
-									<option value="javascript2">javascript core 2</option>
-								</select>
-							</div>
-							<div className="col-3 text-white" >
-								<label htmlFor="question">
-								<textarea id="question" name="question"
-								placeholder="please give us some information about your question.">
-								</textarea></label>
-							</div>
-							<div className="col-1 border-white ">
-								<button className="btn btn-primary">Register</button>
-							</div>
-						</div>
 						</form>
 					</div>
 				</div>
