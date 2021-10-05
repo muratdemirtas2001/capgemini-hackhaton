@@ -181,5 +181,20 @@ router.get("/dashboard", authenticateToken, (req, res) => {
 		.catch((e) => res.send(JSON.stringify(e)));
 				});
 
+router.get("/cohorts", (req, res) => {
+
+	pool
+		.query(
+			"SELECT cohort FROM cohorts",
+		)
+		.then((result) => {
+        let cohorts=result.rows.map((cohort)=>{
+			return cohort.cohort
+		});
+			res.json(cohorts);
+		})
+
+		.catch((e) => res.send(JSON.stringify(e)));
+});
 
 export default router;
