@@ -18,27 +18,14 @@ export default function Dashboard() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
+				console.log("sdsd", data);
 				setUsers(data);
 				setIsPracticed(true);
 			});
-
-		// fetch("/api/login")
-		// .then((res) => {
-		//     if (!res.ok) {
-		//         throw new Error(res.statusText);
-		//     }
-		//     return res.json();
-		// })
-		// .then((body) => {
-		//     setUsers(body);
-		// })
-		// .catch((err) => {
-		//     console.error(err);
-		// });
 	}, [token]);
+
 	console.log("TOKEN IN DASHBOARD IS", token);
 	console.log(isPracticed ? users[0].firstname : "hello world");
-
 	const handlesubmit = () => {
 		return "hello world!";
 	};
@@ -47,7 +34,7 @@ export default function Dashboard() {
 			<Logout />
 			<div className="container-md mt-2 px-3 overflow-hidden">
 				<div className="row p-2 m-2">
-					<div className="col-9 text-white">
+					<div className="col-10 text-white">
 						{isPracticed ? <div>
 							<p>Welcome {users[0].firstname} {users[0].lastname} </p>
 							<span>{users[0].cohort} - </span>
@@ -55,8 +42,8 @@ export default function Dashboard() {
 							<span> 01/10/2021</span>
 						</div> : null}
 					</div>
-					<div className="col-3">
-						<button className="btn btn-danger pl-3">Join now</button>
+					<div className="col-2">
+						<button className="btn btn-success pr-3">Join</button>
 					</div>
 				</div>
 
