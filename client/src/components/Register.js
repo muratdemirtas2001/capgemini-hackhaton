@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable jsx-a11y/no-onchange */
+import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../../Context";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
@@ -9,6 +10,7 @@ export default function Register() {
     const { registedPeople, setRegisteredPeople } = useGlobalContext();
     const [warning, setWarning] = useState(false);
     const [error, setError] = useState("");
+    const [cohort, setCohort] = useState([]);
     let history = useHistory();
     const [signup, setSignUp] = useState({
         "firstname": "",
@@ -20,11 +22,26 @@ export default function Register() {
         "usertype": "",
     });
 
+    useEffect(() => {
+        fetch("/api/cohort")
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error(res.statusText);
+                }
+                return res.json();
+            })
+            .then((body) => {
+                setCohort(body);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    });
+    console.log(cohort);
     const handleSubmit = (e) => {
         e.preventDefault();
         let regValue = /(?=.*[0-9].*)(?=.*[a-z].*)(?=.*[A-Z].*)(.{8,})/;
         const { firstname, lastname, passwordCheck, password, cohort, usertype, email } = signup;
-
         // Validation
         if (!email && !password) {
             setWarning(true);
@@ -75,13 +92,15 @@ export default function Register() {
     };
     console.log(error);
     const handleSignUp = (e) => {
+        const newRegistration = { ...signup, [e.target.name]: e.target.value };
+        setSignUp(newRegistration);
         const { firstname, lastname, passwordCheck, password, cohort, usertype } = signup;
         if (firstname || lastname || password || passwordCheck || cohort || usertype) {
             setWarning(false);
         }
-        const newRegistration = { ...signup, [e.target.name]: e.target.value };
-        setSignUp(newRegistration);
     };
+
+    console.log(signup);
     return (
         <section>
             <Navbar />
@@ -160,23 +179,25 @@ export default function Register() {
                                 />
                             </label>
                         </div>
-
                         <div className="input-group input-group-md mb-3">
-                            <select onBlur={handleSignUp} className="form-select" aria-label="select example" name="cohort" >
-                                <option>What is your cohort ?</option>
-                                <option value="London-8">London-8</option>
-                                <option value="London-9">London-9</option>
-                                <option value="London-10">London-10</option>
-                            </select>
-                        </div>
-
-                        <div className="input-group input-group-md mb-3">
-                            <select onBlur={handleSignUp} className="form-select" aria-label="select example" name="usertype">
-                                <option>Usertype ?</option>
+                            <select value={signup.usertype} onChange={handleSignUp} className="form-select" aria-label="select example" name="usertype">
+                                <option>User Type ?</option>
                                 <option value="student" >student</option>
                                 <option value="mentor" >mentor</option>
                             </select>
                         </div>
+                        {signup.usertype === "student" ?
+                            <div className="input-group input-group-md mb-3">
+                                <select value={signup.usertype} onChange={handleSignUp} className="form-select" aria-label="select example" name="cohort" >
+                                    <option>What is your cohort ?</option>
+                                    {cohort.map((element, index) => {
+                                        return (
+                                            <option value="London-8" key={index}>{element}</option>
+                                        );
+                                    })
+                                    }
+                                </select>
+                            </div> : null}
 
                         <input
                             className="btn btn-primary form-control form-control-lg"
