@@ -18,27 +18,15 @@ export default function Dashboard() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
+				console.log("sdsd", data);
 				setUsers(data);
 				setIsPracticed(true);
 			});
-
-		// fetch("/api/login")
-		// .then((res) => {
-		//     if (!res.ok) {
-		//         throw new Error(res.statusText);
-		//     }
-		//     return res.json();
-		// })
-		// .then((body) => {
-		//     setUsers(body);
-		// })
-		// .catch((err) => {
-		//     console.error(err);
-		// });
 	}, [token]);
+
 	console.log("TOKEN IN DASHBOARD IS", token);
 	console.log(isPracticed ? users[0].firstname : "hello world");
-
+	console.log(users);
 	const handlesubmit = () => {
 		return "hello world!";
 	};

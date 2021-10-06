@@ -190,6 +190,7 @@ export default function Register() {
                             <div className="input-group input-group-md mb-3">
                                 <select value={signup.usertype} onChange={handleSignUp} className="form-select" aria-label="select example" name="cohort" >
                                     <option>What is your cohort ?</option>
+                                    <option>Javasript core 1</option>
                                     {cohort.map((element, index) => {
                                         return (
                                             <option value="London-8" key={index}>{element}</option>
