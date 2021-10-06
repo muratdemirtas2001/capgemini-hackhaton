@@ -1,6 +1,6 @@
 import React from "react";
-import { useHistory, Link } from "react-router-dom";
-
+import { useHistory, Link  } from "react-router-dom";
+import { Navbar , Nav, Container } from "react-bootstrap";
 const Logout = () => {
     const history = useHistory();
 
@@ -10,26 +10,20 @@ const Logout = () => {
     };
 
     return (
-        <nav className="navbar navbar-expand-lg bg-dark navbar-dark py-3 fixed-top">
-            <div className="container">
-                <Link to="/dashboard" className="nav-link">DashBoard</Link>
-                <button
-                    className="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navmenu"
-                >
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className="collapse navbar-collapse" id="navmenu">
-                    <ul className="navbar-nav ms-auto">
-                        <li className="nav-item">
-                            <Link to="/login" href="#login" onClick={logout} className="nav-link">Logout</Link>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+            <Container>
+                <Navbar.Brand href="#home">Welcome to Homework Club</Navbar.Brand>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                <Navbar.Collapse id="responsive-navbar-nav">
+                    <Nav className="me-auto">
+                        <Nav.Link href="#profile"><Link to="/dashboard" className="nav-link">DashBoard</Link></Nav.Link>
+                    </Nav>
+                    <Nav>
+                        <Nav.Link href="#login"><Link to="/login" onClick={logout} className="nav-link">Logout</Link></Nav.Link>
+                    </Nav>
+                </Navbar.Collapse>
+            </Container>
+        </Navbar>
     );
 };
 

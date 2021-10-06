@@ -1,13 +1,13 @@
 // import { useEffect, useState } from "react";
 
-import Navbar from "../components/Navbar";
+import Navbarcomponent from "../components/Navbarcomponent";
 import "./Home.css";
 import Footer from "../components/Footer";
 import Landing from "../components/Landing";
 export function Home() {
 	return (
 		<main role="main">
-			<Navbar />
+			<Navbarcomponent />
 			<Landing />
 			<Footer />
 		</main>

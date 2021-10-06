@@ -26,7 +26,6 @@ export default function Dashboard() {
 
 	console.log("TOKEN IN DASHBOARD IS", token);
 	console.log(isPracticed ? users[0].firstname : "hello world");
-	console.log(users);
 	const handlesubmit = () => {
 		return "hello world!";
 	};
