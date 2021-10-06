@@ -3,7 +3,7 @@ import Footer from "./Footer";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 // import { useGlobalContext } from "../../Context";
-import Navbar from "./Navbar";
+import Navbarcomponent from "./Navbarcomponent";
 export default function Login() {
     let history = useHistory();
     // const { loginPerson } = useGlobalContext();
@@ -48,6 +48,7 @@ export default function Login() {
                 .then((data) => {
                     localStorage.setItem("users", data.token);
                     console.log("login recived data.token is", data.token);
+                    console.log("sdsd",data);
                     if (data.auth === "success") {
                         console.log(data);
                         history.push("/dashboard");
@@ -72,7 +73,7 @@ export default function Login() {
     };
     return (
         <div>
-            <Navbar />
+            <Navbarcomponent />
             <section className="bg-dark text-light p-5 pt-lg-5 text-center text-sm-start">
                 <div className="container">
                     <fieldset className="align-items-center  ">

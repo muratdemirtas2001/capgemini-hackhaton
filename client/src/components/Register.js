@@ -4,7 +4,7 @@ import { useGlobalContext } from "../../Context";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import Footer from "./Footer";
-import Navbar from "./Navbar";
+import Navbarcomponent from "./Navbarcomponent";
 
 export default function Register() {
     const { registedPeople, setRegisteredPeople } = useGlobalContext();
@@ -103,7 +103,7 @@ export default function Register() {
     console.log(signup);
     return (
         <section>
-            <Navbar />
+            <Navbarcomponent />
             <div className="justify-content-center bg-dark p-3 text-white">
                 <fieldset className="justify-content-center align-center d-flex flex-wrap bg-dark p-1">
                     {warning ? <div className=" justify-content-center align-center  p-3 mb-2 bg-danger text-center  text-white">{error}</div> : null}
