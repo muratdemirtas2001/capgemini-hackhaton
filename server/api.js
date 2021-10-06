@@ -21,7 +21,7 @@ router.get("/", (_, res) => {
 
 router.post("/signup", (req, res) => {
 	console.log("register api");
-	const { firstname, lastname, email, password, cohort, usertype, html_css,javascript,react,node,postgresql,mongodb } =
+	const { firstname, lastname, email, password, cohort, usertype, html_css, javascript, react, node, postgresql, mongodb } =
 		req.body;
 	const isValidEmail = EmailValidator.validate(email);
 	const schema = new passwordValidator();
@@ -57,9 +57,9 @@ router.post("/signup", (req, res) => {
 			html_css: html_css,
 			javascript: javascript,
 			react: react,
-			node:node,
-			postgresql:postgresql,
-			mongodb:mongodb,
+			node: node,
+			postgresql: postgresql,
+			mongodb: mongodb,
 		};
 		pool.query(
 			"SELECT * FROM users where email=$1",
@@ -101,7 +101,7 @@ router.post("/signup", (req, res) => {
 router.post("/signin", (req, res) => {
 	//take email and password from front end
 	const { email, password } = req.body;
-    console.log("sign in called");
+	console.log("sign in called");
 	//hash and salt the password
 	const hashedPassword = SHA256(password).toString();
 	const saltedPassword = SHA256(
@@ -148,7 +148,7 @@ router.post("/signin", (req, res) => {
 function authenticateToken(req, res, next) {
 	console.log("authenticate function called");
 	const authHeader = req.headers["authorization"];
-	console.log("AUTHEADER IS____"+authHeader);
+	console.log("AUTHEADER IS____" + authHeader);
 	const token = authHeader && authHeader.split(" ")[1];
 	// console.log("TOKEN IS" + token);
 	if (token == null) {
@@ -176,10 +176,10 @@ router.get("/dashboard", authenticateToken, (req, res) => {
 		])
 		.then((result) => {
 			res.json(result.rows);
-					})
+		})
 
 		.catch((e) => res.send(JSON.stringify(e)));
-				});
+});
 
 router.get("/cohorts", (req, res) => {
 
@@ -188,9 +188,9 @@ router.get("/cohorts", (req, res) => {
 			"SELECT cohort FROM cohorts",
 		)
 		.then((result) => {
-        let cohorts=result.rows.map((cohort)=>{
-			return cohort.cohort
-		});
+			let cohorts = result.rows.map((cohort) => {
+				return cohort.cohort;
+			});
 			res.json(cohorts);
 		})
 
