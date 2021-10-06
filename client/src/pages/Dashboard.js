@@ -25,7 +25,7 @@ export default function Dashboard() {
 	}, [token]);
 
 	console.log("TOKEN IN DASHBOARD IS", token);
-	console.log(isPracticed ? users[0].firstname : "hello world");
+	console.log(isPracticed ? users.firstname : "hello world");
 	const handlesubmit = () => {
 		return "hello world!";
 	};
@@ -36,8 +36,8 @@ export default function Dashboard() {
 				<div className="row p-2 m-2">
 					<div className="col-10 text-white">
 						{isPracticed ? <div>
-							<p>Welcome {users[0].firstname} {users[0].lastname} </p>
-							<span>{users[0].cohort} - </span>
+							<p>Welcome {users.firstname} {users.lastname} </p>
+							<span>{users.cohort} - </span>
 							<span>17:00 - 19:00 </span>
 							<span> 01/10/2021</span>
 						</div> : null}

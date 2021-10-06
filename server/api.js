@@ -175,9 +175,14 @@ router.get("/dashboard", authenticateToken, (req, res) => {
 	console.log("dashboard called");
 	const userID = req.user.userid;
 	let student={ upcomingsessions:"",
-                 bookedsessions:"",
-				zoom_link:"",
-			topics:"" };
+                  bookedsessions:"",
+				  zoom_link:"",
+			      topics:"",
+		          firstname:"",
+			      lastname:"",
+			      cohort:"",
+			      usertype:"",
+		};
 
 	pool
 		.query("select start_date from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where users.id=$1 and sessions.booking_status=false", [
@@ -198,9 +203,16 @@ router.get("/dashboard", authenticateToken, (req, res) => {
 					"select *  from modules",
 				).then((result)=>{
             student.topics=result.rows;
-			res.json(student);
-				});
+			pool.query("select firstname,lastname,cohort,user_type  from users where id=$1",[userID]).then((result)=>{
+				console.log(result.rows);
+student.firstname = result.rows[0].firstname;
+student.lastname = result.rows[0].lastname;
+student.cohort = result.rows[0].cohort;
+student.usertype = result.rows[0].user_type;
+res.json(student);
 			});
+		});
+	});
 			});
 					})
 
