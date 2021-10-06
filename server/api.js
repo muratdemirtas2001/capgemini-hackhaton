@@ -123,6 +123,7 @@ router.post("/signin", (req, res) => {
 						userid: result.rows[0].id,
 						usertype: result.rows[0].user_type,
 					};
+					console.log(user);
 					const token = jwt.sign(user, process.env.TOKEN_SECRET, {
 						expiresIn: "7 days",
 					});
@@ -174,35 +175,37 @@ router.get("/dashboard", authenticateToken, (req, res) => {
 	// console.log(req);
 	console.log("dashboard called");
 	const userID = req.user.userid;
-	let student={ upcomingsessions:"",
-                 bookedsessions:"",
-				zoom_link:"",
-			topics:"" };
+	let student = {
+		upcomingsessions: "",
+		bookedsessions: "",
+		zoom_link: "",
+		topics: "",
+	};
 
 	pool
 		.query("select start_date from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where users.id=$1 and sessions.booking_status=false", [
 			userID,
 		])
 		.then((result) => {
-		student.upcomingsessions=result.rows;
+			student.upcomingsessions = result.rows;
 			pool.query(
 				"select start_date from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where users.id=$1 and sessions.booking_status=true",
 				[userID]
-			).then((result)=>{
-            student.bookedsessions=result.rows;
-			pool.query(
-				"select zoom_link from zoom",
-			).then((result)=>{
-            student.zoom_link=result.rows;
+			).then((result) => {
+				student.bookedsessions = result.rows;
 				pool.query(
-					"select *  from modules",
-				).then((result)=>{
-            student.topics=result.rows;
-			res.json(student);
+					"select zoom_link from zoom",
+				).then((result) => {
+					student.zoom_link = result.rows;
+					pool.query(
+						"select *  from modules",
+					).then((result) => {
+						student.topics = result.rows;
+						res.json(student);
+					});
 				});
 			});
-			});
-					})
+		})
 
 		.catch((e) => res.send(JSON.stringify(e)));
 });
@@ -214,9 +217,9 @@ router.get("/cohorts", (req, res) => {
 			"SELECT cohort FROM cohorts",
 		)
 		.then((result) => {
-        let cohorts=result.rows.map((cohort)=>{
-			return cohort.cohort;
-		});
+			let cohorts = result.rows.map((cohort) => {
+				return cohort.cohort;
+			});
 			res.json(cohorts);
 		})
 

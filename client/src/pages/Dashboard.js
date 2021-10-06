@@ -7,6 +7,7 @@ export default function Dashboard() {
 	// console.log("TOKEN IN DASHBOARD IS",token);
 	const [isPracticed, setIsPracticed] = useState(false);
 	const [users, setUsers] = useState([]);
+	const [zoom, setZoom] = useState([]);
 	console.log("is practiced", isPracticed);
 	useEffect(() => {
 		fetch("/api/dashboard", {
@@ -22,10 +23,25 @@ export default function Dashboard() {
 				setUsers(data);
 				setIsPracticed(true);
 			});
+
+		fetch("/api/zoom")
+			.then((res) => {
+				if (!res.ok) {
+					throw new Error(res.statusText);
+				}
+				return res.json();
+			})
+			.then((body) => {
+				setZoom(body);
+			})
+			.catch((err) => {
+				console.error(err);
+			});
 	}, [token]);
 
 	console.log("TOKEN IN DASHBOARD IS", token);
-	console.log(isPracticed ? users[0].firstname : "hello world");
+	console.log(isPracticed ? users : "hello world");
+	console.log(isPracticed ? zoom : "zoom");
 	const handlesubmit = () => {
 		return "hello world!";
 	};
