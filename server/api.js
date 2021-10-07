@@ -226,4 +226,17 @@ router.get("/cohorts", (req, res) => {
 		.catch((e) => res.send(JSON.stringify(e)));
 });
 
+router.get("/skills", (req, res) => {
+	pool
+		.query("SELECT skill FROM skills")
+		.then((result) => {
+			let skills = result.rows.map((skill) => {
+				return skill.skill;
+			});
+			res.json(skills);
+		})
+
+		.catch((e) => res.send(JSON.stringify(e)));
+});
+
 export default router;
