@@ -19,3 +19,12 @@ button{
 	font-size: 20px;
 	font-weight: 500;
 }
+
+.parent {
+	display: flex;
+	flex-wrap: wrap;
+  }
+  
+  .child {
+	flex: 1 0; 
+  }

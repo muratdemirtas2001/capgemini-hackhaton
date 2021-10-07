@@ -12,6 +12,7 @@ export default function Register() {
     const [error, setError] = useState("");
     const [cohort, setCohort] = useState([]);
     let history = useHistory();
+    const skills = ["html_css", "javascript", "react", "node", "postgresql", "mongodb"];
     const [signup, setSignUp] = useState({
         "firstname": "",
         "lastname": "",
@@ -20,6 +21,12 @@ export default function Register() {
         "passwordCheck": "",
         "cohort": "",
         "usertype": "",
+        "html_css": false,
+        "javascript": false,
+        "react": false,
+        "node": false,
+        "postgresql": false,
+        "mongodb": false,
     });
 
     useEffect(() => {
@@ -36,7 +43,7 @@ export default function Register() {
             .catch((err) => {
                 console.error(err);
             });
-    },[]);
+    }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -91,14 +98,17 @@ export default function Register() {
         });
     };
     const handleSignUp = (e) => {
-        const newRegistration = { ...signup, [e.target.name]: e.target.value };
+        const target = e.target;
+        const value = target.type === "checkbox" ? target.checked : target.value;
+        const name = target.name;
+        const newRegistration = { ...signup, [name]: value };
         setSignUp(newRegistration);
         const { firstname, lastname, passwordCheck, password, cohort, usertype } = signup;
         if (firstname || lastname || password || passwordCheck || cohort || usertype) {
             setWarning(false);
         }
     };
-
+    console.log(signup);
     return (
         <section>
             <Navbarcomponent />
@@ -195,7 +205,28 @@ export default function Register() {
                                     })
                                     }
                                 </select>
-                            </div> : null}
+                            </div> : signup.usertype === "mentor" ?
+                                <div className="mb-3">
+                                    <span>Please Select skills you have?</span>
+                                    <div className="">
+                                        {skills.map((skill, index) => {
+                                            return (
+                                                <div className="input-group input-group-md mb-3 form-check" key={index}>
+                                                    <label htmlFor={skill} className="form-check-label"  >
+                                                        {skill}
+                                                        <input
+                                                            type="checkbox"
+                                                            name={skill}
+                                                            checked={signup[skill]}
+                                                            id={skill}
+                                                            onChange={handleSignUp}
+                                                            className="form-check-input form-control-md"
+                                                        />
+                                                    </label>
+                                                </div>
+                                            );
+                                        })}</div>
+                                </div> : null}
 
                         <input
                             className="btn btn-primary form-control form-control-lg"

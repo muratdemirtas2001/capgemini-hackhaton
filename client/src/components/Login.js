@@ -46,11 +46,9 @@ export default function Login() {
             })
                 .then((res) => res.json())
                 .then((data) => {
+                      console.log("sdsds",data);
                     localStorage.setItem("users", data.token);
-                    console.log("login recived data.token is", data.token);
-                    console.log("sdsd",data);
                     if (data.auth === "success") {
-                        console.log(data);
                         history.push("/dashboard");
                     } else if (data.auth === "error") {
                         console.log(data);

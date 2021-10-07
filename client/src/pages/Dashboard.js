@@ -38,12 +38,14 @@ export default function Dashboard() {
 				console.error(err);
 			});
 	}, [token]);
-
+	console.log(users);
 	console.log("TOKEN IN DASHBOARD IS", token);
-	console.log(isPracticed ? users.firstname : "hello world");
+	console.log(isPracticed ? users : "hello world");
+	console.log(isPracticed ? zoom : "hello world");
 	const handlesubmit = () => {
 		return "hello world!";
 	};
+	console.log(zoom);
 	return (
 		<>
 			<Logout />
