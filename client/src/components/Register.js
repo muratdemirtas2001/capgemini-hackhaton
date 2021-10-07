@@ -23,7 +23,7 @@ export default function Register() {
     });
 
     useEffect(() => {
-        fetch("/api/cohort")
+        fetch("/api/cohorts")
             .then((res) => {
                 if (!res.ok) {
                     throw new Error(res.statusText);
@@ -36,8 +36,8 @@ export default function Register() {
             .catch((err) => {
                 console.error(err);
             });
-    });
-    console.log(cohort);
+    },[]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
         let regValue = /(?=.*[0-9].*)(?=.*[a-z].*)(?=.*[A-Z].*)(.{8,})/;
@@ -90,7 +90,6 @@ export default function Register() {
             "passwordCheck": passwordCheck ? passwordCheck : "",
         });
     };
-    console.log(error);
     const handleSignUp = (e) => {
         const newRegistration = { ...signup, [e.target.name]: e.target.value };
         setSignUp(newRegistration);
@@ -100,7 +99,6 @@ export default function Register() {
         }
     };
 
-    console.log(signup);
     return (
         <section>
             <Navbarcomponent />
@@ -190,7 +188,6 @@ export default function Register() {
                             <div className="input-group input-group-md mb-3">
                                 <select value={signup.usertype} onChange={handleSignUp} className="form-select" aria-label="select example" name="cohort" >
                                     <option>What is your cohort ?</option>
-                                    <option>Javasript core 1</option>
                                     {cohort.map((element, index) => {
                                         return (
                                             <option value="London-8" key={index}>{element}</option>
