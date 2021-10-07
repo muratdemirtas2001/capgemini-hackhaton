@@ -185,8 +185,7 @@ router.get("/dashboard", authenticateToken, (req, res) => {
 			      usertype:"",
 		};
 
-	pool
-		.query("select start_date from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where users.id=$1 and sessions.booking_status=false", [
+	pool.query("select start_date from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where users.id=$1 and sessions.booking_status=false", [
 			userID,
 		])
 		.then((result) => {
@@ -200,20 +199,19 @@ router.get("/dashboard", authenticateToken, (req, res) => {
 					"select *  from modules",
 				).then((result)=>{
             student.topics=result.rows;
-			pool.query("select firstname,lastname,cohort,user_type  from users where id=$1",[userID]).then((result)=>{
+			pool.query("select firstname,lastname,cohort,user_type  from users where id=$1",[userID])
+			.then((result)=>{
 				console.log(result.rows);
-student.firstname = result.rows[0].firstname;
-student.lastname = result.rows[0].lastname;
-student.cohort = result.rows[0].cohort;
-student.usertype = result.rows[0].user_type;
-res.json(student);
+			student.firstname = result.rows[0].firstname;
+			student.lastname = result.rows[0].lastname;
+			student.cohort = result.rows[0].cohort;
+			student.usertype = result.rows[0].user_type;
+			res.json(student);
 			});
 		});
 	});
-			});
-					})
-
-		.catch((e) => res.send(JSON.stringify(e)));
+			})
+			.catch((e) => res.send(JSON.stringify(e)));
 });
 
 router.get("/cohorts", (req, res) => {
