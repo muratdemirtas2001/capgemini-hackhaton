@@ -206,7 +206,12 @@ router.get("/dashboard", authenticateToken, (req, res) => {
 			student.lastname = result.rows[0].lastname;
 			student.cohort = result.rows[0].cohort;
 			student.usertype = result.rows[0].user_type;
+			pool.query("select zoom_link from zoom")
+			.then((result)=>{
+			student.zoom_link = result.rows[0].zoom_link;
 			res.json(student);
+			});
+
 			});
 		});
 	});
