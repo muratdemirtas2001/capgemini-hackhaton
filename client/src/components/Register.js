@@ -77,7 +77,7 @@ export default function Register() {
                     if (data.register === "success") {
                         localStorage.setItem("users", requestOptions);
                         setRegisteredPeople(registedPeople.concat(data));
-                        history.push("/dashboard");
+                        history.push("/login");
                     } else if (data.register === "error" || data.register === "error-registereduser") {
                         setError("User already exists");
                         setWarning(true);
@@ -92,9 +92,15 @@ export default function Register() {
             "lastname": lastname ? lastname : "",
             "email": email ? email : "",
             "password": password ? password : "",
+            "passwordCheck": passwordCheck ? passwordCheck : "",
             "cohort": cohort ? cohort : "",
             "usertype": usertype ? usertype : "",
-            "passwordCheck": passwordCheck ? passwordCheck : "",
+            "html_css": false,
+            "javascript": false,
+            "react": false,
+            "node": false,
+            "postgresql": false,
+            "mongodb": false,
         });
     };
     const handleSignUp = (e) => {
@@ -206,12 +212,12 @@ export default function Register() {
                                     }
                                 </select>
                             </div> : signup.usertype === "mentor" ?
-                                <div className="mb-3">
+                                <div className="">
                                     <span>Please Select skills you have?</span>
                                     <div className="">
                                         {skills.map((skill, index) => {
                                             return (
-                                                <div className="input-group input-group-md mb-3 form-check" key={index}>
+                                                <div className="input-group input-group-md form-check" key={index}>
                                                     <label htmlFor={skill} className="form-check-label"  >
                                                         {skill}
                                                         <input
@@ -225,9 +231,8 @@ export default function Register() {
                                                     </label>
                                                 </div>
                                             );
-                                        })}</div>
+                                        })} </div>
                                 </div> : null}
-
                         <input
                             className="btn btn-primary form-control form-control-lg"
                             type="submit"
