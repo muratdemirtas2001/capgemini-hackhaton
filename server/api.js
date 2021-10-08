@@ -198,21 +198,25 @@ router.get("/dashboard", authenticateToken, (req, res) => {
 				student.bookedsessions = result.rows;
 				pool.query(
 					"select *  from modules",
-				).then((result) => {
-					student.topics = result.rows;
-					pool.query("select firstname,lastname,cohort,user_type  from users where id=$1", [userID])
-						.then((result) => {
-							console.log(result.rows);
-							student.firstname = result.rows[0].firstname;
-							student.lastname = result.rows[0].lastname;
-							student.cohort = result.rows[0].cohort;
-							student.usertype = result.rows[0].user_type;
-							res.json(student);
-						});
-				});
+				).then((result)=>{
+            student.topics=result.rows;
+			pool.query("select firstname,lastname,cohort,user_type  from users where id=$1",[userID])
+			.then((result)=>{
+				console.log(result.rows);
+			student.firstname = result.rows[0].firstname;
+			student.lastname = result.rows[0].lastname;
+			student.cohort = result.rows[0].cohort;
+			student.usertype = result.rows[0].user_type;
+			pool.query("select zoom_link from zoom")
+			.then((result)=>{
+			student.zoom_link = result.rows[0].zoom_link;
+			res.json(student);
 			});
-		})
-		.catch((e) => res.send(JSON.stringify(e)));
+			});
+		});
+	});
+			})
+			.catch((e) => res.send(JSON.stringify(e)));
 });
 
 router.get("/cohorts", (req, res) => {
