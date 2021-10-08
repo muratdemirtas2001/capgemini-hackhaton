@@ -3,7 +3,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./pages/Home";
 import Register from "./components/Register";
 import Login from "./components/Login";
-import Dashboard from "./pages/Dashboard";
 import Mentordashboard from "./pages/Mentordashboard";
 import Admindashboard from "./pages/Admindashboard";
 import Studentdashboard from "./pages/Studentdashboard";
@@ -18,9 +17,6 @@ const App = () => (
 		</Route>
 		<Route path="/login">
 			<Login  />
-		</Route>
-		<Route path="/dashboard">
-			<Dashboard  />
 		</Route>
 		<Route path="/mentor">
 			<Mentordashboard  />
