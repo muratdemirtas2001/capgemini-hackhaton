@@ -4,7 +4,7 @@ export default function Admindashboard() {
     return (
         <>
             <Logout />
-            <div className="text-white">
+            <div>
                 <h1>I am admin dashboard</h1>
             </div>
         </>

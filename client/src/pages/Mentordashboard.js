@@ -5,7 +5,7 @@ export default function Mentordashboard() {
     return (
         <>
             <Logout />
-            <div className="text-white">
+            <div>
                 <h1>I am Mentor dashboard</h1>
             </div>
         </>
