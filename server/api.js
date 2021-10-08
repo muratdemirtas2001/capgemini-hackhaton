@@ -186,13 +186,13 @@ router.get("/dashboard", authenticateToken, (req, res) => {
 		usertype: "",
 	};
 
-	pool.query("select start_date from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where users.id=$1 and sessions.booking_status=false", [
+	pool.query("select start_date,end_date,club_name,club_id from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where users.id=$1 and sessions.booking_status=false", [
 		userID,
 	])
 		.then((result) => {
 			student.upcomingsessions = result.rows;
 			pool.query(
-				"select start_date from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where users.id=$1 and sessions.booking_status=true",
+				"select start_date,end_date,club_name,club_id from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where users.id=$1 and sessions.booking_status=true",
 				[userID]
 			).then((result) => {
 				student.bookedsessions = result.rows;
@@ -247,5 +247,39 @@ router.get("/skills", (req, res) => {
 
 		.catch((e) => res.send(JSON.stringify(e)));
 });
+
+router.post("/booksession", authenticateToken, (req, res) => {
+	// console.log(req);
+	console.log("booksession called");
+	const {
+		club_id,
+		note,
+		module_id,
+		} = req.body;
+	const userID = req.user.userid;
+
+	pool
+		.query(
+			"select * from sessions where user_id=$1 and club_id=$2 and module_id=$3",
+			[userID,club_id,module_id]
+		).then((result)=>{
+         if(result.rows.length===0){
+         pool.query("insert into sessions (club_id,user_id,booking_status,attendance_status,free_note,module_id) VALUES ($1,$2,'true','false',$3,$4)",
+						[club_id,userID,note,module_id]
+					).then((result)=>{
+					res.sendStatus(200);
+					});
+				} else {
+              pool.query("UPDATE sessions SET booking_status = 'true', free_note=$1 WHERE club_id = $2 and user_id=$3 and module_id=$4;",
+				[note,club_id, userID, module_id]
+				)
+				.then(() => {
+				res.sendStatus(200);
+				});
+		}
+		});
+
+});
+
 
 export default router;
