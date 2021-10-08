@@ -46,12 +46,19 @@ export default function Login() {
             })
                 .then((res) => res.json())
                 .then((data) => {
+                      console.log("sdsds",data);
                     localStorage.setItem("users", data.token);
-                    console.log("login recived data.token is", data.token);
-                    console.log("sdsd",data);
                     if (data.auth === "success") {
-                        console.log(data);
-                        history.push("/dashboard");
+                        if(data.usertype === "student"){
+                            history.push("/student");
+                        }
+                        if(data.usertype === "mentor"){
+                            history.push("/mentor");
+                        }
+                        if(data.usertype === "admin"){
+                            history.push("/admin");
+                        }
+
                     } else if (data.auth === "error") {
                         console.log(data);
                         setWarning(true);

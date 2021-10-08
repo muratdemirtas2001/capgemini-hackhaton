@@ -16,7 +16,7 @@ const Logout = () => {
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link><Link to="/dashboard" className="nav-link">DashBoard</Link></Nav.Link>
+                        {/* <Nav.Link><Link to="/dashboard" className="nav-link">DashBoard</Link></Nav.Link> */}
                     </Nav>
                     <Nav>
                         <Nav.Link onClick={logout}><Link to="/login"className="nav-link">Logout</Link></Nav.Link>

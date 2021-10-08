@@ -3,8 +3,6 @@ import Logout from "../components/Logout";
 
 export default function Dashboard() {
 	const token = localStorage.getItem("users");
-
-	// console.log("TOKEN IN DASHBOARD IS",token);
 	const [isPracticed, setIsPracticed] = useState(false);
 	const [users, setUsers] = useState([]);
 	const [zoom, setZoom] = useState([]);
@@ -19,7 +17,6 @@ export default function Dashboard() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				console.log("sdsd", data);
 				setUsers(data);
 				setIsPracticed(true);
 			});
@@ -38,9 +35,10 @@ export default function Dashboard() {
 				console.error(err);
 			});
 	}, [token]);
-
+	console.log(users);
 	console.log("TOKEN IN DASHBOARD IS", token);
-	console.log(isPracticed ? users.firstname : "hello world");
+	console.log(isPracticed ? users : "hello world");
+	console.log(isPracticed ? zoom : "hello world");
 	const handlesubmit = () => {
 		return "hello world!";
 	};

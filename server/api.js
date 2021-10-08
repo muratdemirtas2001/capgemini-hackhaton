@@ -175,19 +175,20 @@ router.get("/dashboard", authenticateToken, (req, res) => {
 	// console.log(req);
 	console.log("dashboard called");
 	const userID = req.user.userid;
-	let student={ upcomingsessions:"",
-                  bookedsessions:"",
-				  zoom_link:"",
-			      topics:"",
-		          firstname:"",
-			      lastname:"",
-			      cohort:"",
-			      usertype:"",
-		};
+	let student = {
+		upcomingsessions: "",
+		bookedsessions: "",
+		zoom_link: "",
+		topics: "",
+		firstname: "",
+		lastname: "",
+		cohort: "",
+		usertype: "",
+	};
 
 	pool.query("select start_date from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where users.id=$1 and sessions.booking_status=false", [
-			userID,
-		])
+		userID,
+	])
 		.then((result) => {
 			student.upcomingsessions = result.rows;
 			pool.query(
@@ -211,7 +212,6 @@ router.get("/dashboard", authenticateToken, (req, res) => {
 			student.zoom_link = result.rows[0].zoom_link;
 			res.json(student);
 			});
-
 			});
 		});
 	});
