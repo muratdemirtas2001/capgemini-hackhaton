@@ -7,13 +7,13 @@
 
 body {
 	box-sizing: border-box;
-	background-color:#212529;
+	/* background-color:#212529; */
 }
-body::before {
+/* body::before {
 	display: block;
 	content: '';
 	height: 70px;
-  }
+  } */
 button{
 	margin-left:7px;
 	font-size: 20px;
