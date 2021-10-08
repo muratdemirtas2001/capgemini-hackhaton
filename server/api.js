@@ -11,7 +11,7 @@ import { pool } from "./db";
 const uuid = require("uuid");
 const passwordValidator = require("password-validator");
 const jwt = require("jsonwebtoken");
-// const moment = require("moment");
+const moment = require("moment");
 // const moment = require("moment-timezone");
 const router = new Router();
 
@@ -281,5 +281,26 @@ router.post("/booksession", authenticateToken, (req, res) => {
 
 });
 
+router.get("/graph", (req, res) => {
+let month = req.query.month;
+let year = req.query.year;
+let startdate = moment(month + year, "MM-YYYY");
+let enddate = moment(startdate).add(1,"M");
 
+	pool
+		.query(
+			"SELECT club_name, count(club_name) as total_attendance FROM (sessions inner join clubs on sessions.club_id=clubs.id ) where start_date >$1 and end_date<$2 group by club_name",[startdate,enddate]
+		)
+		.then((result) => {
+			if(result.rows.length>0){
+		res.json(result.rows);
+			} else{
+				res.json({ "message":"no-club" });
+			}
+
+		})
+
+		.catch((e) => res.send(JSON.stringify(e)));
+});
 export default router;
+
