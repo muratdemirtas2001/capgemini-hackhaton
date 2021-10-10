@@ -82,7 +82,7 @@ export default function Login() {
         <div>
             <Navbarcomponent />
             <section className="bg-dark text-light p-5 pt-lg-5 text-center text-sm-start">
-                <div className="container">
+                <div className="container animate__animated animate__flipInY">
                     <fieldset className="align-items-center  ">
                     {warning ? <div className="col-lg-12 p-3 mb-2 bg-danger text-white text-center">{error}</div> : null}
                         <div className="justify-content-center align-center d-flex flex-wrap bg-dark p-3">

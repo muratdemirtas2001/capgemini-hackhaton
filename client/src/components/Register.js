@@ -122,7 +122,7 @@ export default function Register() {
                 <fieldset className="justify-content-center align-center d-flex flex-wrap bg-dark p-1">
                     {warning ? <div className=" justify-content-center align-center  p-3 mb-2 bg-danger text-center  text-white">{error}</div> : null}
                     <legend className="col-12 text-center">Homework Club Sign Up</legend>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} className="animate__animated animate__flipInY">
                         <div className="input-group input-group-md mb-3">
                             <label htmlFor="firstname" className="form-label" >
                                 FirstName:
