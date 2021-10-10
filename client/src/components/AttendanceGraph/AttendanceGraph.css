@@ -1,5 +1,4 @@
 .graph-container {
-  width:49%;
-  background-color: blueviolet;
-  min-height: 100vh;
+	width: 49%;
+	min-height: 100vh;
 }

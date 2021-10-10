@@ -1,5 +1,18 @@
+.isRatioAcceptable--true {
+	color: #f8f9fa;
+}
+
+.isRatioAcceptable--false {
+	color: #000000;
+	background-color: #cfcfcf;
+}
+
 .sessions-left-sidebar {
-  width: 49%;
-  height: 100vh;
-  background-color: red;
+	width: 40%;
+	height: 100vh;
+	text-align: center;
+	border: solid;
+	border-width: 1px;
+	border-color: #f8f9fa;
+	padding-top: 15px;
 }
