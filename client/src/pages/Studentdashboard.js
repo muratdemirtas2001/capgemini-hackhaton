@@ -11,7 +11,7 @@ export default function Dashboard() {
 	const [bookedsession, setBookedsession] = useState(
 		{
 			"topic": "",
-			"information": "",
+			"note": "",
 
 		}
 	);
@@ -30,20 +30,6 @@ export default function Dashboard() {
 				setUsers(data);
 				setIsPracticed(true);
 			});
-
-		// fetch("/api/zoom")
-		// 	.then((res) => {
-		// 		if (!res.ok) {
-		// 			throw new Error(res.statusText);
-		// 		}
-		// 		return res.json();
-		// 	})
-		// 	.then((body) => {
-		// 		setZoom(body);
-		// 	})
-		// 	.catch((err) => {
-		// 		console.error(err);
-		// 	});
 	}, [token]);
 	console.log(users.zoom_link);
 	console.log("TOKEN IN DASHBOARD IS", token);
@@ -92,7 +78,7 @@ export default function Dashboard() {
 							</div>
 							<div className="row gx-5">
 								{/* left side of the grid */}
-								<div className="col-lg-4 col-md-4 col-sm-4 border border-white text-white p-3">
+								<div className="col-lg-4 col-md-4 col-sm-4 text-white text-center p-3">
 									<h1>Booked Session</h1>
 									<div>
 										<h3>HW Session 7 ARRAYS</h3>
@@ -107,15 +93,15 @@ export default function Dashboard() {
 									</div>
 								</div>
 								{/* right side of the grid */}
-								<div className="col-lg-8 col-md-8 col-sm-8 border border-white">
+								<div className="col-lg-8 col-md-8 col-sm-8">
 									<div className="row">
-										<div className="col border-white text-white text-center ">
+										<div className="col text-white text-center ">
 											<h2>Upcoming session</h2>
 										</div>
 									</div>
 									<form onSubmit={handlesubmit}>
-										<div className="row row gy-3 p-3 mt-2 border align-items-center text-center">
-											<div className="col-sm-12 col-md-12 col-lg-3 border-white text-white d-flex flex-column">
+										<div className="row row gy-3 p-3 mt-2 align-items-center text-center">
+											<div className="col-sm-12 col-md-12 col-lg-3 text-white d-flex flex-column">
 												<span>HW Session 6</span>
 												<span>Date : 04/10/2021 </span>
 												<span>Time :17:00 - 19:00</span>
@@ -135,15 +121,16 @@ export default function Dashboard() {
 												</select>
 											</div>
 											<div className="col-sm-12 col-md-12 col-lg-2 text-white text-center" >
-												<label htmlFor="information">
+												<label htmlFor="note">
 													<textarea
-														id="information"
-														name="information"
+														id="note"
+														name="note"
 														cols="20"
 														rows="5"
 														placeholder="please give us some information about your question."
 														minLength="20"
 														onChange={handlebooking}
+														required
 													>
 													</textarea></label>
 											</div>
