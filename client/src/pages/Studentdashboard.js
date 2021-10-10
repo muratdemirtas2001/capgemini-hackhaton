@@ -15,7 +15,6 @@ export default function Dashboard() {
 
 		}
 	);
-	console.log("is practiced", isPracticed);
 
 	useEffect(() => {
 		fetch("/api/dashboard", {
@@ -31,9 +30,6 @@ export default function Dashboard() {
 				setIsPracticed(true);
 			});
 	}, [token]);
-	console.log(users.zoom_link);
-	console.log("TOKEN IN DASHBOARD IS", token);
-	console.log(isPracticed ? users : "hello world");
 	const handlesubmit = (e) => {
 		e.preventDefault();
 		setWarning(true);
@@ -45,7 +41,7 @@ export default function Dashboard() {
 		setBookedsession(newBooking);
 	};
 
-	console.log(bookedsession);
+	console.log(isPracticed ? users : "wait");
 	return (
 		<>
 			{isPracticed ?
@@ -106,8 +102,8 @@ export default function Dashboard() {
 												<span>Date : 04/10/2021 </span>
 												<span>Time :17:00 - 19:00</span>
 											</div>
-											<div className=" col-sm-12 col-md-12 col-lg-4 ">
-												<select value={bookedsession.topic} onChange={handlebooking} className="form-select" aria-label="select example" name="topic">
+											<div className="col-sm-12 col-md-12 col-lg-4">
+												<select value={bookedsession.topic} onChange={handlebooking} className="form-select form-control" aria-label="select example" name="topic">
 													<option defaultChecked>Topic Choice</option>
 													{users.topics.map((topic, index) => {
 														let value = `${topic.module_name} - week ${topic.week}`;
@@ -120,21 +116,22 @@ export default function Dashboard() {
 													})}
 												</select>
 											</div>
-											<div className="col-sm-12 col-md-12 col-lg-2 text-white text-center" >
+											<div className="col-sm-12 col-md-12 col-lg-3 text-white text-center" >
 												<label htmlFor="note">
 													<textarea
 														id="note"
+														className="form-control"
 														name="note"
-														cols="20"
 														rows="5"
-														placeholder="please give us some information about your question."
+														cols="70"
+														placeholder="please give us some information about your question(s)."
 														minLength="20"
 														onChange={handlebooking}
 														required
 													>
 													</textarea></label>
 											</div>
-											<div className="col-sm-12 col-md-12 col-lg-3  border-white ">
+											<div className="col-sm-12 col-md-12 col-lg-2  border-white ">
 												<button className="btn btn-primary" type="submit">Register</button>
 											</div>
 										</div>
