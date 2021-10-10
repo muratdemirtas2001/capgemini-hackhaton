@@ -114,7 +114,7 @@ export default function Register() {
             setWarning(false);
         }
     };
-    console.log(signup);
+
     return (
         <section>
             <Navbarcomponent />
