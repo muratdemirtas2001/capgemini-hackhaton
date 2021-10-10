@@ -2,11 +2,12 @@
 import React, { useEffect, useState } from "react";
 import Logout from "../components/Logout";
 import Footer from "../components/Footer";
+import { CSSTransition } from "react-transition-group";
 export default function Dashboard() {
 	const token = localStorage.getItem("users");
 	const [isPracticed, setIsPracticed] = useState(false);
 	const [users, setUsers] = useState([]);
-	const [warning,setWarning] = useState(true);
+	const [warning, setWarning] = useState(false);
 	const [bookedsession, setBookedsession] = useState(
 		{
 			"topic": "",
@@ -30,10 +31,6 @@ export default function Dashboard() {
 				setIsPracticed(true);
 			});
 
-		const timer = setTimeout(() => {
-			warning ? setWarning(false) : null;
-		}, 3000);
-		return () => clearTimeout(timer);
 		// fetch("/api/zoom")
 		// 	.then((res) => {
 		// 		if (!res.ok) {
@@ -47,12 +44,13 @@ export default function Dashboard() {
 		// 	.catch((err) => {
 		// 		console.error(err);
 		// 	});
-	}, [token,warning]);
+	}, [token]);
 	console.log(users.zoom_link);
 	console.log("TOKEN IN DASHBOARD IS", token);
 	console.log(isPracticed ? users : "hello world");
 	const handlesubmit = (e) => {
 		e.preventDefault();
+		setWarning(true);
 		return "hello world!";
 	};
 
@@ -67,9 +65,17 @@ export default function Dashboard() {
 			{isPracticed ?
 				<div className="position-relative">
 					<Logout />
-					{warning ?	<div className="col-lg-6 col-md-6 col-sm-7 offset-sm-2 text-white text-center bg-success m-3 position-absolute top-0 start-50 translate-middle border rounded-bottom">
-						<h4 className="mt-3">Session has been succesfully booked.</h4>
-					</div> : null }
+					<CSSTransition
+						in={warning}
+						timeout={2000}
+						classNames="alert"
+						unmountOnExit
+						onEnter={() => setWarning(false)}
+					>
+						<div className="col-lg-6 col-md-6 col-sm-7 offset-sm-2 text-white text-center bg-success m-3 position-absolute top-20 start-50 translate-middle border rounded-bottom">
+							<h4 className="mt-3">Session has been succesfully booked.</h4>
+						</div>
+					</CSSTransition>
 					<section>
 						<div className="px-3 overflow-hidden bg-dark">
 							<div className="row p-2 m-2">
