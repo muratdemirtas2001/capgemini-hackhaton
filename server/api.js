@@ -302,5 +302,22 @@ let enddate = moment(startdate).add(1,"M");
 
 		.catch((e) => res.send(JSON.stringify(e)));
 });
+
+
+router.post("/cancelbooking", authenticateToken, (req, res) => {
+	// console.log(req);
+	console.log("cancelbooking called");
+	const { club_id } = req.body;
+	const userID = req.user.userid;
+
+	pool.query(
+						"UPDATE sessions SET booking_status = 'false' WHERE club_id = $1 and user_id=$2;",
+						[club_id, userID]
+					)
+					.then(() => {
+						res.sendStatus(200);
+					});
+});
+
 export default router;
 
