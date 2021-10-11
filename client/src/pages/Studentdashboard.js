@@ -8,10 +8,11 @@ export default function Dashboard() {
 	const [isPracticed, setIsPracticed] = useState(false);
 	const [users, setUsers] = useState([]);
 	const [warning, setWarning] = useState(false);
-	const [bookedsession, setBookedsession] = useState(
+	const [booksession, setBooksession] = useState(
 		{
-			"topic": "",
+			"club_id": "",
 			"note": "",
+			"module_id": "",
 
 		}
 	);
@@ -29,19 +30,50 @@ export default function Dashboard() {
 				setUsers(data);
 				setIsPracticed(true);
 			});
+
+			fetch("/api/booksession", {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			})
+				.then((res) => res.json())
+				.then((data) => {
+					setBooksession(data);
+					setIsPracticed(true);
+				});
+
+
+
 	}, [token]);
+
 	const handlesubmit = (e) => {
 		e.preventDefault();
-		setWarning(true);
-		return "hello world!";
+		const requestOptions = {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(booksession),
+		};
+		fetch("/api/booksession", requestOptions)
+			.then((response) => response.json())
+			.then((data) => {
+				setWarning(true);
+				setBooksession(booksession.concat(data));
+			})
+			.catch((error) => {
+				console.error("Error:", error);
+			});
 	};
 
 	const handlebooking = (e) => {
-		const newBooking = { ...bookedsession, [e.target.name]: e.target.value };
-		setBookedsession(newBooking);
+		const newBooking = { ...booksession, [e.target.name]: e.target.value };
+		setBooksession(newBooking);
 	};
 
-	console.log(isPracticed ? users : "wait");
+	console.log(isPracticed ? users : "loading users");
+	console.log(isPracticed ? booksession : "loading booksession");
+	console.log(booksession);
 	return (
 		<>
 			{isPracticed ?
@@ -103,13 +135,13 @@ export default function Dashboard() {
 												<span>Time :17:00 - 19:00</span>
 											</div>
 											<div className="col-sm-12 col-md-12 col-lg-4">
-												<select value={bookedsession.topic} onChange={handlebooking} className="form-select form-control" aria-label="select example" name="topic">
-													<option defaultChecked>Topic Choice</option>
+												<select  onChange={handlebooking} className="form-select form-control" aria-label="select example" name="module_id">
+													<option>Topic Choice</option>
 													{users.topics.map((topic, index) => {
-														let value = `${topic.module_name} - week ${topic.week}`;
+														// let value = `${topic.module_name} - week ${topic.week}`;
 														return (
 															<option
-																value={value}
+																value={index + 1}
 																key={index}>{topic.module_name} - week {topic.week}
 															</option>
 														);

@@ -71,10 +71,11 @@ ALTER TABLE ONLY public.modules
 INSERT INTO users VALUES ('f8ed3880-a212-470c-83b5-edae3e5e0643', 'Murat','Demirtas','m@gmail.com','8f431f91fe3bca534b10287cc9db2dbed393d38946bc0cb8f9eb2898673dbe43','London-7','student');
 
 
-   CREATE TABLE public.clubs (
+ CREATE TABLE public.clubs (
     id integer NOT NULL,
     start_date timestamp with time zone NOT NULL,
-    end_date timestamp with time zone NOT NULL
+    end_date timestamp with time zone NOT NULL,
+    club_name character varying
 );
 
 CREATE SEQUENCE public.clubs_id_seq
@@ -93,13 +94,15 @@ ALTER TABLE ONLY public.clubs
     ADD CONSTRAINT clubs_pkey PRIMARY KEY (id);
     
     
-CREATE TABLE public.sessions (
+
+    CREATE TABLE public.sessions (
     id integer NOT NULL,
     club_id integer NOT NULL,
     user_id uuid NOT NULL,
     booking_status boolean NOT NULL,
     attendance_status boolean NOT NULL,
-    free_note character varying NOT NULL
+    free_note character varying NOT NULL,
+    module_id integer
 );
 
 CREATE SEQUENCE public.booked_sessions_id_seq
@@ -121,8 +124,10 @@ ALTER TABLE ONLY public.sessions
     ADD CONSTRAINT sessions_club_id_fkey FOREIGN KEY (club_id) REFERENCES public.clubs(id);
 
 ALTER TABLE ONLY public.sessions
+    ADD CONSTRAINT sessions_module_id_fkey FOREIGN KEY (module_id) REFERENCES public.modules(id);
+
+ALTER TABLE ONLY public.sessions
     ADD CONSTRAINT sessions_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
-    
       
     
   CREATE TABLE public.skills (
@@ -168,9 +173,9 @@ ALTER TABLE ONLY public.zoom
     
     
  
-    INSERT INTO clubs (start_date,end_date) VALUES ('2021-10-13 18:00:00+01','2021-10-13 20:00:00+01');                        
- INSERT INTO clubs (start_date,end_date) VALUES ('2021-10-27 18:00:00+01','2021-10-27 20:00:00+01');
- INSERT INTO clubs (start_date,end_date) VALUES ('2021-11-10 18:00:00+01','2021-11-10 20:00:00+01');                        
+ INSERT INTO clubs (start_date,end_date,club_name) VALUES ('2021-10-13 18:00:00+01','2021-10-13 20:00:00+01','HWC-1');                        
+ INSERT INTO clubs (start_date,end_date,club_name) VALUES ('2021-10-27 18:00:00+01','2021-10-27 20:00:00+01','HWC-2');
+ INSERT INTO clubs (start_date,end_date,club_name) VALUES ('2021-11-10 18:00:00+01','2021-11-10 20:00:00+01','HWC-3');                        
        
  INSERT INTO modules (module_name,week,coursework_link) VALUES ('HTML-CSS',1,'https://syllabus.codeyourfuture.io/html-css/week-1/homework');                        
  INSERT INTO modules (module_name,week,coursework_link) VALUES ('HTML-CSS',2,'https://syllabus.codeyourfuture.io/html-css/week-2/homework');
@@ -212,9 +217,9 @@ ALTER TABLE ONLY public.zoom
   INSERT INTO skills (skill) VALUES ('PostgreSQL');
   INSERT INTO skills (skill) VALUES ('MongoDB');
 
-  INSERT INTO sessions (club_id,user_id,booking_status,attendance_status,free_note) VALUES (1,'f8ed3880-a212-470c-83b5-edae3e5e0643','true','true','help meeeeee');
-  INSERT INTO sessions (club_id,user_id,booking_status,attendance_status,free_note) VALUES (2,'f8ed3880-a212-470c-83b5-edae3e5e0643','false','true','help meeeeee');
-  INSERT INTO sessions (club_id,user_id,booking_status,attendance_status,free_note) VALUES (3,'f8ed3880-a212-470c-83b5-edae3e5e0643','true','false','help meeeeee');
+  INSERT INTO sessions (club_id,user_id,booking_status,attendance_status,free_note,module_id) VALUES (1,'f8ed3880-a212-470c-83b5-edae3e5e0643','true','true','help meeeeee',5);
+  INSERT INTO sessions (club_id,user_id,booking_status,attendance_status,free_note,module_id) VALUES (2,'f8ed3880-a212-470c-83b5-edae3e5e0643','false','true','help meeeeee',4);
+  INSERT INTO sessions (club_id,user_id,booking_status,attendance_status,free_note,module_id) VALUES (3,'f8ed3880-a212-470c-83b5-edae3e5e0643','true','false','help meeeeee',3);
                       
                           
                   
