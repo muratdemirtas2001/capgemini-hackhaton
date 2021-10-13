@@ -310,13 +310,14 @@ router.post("/cancelbooking", authenticateToken, (req, res) => {
 	const { club_id } = req.body;
 	const userID = req.user.userid;
 
-	pool.query(
-						"UPDATE sessions SET booking_status = 'false' WHERE club_id = $1 and user_id=$2;",
-						[club_id, userID]
-					)
-					.then(() => {
-						res.sendStatus(200);
-					});
+	pool
+		.query(
+			"UPDATE sessions SET booking_status = 'false',free_note='' WHERE club_id = $1 and user_id=$2;",
+			[club_id, userID]
+		)
+		.then(() => {
+			res.sendStatus(200);
+		});
 });
 
 export default router;
