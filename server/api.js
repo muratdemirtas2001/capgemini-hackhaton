@@ -84,12 +84,19 @@ router.post("/signup", (req, res) => {
 							newUser.node,
 							newUser.postgresql,
 							newUser.mongodb,
-						],
-						(error, result) => {
-							res.json({ register: "success" });
-							console.log(error, result);
-						}
-					);
+						]
+				).then((result)=>{
+                     pool.query("SELECT id from clubs").then((result)=>{
+												console.log(result.rows);
+												result.rows.forEach((id) => {
+													pool.query(
+														"insert into sessions (club_id,user_id,booking_status,attendance_status,free_note) values ($1,$2,false,false,'')",
+														[id.id, newUser.id]
+													);
+												});
+													res.json({ register: "success" });
+											});
+					});
 				}
 			}
 		);
@@ -260,23 +267,18 @@ router.post("/booksession", authenticateToken, (req, res) => {
 
 	pool
 		.query(
-			"select * from sessions where user_id=$1 and club_id=$2 and module_id=$3",
-			[userID,club_id,module_id]
-		).then((result)=>{
-         if(result.rows.length===0){
-         pool.query("insert into sessions (club_id,user_id,booking_status,attendance_status,free_note,module_id) VALUES ($1,$2,'true','false',$3,$4)",
-						[club_id,userID,note,module_id]
-					).then((result)=>{
-					res.sendStatus(200);
-					});
-				} else {
-              pool.query("UPDATE sessions SET booking_status = 'true', free_note=$1 WHERE club_id = $2 and user_id=$3 and module_id=$4;",
-				[note,club_id, userID, module_id]
+			"select * from sessions where user_id=$1 and club_id=$2",
+
+			[userID, club_id]
+		)
+		.then((result) => {
+		pool.query("UPDATE sessions SET booking_status = 'true', free_note=$1,module_id=$2 WHERE club_id = $3 and user_id=$4;",
+					[note, module_id,club_id, userID]
 				)
 				.then(() => {
-				res.sendStatus(200);
+					res.sendStatus(200);
 				});
-		}
+			// }
 		});
 
 });
