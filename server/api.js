@@ -322,5 +322,22 @@ router.post("/cancelbooking", authenticateToken, (req, res) => {
 		});
 });
 
+router.post("/changezoomlink", authenticateToken, (req, res) => {
+	const { zoom_link } = req.body;
+	const userID = req.user.userid;
+		pool
+		.query("SELECT user_type from users where id=$1;",[userID])
+		.then((result) => {
+		let user_type=result.rows[0].user_type;
+		if(user_type==="admin"){
+			pool.query("UPDATE zoom SET zoom_link=$1;", [zoom_link]);
+			res.sendStatus(200);
+		} else {
+			res.sendStatus(401);
+		}
+		});
+});
+
+
 export default router;
 
