@@ -338,6 +338,21 @@ router.post("/changezoomlink", authenticateToken, (req, res) => {
 		});
 });
 
+router.post("/assignadmin", authenticateToken, (req, res) => {
+	const { email } = req.body;
+	const userID = req.user.userid;
+	pool
+		.query("SELECT user_type from users where id=$1;", [userID])
+		.then((result) => {
+			let user_type = result.rows[0].user_type;
+			if (user_type === "admin") {
+				pool.query("UPDATE users SET user_type='admin' WHERE email=$1;", [email]);
+				res.sendStatus(200);
+			} else {
+				res.sendStatus(401);
+			}
+		});
+});
 
 export default router;
 
