@@ -376,5 +376,18 @@ router.post("/deleteaccount", authenticateToken, (req, res) => {
 		});
 });
 
+router.get("/upcomingsessions",authenticateToken, (req, res) => {
+	let currentTime=new Date();
+	pool
+		.query(
+			"select clubs.id as club_id,club_name, start_date,end_date,sum(case when user_type  = 'student' then 1 else 0 end) as registered_student,sum(case when user_type  = 'mentor' then 1 else 0 end) as registered_mentor from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where sessions.booking_status=true and start_date>$1 group by clubs.id",[currentTime])
+		.then((result) => {
+		res.json(result.rows);
+		})
+
+		.catch((e) => res.send(JSON.stringify(e)));
+});
+
+
 export default router;
 
