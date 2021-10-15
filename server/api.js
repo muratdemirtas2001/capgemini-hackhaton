@@ -389,6 +389,33 @@ router.get("/upcomingsessions",authenticateToken, (req, res) => {
 		.catch((e) => res.send(JSON.stringify(e)));
 });
 
+router.get("/sessiondetails", authenticateToken, (req, res) => {
+	let club_id = req.query.session_id;
+	let sessiondetails={"session":{},"student":{},"mentor":{}};
+	pool
+		.query("select clubs.id as session_id,club_name as session_title,to_char(start_date,'DD-MM-YYYY') as session_date,to_char(start_date,'HH24:MI') as start_time,to_char(end_date,'HH24:MI') as end_time from clubs where clubs.id=$1",[club_id]
+
+		)
+		.then((result) => {
+			sessiondetails.session=result.rows;
+				pool.query("select firstname || ' ' || lastname as student_name,free_note,modules.module_name,modules.week  from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id inner join modules on sessions.module_id=modules.id where clubs.id=$1 and booking_status=true and user_type='student'",
+					[club_id]
+				).then((result)=>{
+			sessiondetails.student = result.rows;
+				pool
+					.query("select firstname || ' ' || lastname as mentor_name,html_css,javascript,react,node,postgresql,mongodb  from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id inner join modules on sessions.module_id=modules.id where clubs.id=$1 and booking_status=true and user_type='mentor'",
+						[club_id]
+					)
+					.then((result) => {
+						sessiondetails.mentor = result.rows;
+						res.json(sessiondetails);
+					});
+				});
+		})
+
+		.catch((e) => res.send(JSON.stringify(e)));
+});
+
 
 export default router;
 
