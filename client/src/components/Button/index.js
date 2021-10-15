@@ -1,8 +1,11 @@
 import "./Button.css";
 
-const Button = ({ label, mode, size }) => {
+const Button = ({ label, mode, size, onClick }) => {
 	return (
-		<button className={[`button--${mode}`, `button--${size}`].join(" ")}>
+		<button
+			className={[`button--${mode}`, `button--${size}`].join(" ")}
+			onClick={onClick}
+		>
 			{label}
 		</button>
 	);

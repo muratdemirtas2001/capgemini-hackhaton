@@ -5,13 +5,7 @@ import AttendanceDateFilters from "../AttendanceDateFilters";
 
 import "./AttendanceGraph.css";
 
-const AttendanceGraph = () => {
-	const currentMonth = "September";
-	const currentYear = 2023;
-
-	const [month, setMonth] = useState(currentMonth);
-	const [year, setYear] = useState(currentYear);
-
+const AttendanceGraph = ({ type }) => {
 	defaults.color = "#f8f9fa";
 	const options = {
 		scales: {
@@ -38,13 +32,8 @@ const AttendanceGraph = () => {
 
 	return (
 		<>
-			<div className="graph-container white-text">
-				<AttendanceDateFilters
-					month={month}
-					setMonth={setMonth}
-					year={year}
-					setYear={setYear}
-				/>
+			<div className="graph-container">
+				<h3>{type} attendance </h3>
 				<Bar data={state} options={options} />
 			</div>
 		</>
