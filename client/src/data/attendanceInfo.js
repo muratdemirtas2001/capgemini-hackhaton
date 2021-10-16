@@ -12,7 +12,7 @@ const attendanceInfo = [
 				attended: false,
 			},
 		],
-		volunteers: [
+		mentors: [
 			{
 				name: "Bob Train",
 				attended: false,
@@ -36,7 +36,7 @@ const attendanceInfo = [
 				attended: false,
 			},
 		],
-		volunteers: [
+		mentors: [
 			{
 				name: "Billy Train",
 				attended: false,
