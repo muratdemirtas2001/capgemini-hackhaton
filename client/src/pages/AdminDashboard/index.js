@@ -1,7 +1,6 @@
 import AttendanceGraph from "../../components/AttendanceGraph";
 import Navbarcomponent from "../../components/Navbarcomponent";
 import "./AdminDashboard.css";
-import Button from "../../components/Button";
 import { useEffect, useState } from "react";
 import createNavigationLinks from "../../utils/createNavigationLinks";
 import upcomingSessionsAdmin from "../../data/upcomingSessionsAdmin";
@@ -9,6 +8,12 @@ import ResponsiveTable from "../../components/ResponsiveTable";
 import displayUpcomingSessionsForAdmin from "../../utils/displaySessionsForAdmin";
 import AttendanceDateFilters from "../../components/AttendanceDateFilters";
 import convertMonthToString from "../../utils/convertMonthToString";
+import AttendanceAccordion from "../../components/AttendanceAccordion/AttendanceAccordion";
+import attendanceInfo from "../../data/attendanceInfo";
+import MentorSkillFilter from "../../components/MentorSkillFilter/MentorSkillFilter";
+import displayMentorsTable from "../../utils/displayMentorsTable";
+import mentorsData from "../../data/mentors";
+import mentorsTableHeadings from "../../constants/mentorsTableHeadings";
 
 const AdminDashboard = () => {
 	const [currentPage, setCurrentPage] = useState("Sessions");
@@ -16,9 +21,13 @@ const AdminDashboard = () => {
 	const [currentYear, setCurrentYear] = useState();
 	const [month, setMonth] = useState();
 	const [year, setYear] = useState();
-	const pageOptions = ["Sessions", "Attendance", "Volunteers", "Cohorts"];
+	const [skill, setSkill] = useState();
+	const [mentors, setMentors] = useState(mentorsData);
+	const [attendanceInformation, setAttendanceInformation] =
+		useState(attendanceInfo);
+	const pageOptions = ["Sessions", "Attendance", "Mentors", "Cohorts"];
 	const name = "Sarah";
-	const headings = ["Session", "Date", "Students:Volunteers", ""];
+	const headings = ["Session", "Date", "Students:Mentors", ""];
 
 	useEffect(() => {
 		if (currentPage === "Attendance") {
@@ -39,7 +48,7 @@ const AdminDashboard = () => {
 				</div>
 				{currentPage === "Sessions" && (
 					<div className="admin-container">
-						<h2>Upcoming sessions</h2>
+						<h2 className="admin-heading">Upcoming sessions</h2>
 						<ResponsiveTable
 							data={upcomingSessionsAdmin}
 							headings={headings}
@@ -49,9 +58,7 @@ const AdminDashboard = () => {
 				)}
 				{currentPage === "Attendance" && (
 					<div className="admin-container">
-						<h2>Attendance</h2>
-						<a href="#Student"> Students</a>
-						<a href="#Mentor"> Mentors </a>
+						<h2 className="admin-heading">Attendance</h2>
 						<AttendanceDateFilters
 							month={month}
 							setMonth={setMonth}
@@ -60,11 +67,30 @@ const AdminDashboard = () => {
 							currentMonth={currentMonth}
 							currentYear={currentYear}
 						/>
-						<div className="graphs-container">
-							<AttendanceGraph type={"Student"} />
-							<AttendanceGraph type={"Mentor"} />
+						<div>
+							<AttendanceGraph />
 						</div>
-						<div></div>
+						<div>
+							<AttendanceAccordion
+								attendanceInformation={attendanceInformation}
+							/>
+						</div>
+					</div>
+				)}
+				{currentPage === "Mentors" && (
+					<div className="admin-container">
+						<h2 className="admin-heading">Mentors</h2>
+						<MentorSkillFilter skill={skill} setSkill={setSkill} />
+						<ResponsiveTable
+							data={mentors}
+							displayFunction={displayMentorsTable}
+							headings={mentorsTableHeadings}
+						/>
+					</div>
+				)}
+				{currentPage === "Cohorts" && (
+					<div>
+						<h2 className="admin-heading">Cohorts</h2>
 					</div>
 				)}
 			</div>
