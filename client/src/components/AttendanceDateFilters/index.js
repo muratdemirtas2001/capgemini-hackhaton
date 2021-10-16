@@ -44,18 +44,10 @@ const AttendanceDateFilters = ({
 
 	return (
 		<div className="filters-container">
-			<select
-				id="month-filter"
-				value={activeMonthFilter}
-				onChange={applyMonthFilter}
-			>
+			<select value={activeMonthFilter} onChange={applyMonthFilter}>
 				{generateOptions(months)}
 			</select>
-			<select
-				is="year-filter"
-				value={activeYearFilter}
-				onChange={applyYearFilter}
-			>
+			<select value={activeYearFilter} onChange={applyYearFilter}>
 				{generateOptions(years)}
 			</select>
 		</div>
