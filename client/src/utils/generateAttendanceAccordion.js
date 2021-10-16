@@ -5,21 +5,26 @@ import {
 	AccordionItemPanel,
 } from "react-accessible-accordion";
 import ResponsiveTable from "../components/ResponsiveTable";
+import displayAttendanceTable from "./displayAttendanceTable";
 
 const generateAttendanceAccordion = (sessions) => {
-    const headings = ["Full name", "Cohort", "Attendance status"]
+	console.log(sessions);
+	const headings = ["Full name", "Role", "Cohort", "Attendance status"];
 	return sessions.map((session, index) => {
-		const atendeesNumber = session.students.length + session.students.length;
 		return (
-			<AccordionItem uuid={index}>
+			<AccordionItem key={`${index}--attendance-accordion`} uuid={index + 1}>
 				<AccordionItemHeading>
-					<h4>{session.title} </h4>
-					<p> {atendeesNumber} attendees </p>
-					<AccordionItemButton>+</AccordionItemButton>
+					<AccordionItemButton>
+						<h4>Session | 10 registered </h4>
+					</AccordionItemButton>
 				</AccordionItemHeading>
 				<AccordionItemPanel>
-                    <ResponsiveTable headings={headings} data={} displayFunction={}/>
-                </AccordionItemPanel>
+					<ResponsiveTable
+						data={sessions}
+						headings={headings}
+						displayFunction={displayAttendanceTable}
+					/>
+				</AccordionItemPanel>
 			</AccordionItem>
 		);
 	});
