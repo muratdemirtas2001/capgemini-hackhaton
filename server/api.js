@@ -416,25 +416,58 @@ router.get("/sessiondetails", authenticateToken, (req, res) => {
 		.catch((e) => res.send(JSON.stringify(e)));
 });
 
-router.get("/findmentor", authenticateToken, (req, res) => {
-	let club_id = req.query.session_id;
-	let mentors = { mentor: {}, skills: {}, mentor: {} };
-	pool
-		.query("select firstname || ' ' || lastname as mentor_name,email from (users inner join sessions on sessions.user_id=users.id) inner join modules on sessions.module_id=modules.id inner join clubs on sessions.club_id=clubs.id where clubs.id=$1 and booking_status=false and user_type='mentor'",[club_id])
-		.then((result) => {
-		mentors.mentor=result.rows;
-		pool.query("select distinct module_name from (sessions inner join modules on sessions.module_id=modules.id) where sessions.id=$1",[club_id])
-		.then((result)=>{
-		mentors.skills=result.rows;
-		mentors.mentor.filter((mentor)=>{
-        pool.query("")
-		})
-		res.json(mentors);
-		});
-		})
+// router.get("/findmentor", authenticateToken, (req, res) => {
+// 	let club_id = req.query.session_id;
+// 	let mentors = { mentor: {}, skills: {}, mentor: {} };
+// 	pool
+// 		.query("select firstname || ' ' || lastname as mentor_name,email from (users inner join sessions on sessions.user_id=users.id) inner join modules on sessions.module_id=modules.id inner join clubs on sessions.club_id=clubs.id where clubs.id=$1 and booking_status=false and user_type='mentor'",[club_id])
+// 		.then((result) => {
+// 		mentors.mentor=result.rows;
+// 		pool.query("select distinct module_name from (sessions inner join modules on sessions.module_id=modules.id) where sessions.id=$1",[club_id])
+// 		.then((result)=>{
+// 		mentors.skills=result.rows;
+// 		mentors.mentor.filter((mentor)=>{
+//         pool.query("")
+// 		})
+// 		res.json(mentors);
+// 		});
+// 		})
 
-		.catch((e) => res.send(JSON.stringify(e)));
+// 		.catch((e) => res.send(JSON.stringify(e)));
+// });
+
+
+router.post("/createnewsession", authenticateToken, (req, res) => {
+	const { session_date,start_time,end_time } = req.body;
+	const userID = req.user.userid;
+	let start_date=moment(session_date+" "+start_time);
+	let end_date = moment(session_date + " " + end_time);
+	let club_name="";
+	// let dummydate=start_date;
+	let cutoff_date=start_date.clone();
+	cutoff_date = cutoff_date.subtract(5, "days");
+	console.log(start_date);
+
+	pool
+		.query("SELECT user_type from users where id=$1;", [userID])
+		.then((result) => {
+			let user_type = result.rows[0].user_type;
+			if (user_type === "admin") {
+				pool.query("SELECT id from clubs ORDER BY id DESC  LIMIT 1").then((result)=>{
+					club_name = `HCW-${result.rows[0].id + 1}`;
+					pool
+						.query("INSERT INTO clubs (start_date,end_date,club_name,cutoff_date) values($1,$2,$3,$4);", [start_date,end_date,club_name,cutoff_date])
+						.then((result) => {
+						res.sendStatus(200);
+						});
+				});
+
+			} else {
+				res.sendStatus(401);
+			}
+		});
 });
+
 
 export default router;
 
