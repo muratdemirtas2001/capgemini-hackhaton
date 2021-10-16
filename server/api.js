@@ -391,7 +391,7 @@ router.get("/upcomingsessions",authenticateToken, (req, res) => {
 
 router.get("/sessiondetails", authenticateToken, (req, res) => {
 	let club_id = req.query.session_id;
-	let sessiondetails={"session":{},"student":{},"mentor":{}};
+	let sessiondetails={ "session":{},"student":{},"mentor":{} };
 	pool
 		.query("select clubs.id as session_id,club_name as session_title,to_char(start_date,'DD-MM-YYYY') as session_date,to_char(start_date,'HH24:MI') as start_time,to_char(end_date,'HH24:MI') as end_time from clubs where clubs.id=$1",[club_id]
 
@@ -416,6 +416,25 @@ router.get("/sessiondetails", authenticateToken, (req, res) => {
 		.catch((e) => res.send(JSON.stringify(e)));
 });
 
+router.get("/findmentor", authenticateToken, (req, res) => {
+	let club_id = req.query.session_id;
+	let mentors = { mentor: {}, skills: {}, mentor: {} };
+	pool
+		.query("select firstname || ' ' || lastname as mentor_name,email from (users inner join sessions on sessions.user_id=users.id) inner join modules on sessions.module_id=modules.id inner join clubs on sessions.club_id=clubs.id where clubs.id=$1 and booking_status=false and user_type='mentor'",[club_id])
+		.then((result) => {
+		mentors.mentor=result.rows;
+		pool.query("select distinct module_name from (sessions inner join modules on sessions.module_id=modules.id) where sessions.id=$1",[club_id])
+		.then((result)=>{
+		mentors.skills=result.rows;
+		mentors.mentor.filter((mentor)=>{
+        pool.query("")
+		})
+		res.json(mentors);
+		});
+		})
+
+		.catch((e) => res.send(JSON.stringify(e)));
+});
 
 export default router;
 
