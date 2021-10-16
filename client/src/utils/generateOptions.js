@@ -1,6 +1,10 @@
 const generateOptions = (options) => {
-	return options.map((possibility) => {
-		return <option value={possibility}>{possibility}</option>;
+	return options.map((possibility, index) => {
+		return (
+			<option value={possibility} key={`${index}--${possibility}`}>
+				{possibility}
+			</option>
+		);
 	});
 };
 
