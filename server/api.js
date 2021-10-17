@@ -468,6 +468,36 @@ router.post("/createnewsession", authenticateToken, (req, res) => {
 		});
 });
 
+router.get("/allcohorts", authenticateToken, async (req, res) => {
+	const userID = req.user.userid;
+	let cohortlist=[];
+	let data={};
+	await pool.query(" SELECT firstname || ' ' || lastname as student_name,email,cohort from users where user_type='student' "
+					)
+					.then((result) => {
+						cohortlist = result.rows.map((info) => {
+							return info.cohort;
+						});
+						cohortlist = cohortlist.filter(
+							(item, i, ar) => ar.indexOf(item) === i
+							);
+});
+let listlength=0;
+cohortlist.forEach((cohort) => {pool .query(
+						"SELECT firstname || ' ' || lastname as student_name,email from users where user_type='student' and cohort=$1",
+						[cohort]
+					)
+					.then((result) => {
+						data[cohort] = [result.rows];
+						listlength+=1;
+						if (listlength === cohortlist.length) {
+							res.json(data);
+						}
+
+					});
+			});
+
+});
 
 export default router;
 
