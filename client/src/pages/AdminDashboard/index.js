@@ -1,16 +1,21 @@
+import { useEffect, useState } from "react";
+
+import "./AdminDashboard.css";
+
+// components
 import AttendanceGraph from "../../components/AttendanceGraph";
 import Navbarcomponent from "../../components/Navbarcomponent";
-import "./AdminDashboard.css";
-import { useEffect, useState } from "react";
-import createNavigationLinks from "../../utils/createNavigationLinks";
 import upcomingSessionsAdmin from "../../data/upcomingSessionsAdmin";
 import ResponsiveTable from "../../components/ResponsiveTable";
-import displayUpcomingSessionsForAdmin from "../../utils/displaySessionsForAdmin";
 import AttendanceDateFilters from "../../components/AttendanceDateFilters";
-import convertMonthToString from "../../utils/convertMonthToString";
-import AttendanceAccordion from "../../components/AttendanceAccordion/AttendanceAccordion";
-import attendanceInfo from "../../data/attendanceInfo";
+import AttendanceAccordion from "../../components/AttendanceAccordion";
 import MentorSkillFilter from "../../components/MentorSkillFilter/MentorSkillFilter";
+
+// utils, data and constants
+import createNavigationLinks from "../../utils/createNavigationLinks";
+import displayUpcomingSessionsForAdmin from "../../utils/displaySessionsForAdmin";
+import convertMonthToString from "../../utils/convertMonthToString";
+import attendanceInfo from "../../data/attendanceInfo";
 import displayMentorsTable from "../../utils/displayMentorsTable";
 import mentorsData from "../../data/mentors";
 import mentorsTableHeadings from "../../constants/mentorsTableHeadings";

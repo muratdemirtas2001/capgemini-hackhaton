@@ -1,8 +1,8 @@
+import { useEffect } from "react";
+
 import "./AttendanceDateFilters.css";
 
-import Button from "../Button";
 import generateOptions from "../../utils/generateOptions";
-import { useEffect } from "react";
 
 const AttendanceDateFilters = ({
 	month,

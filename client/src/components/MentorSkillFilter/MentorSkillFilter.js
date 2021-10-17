@@ -1,6 +1,6 @@
+import "./MentorSkillFilter.css";
 import skills from "../../constants/skills";
 import generateOptions from "../../utils/generateOptions";
-import "./MentorSkillFilter";
 
 const MentorSkillFilter = ({ skill, setSkill }) => {
 	const applySkillFilter = (event) => {
