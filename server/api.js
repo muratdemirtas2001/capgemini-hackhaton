@@ -443,10 +443,8 @@ router.post("/createnewsession", authenticateToken, (req, res) => {
 	let start_date=moment(session_date+" "+start_time);
 	let end_date = moment(session_date + " " + end_time);
 	let club_name="";
-	// let dummydate=start_date;
 	let cutoff_date=start_date.clone();
 	cutoff_date = cutoff_date.subtract(5, "days");
-	console.log(start_date);
 
 	pool
 		.query("SELECT user_type from users where id=$1;", [userID])
@@ -483,7 +481,8 @@ router.get("/allcohorts", authenticateToken, async (req, res) => {
 							);
 });
 let listlength=0;
-cohortlist.forEach((cohort) => {pool .query(
+cohortlist.forEach((cohort) => {
+pool .query(
 						"SELECT firstname || ' ' || lastname as student_name,email from users where user_type='student' and cohort=$1",
 						[cohort]
 					)
@@ -497,6 +496,25 @@ cohortlist.forEach((cohort) => {pool .query(
 					});
 			});
 
+});
+
+router.post("/createcohort", authenticateToken, (req, res) => {
+	const { cohort_name } = req.body;
+	const userID = req.user.userid;
+	pool
+		.query("SELECT user_type from users where id=$1;", [userID])
+		.then((result) => {
+			let user_type = result.rows[0].user_type;
+			if (user_type === "admin") {
+				pool
+					.query("INSERT INTO  cohorts (cohort) values($1)",[cohort_name])
+					.then(() => {
+					res.sendStatus(200);
+					});
+			} else {
+				res.sendStatus(401);
+			}
+		});
 });
 
 export default router;
