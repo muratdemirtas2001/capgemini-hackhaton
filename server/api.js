@@ -517,5 +517,20 @@ router.post("/createcohort", authenticateToken, (req, res) => {
 		});
 });
 
+router.get("/studentattendance",authenticateToken, (req, res) => {
+	let month = req.query.month;
+	let year = req.query.year;
+	let startdate = moment(month + year, "MM-YYYY");
+	let enddate = moment(startdate).add(1, "M");
+	pool
+		.query(
+			"SELECT firstname || ' ' || lastname as student_name, cohort,clubs.id as session_id,club_name,start_date, booking_status,attendance_status FROM (users inner join sessions on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id  where  user_type='student' and start_date >$1 and end_date<$2",[startdate,enddate])
+		.then((result) => {
+				res.json(result.rows);
+		})
+
+		.catch((e) => res.send(JSON.stringify(e)));
+});
+
 export default router;
 
