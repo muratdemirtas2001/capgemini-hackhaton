@@ -441,10 +441,13 @@ router.post("/createnewsession", authenticateToken, (req, res) => {
 	const { session_date,start_time,end_time } = req.body;
 	const userID = req.user.userid;
 	let start_date=moment(session_date+" "+start_time);
+	console.log("start date",start_date);
 	let end_date = moment(session_date + " " + end_time);
 	let club_name="";
 	let cutoff_date=start_date.clone();
 	cutoff_date = cutoff_date.subtract(5, "days");
+	let users;
+	let clubid;
 
 	pool
 		.query("SELECT user_type from users where id=$1;", [userID])
@@ -452,10 +455,20 @@ router.post("/createnewsession", authenticateToken, (req, res) => {
 			let user_type = result.rows[0].user_type;
 			if (user_type === "admin") {
 				pool.query("SELECT id from clubs ORDER BY id DESC  LIMIT 1").then((result)=>{
+                     clubid=result.rows[0].id+1;
 					club_name = `HCW-${result.rows[0].id + 1}`;
 					pool
 						.query("INSERT INTO clubs (start_date,end_date,club_name,cutoff_date) values($1,$2,$3,$4);", [start_date,end_date,club_name,cutoff_date])
 						.then((result) => {
+							     pool.query("SELECT id from users").then((result) => {
+											users=result.rows;
+											users.forEach((user) => {
+												pool.query(
+													"insert into sessions (club_id,user_id,booking_status,attendance_status,free_note) values ($1,$2,false,false,'')",
+													[clubid, user.id]
+												);
+											});
+										});
 						res.sendStatus(200);
 						});
 				});
@@ -524,9 +537,11 @@ router.get("/studentattendance",authenticateToken, (req, res) => {
 	let enddate = moment(startdate).add(1, "M");
 	pool
 		.query(
-			"SELECT firstname || ' ' || lastname as student_name, cohort,clubs.id as session_id,club_name,start_date, booking_status,attendance_status FROM (users inner join sessions on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id  where  user_type='student' and start_date >$1 and end_date<$2",[startdate,enddate])
+			"SELECT firstname || ' ' || lastname as student_name, cohort,clubs.id as session_id,club_name,to_char(start_date,'MM-DD-YYYY') as session_date, booking_status,attendance_status FROM (users inner join sessions on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id  where  user_type='student' and start_date >$1 and end_date<$2 and booking_status=true",
+			[startdate, enddate]
+		)
 		.then((result) => {
-				res.json(result.rows);
+			res.json(result.rows);
 		})
 
 		.catch((e) => res.send(JSON.stringify(e)));
