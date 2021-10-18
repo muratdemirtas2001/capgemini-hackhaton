@@ -547,5 +547,31 @@ router.get("/studentattendance",authenticateToken, (req, res) => {
 		.catch((e) => res.send(JSON.stringify(e)));
 });
 
+router.get("/volunteersinfo", authenticateToken, (req, res) => {
+	pool
+		.query(
+			"SELECT firstname || ' ' || lastname as mentor_name, email,html_css,javascript,react,node,postgresql,mongodb from users where user_type='mentor' "
+		)
+		.then((result) => {
+			let data=[];
+			let mentors=result.rows;
+			let skills=["html_css","javascript","react","node","postgresql","mongodb"];
+			mentors.forEach((mentor)=>{
+				let skillmentor = [];
+				skills.forEach((skill)=>{
+            if (mentor[skill]){
+             skillmentor=[...skillmentor, skill];
+			}
+		});
+		// console.log(skillmentor);
+		mentor.skills=skillmentor;
+		console.log(mentors);
+			});
+			res.json(mentors);
+		})
+
+		.catch((e) => res.send(JSON.stringify(e)));
+});
+
 export default router;
 
