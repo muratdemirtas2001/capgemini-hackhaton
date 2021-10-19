@@ -177,6 +177,21 @@ function authenticateToken(req, res, next) {
 	});
 }
 
+//verify user is admin middleware
+function admincheck(req, res, next) {
+const userID = req.user.userid;
+pool
+	.query("SELECT user_type from users where id=$1;", [userID])
+	.then((result) => {
+		let user_type = result.rows[0].user_type;
+		if (user_type === "admin") {
+		next();
+		} else {
+			res.sendStatus(403);
+		}
+	});
+
+}
 
 router.get("/dashboard", authenticateToken, (req, res) => {
 	// console.log(req);
@@ -256,8 +271,6 @@ router.get("/skills", (req, res) => {
 });
 
 router.post("/booksession", authenticateToken, (req, res) => {
-	// console.log(req);
-	console.log("booksession called");
 	const {
 		club_id,
 		note,
@@ -283,7 +296,7 @@ router.post("/booksession", authenticateToken, (req, res) => {
 
 });
 
-router.get("/graph", (req, res) => {
+router.get("/graph", authenticateToken, admincheck,(req, res) => {
 let month = req.query.month;
 let year = req.query.year;
 let startdate = moment(month + year, "MM-YYYY");
@@ -307,11 +320,8 @@ let enddate = moment(startdate).add(1,"M");
 
 
 router.post("/cancelbooking", authenticateToken, (req, res) => {
-	// console.log(req);
-	console.log("cancelbooking called");
 	const { club_id } = req.body;
 	const userID = req.user.userid;
-
 	pool
 		.query(
 			"UPDATE sessions SET booking_status = 'false',free_note='' WHERE club_id = $1 and user_id=$2;",
@@ -322,60 +332,33 @@ router.post("/cancelbooking", authenticateToken, (req, res) => {
 		});
 });
 
-router.post("/changezoomlink", authenticateToken, (req, res) => {
+router.post("/changezoomlink", authenticateToken,admincheck, (req, res) => {
 	const { zoom_link } = req.body;
-	const userID = req.user.userid;
-		pool
-		.query("SELECT user_type from users where id=$1;",[userID])
-		.then((result) => {
-		let user_type=result.rows[0].user_type;
-		if(user_type==="admin"){
-			pool.query("UPDATE zoom SET zoom_link=$1;", [zoom_link]);
-			res.sendStatus(200);
-		} else {
-			res.sendStatus(401);
-		}
-		});
+	pool.query("UPDATE zoom SET zoom_link=$1;", [zoom_link]).then(()=>{
+		res.sendStatus(200);
+	});
+
 });
 
-router.post("/assignadmin", authenticateToken, (req, res) => {
+router.post("/assignadmin", authenticateToken,admincheck, (req, res) => {
 	const { email } = req.body;
-	const userID = req.user.userid;
-	pool
-		.query("SELECT user_type from users where id=$1;", [userID])
-		.then((result) => {
-			let user_type = result.rows[0].user_type;
-			if (user_type === "admin") {
-				pool.query("UPDATE users SET user_type='admin' WHERE email=$1;", [email]);
-				res.sendStatus(200);
-			} else {
-				res.sendStatus(401);
-			}
-		});
+	pool.query("UPDATE users SET user_type='admin' WHERE email=$1;", [email]).then(()=>{
+	res.sendStatus(200);
+	});
 });
 
-router.post("/deleteaccount", authenticateToken, (req, res) => {
+router.post("/deleteaccount", authenticateToken,admincheck, (req, res) => {
 	const { email } = req.body;
-	const userID = req.user.userid;
-	pool
-		.query("SELECT user_type from users where id=$1;", [userID])
-		.then((result) => {
-			let user_type = result.rows[0].user_type;
-			if (user_type === "admin") {
-				pool.query("SELECT email from users WHERE email=$1;", [email]).then((result)=>{
-                if (result.rows.length>0) {
-                pool.query("DELETE from users WHERE email=$1;", [email]);
-				res.sendStatus(200);
-                } else{
-				res.sendStatus(400);
-				}
-				});
-			} else {
-				res.sendStatus(401);
-			}
-		});
+	pool.query("SELECT email from users WHERE email=$1;", [email]).then((result)=>{
+    if (result.rows.length>0) {
+        pool.query("DELETE from users WHERE email=$1;", [email]);
+		res.sendStatus(200);
+    } else{
+		res.sendStatus(400);
+	}
+	});
 });
-router.get("/upcomingsessions",authenticateToken, (req, res) => {
+router.get("/upcomingsessions",authenticateToken,admincheck, (req, res) => {
 	let currentTime=new Date();
 	pool
 		.query(
@@ -389,7 +372,7 @@ router.get("/upcomingsessions",authenticateToken, (req, res) => {
 		.catch((e) => res.send(JSON.stringify(e)));
 });
 
-router.get("/sessiondetails", authenticateToken, (req, res) => {
+router.get("/sessiondetails", authenticateToken,admincheck, (req, res) => {
 	let club_id = req.query.session_id;
 	let sessiondetails={ "session":{},"student":{},"mentor":{} };
 	pool
@@ -437,7 +420,7 @@ router.get("/sessiondetails", authenticateToken, (req, res) => {
 // });
 
 
-router.post("/createnewsession", authenticateToken, (req, res) => {
+router.post("/createnewsession", authenticateToken,admincheck, (req, res) => {
 	const { session_date,start_time,end_time } = req.body;
 	const userID = req.user.userid;
 	let start_date=moment(session_date+" "+start_time);
@@ -479,7 +462,7 @@ router.post("/createnewsession", authenticateToken, (req, res) => {
 		});
 });
 
-router.get("/allcohorts", authenticateToken, async (req, res) => {
+router.get("/allcohorts", authenticateToken, admincheck,async (req, res) => {
 	const userID = req.user.userid;
 	let cohortlist=[];
 	let data={};
@@ -511,7 +494,7 @@ pool .query(
 
 });
 
-router.post("/createcohort", authenticateToken, (req, res) => {
+router.post("/createcohort", authenticateToken,admincheck, (req, res) => {
 	const { cohort_name } = req.body;
 	const userID = req.user.userid;
 	pool
@@ -530,7 +513,7 @@ router.post("/createcohort", authenticateToken, (req, res) => {
 		});
 });
 
-router.get("/studentattendance",authenticateToken, (req, res) => {
+router.get("/studentattendance",authenticateToken, admincheck, (req, res) => {
 	let month = req.query.month;
 	let year = req.query.year;
 	let startdate = moment(month + year, "MM-YYYY");
@@ -547,7 +530,7 @@ router.get("/studentattendance",authenticateToken, (req, res) => {
 		.catch((e) => res.send(JSON.stringify(e)));
 });
 
-router.get("/volunteersinfo", authenticateToken, (req, res) => {
+router.get("/volunteersinfo", authenticateToken,admincheck, (req, res) => {
 	pool
 		.query(
 			"SELECT firstname || ' ' || lastname as mentor_name, email,html_css,javascript,react,node,postgresql,mongodb from users where user_type='mentor' "
@@ -563,7 +546,6 @@ router.get("/volunteersinfo", authenticateToken, (req, res) => {
              skillmentor=[...skillmentor, skill];
 			}
 		});
-		// console.log(skillmentor);
 		mentor.skills=skillmentor;
 		console.log(mentors);
 			});
@@ -574,7 +556,7 @@ router.get("/volunteersinfo", authenticateToken, (req, res) => {
 });
 
 
-router.get("/volunteerspecificskill", authenticateToken, (req, res) => {
+router.get("/volunteerspecificskill", authenticateToken, admincheck,(req, res) => {
 	let skill = req.query.skill;
 
 	pool
