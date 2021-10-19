@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import "./AdminDashboard.css";
 
 // components
+import Button from "../../components/Button";
 import AttendanceGraph from "../../components/AttendanceGraph";
 import Navbarcomponent from "../../components/Navbarcomponent";
 import upcomingSessionsAdmin from "../../data/upcomingSessionsAdmin";
@@ -45,8 +46,7 @@ const AdminDashboard = () => {
 
 	return (
 		<>
-			<Navbarcomponent />
-			<h1 className="white-text center-text"> Welcome {name}!</h1>
+			<h1 className="center-text"> Welcome {name}!</h1>
 			<div className="admin-main-container">
 				<div className="admin-nav-container">
 					{createNavigationLinks(pageOptions, currentPage, setCurrentPage)}
@@ -54,6 +54,7 @@ const AdminDashboard = () => {
 				{currentPage === "Sessions" && (
 					<div className="admin-container">
 						<h2 className="admin-heading">Upcoming sessions</h2>
+						<Button label="New" mode="primary" size="small" />
 						<ResponsiveTable
 							data={upcomingSessionsAdmin}
 							headings={headings}
@@ -64,6 +65,7 @@ const AdminDashboard = () => {
 				{currentPage === "Attendance" && (
 					<div className="admin-container">
 						<h2 className="admin-heading">Attendance</h2>
+
 						<AttendanceDateFilters
 							month={month}
 							setMonth={setMonth}
@@ -94,8 +96,9 @@ const AdminDashboard = () => {
 					</div>
 				)}
 				{currentPage === "Cohorts" && (
-					<div>
+					<div className="admin-container">
 						<h2 className="admin-heading">Cohorts</h2>
+						<Button label="New" mode="primary" size="small" />
 					</div>
 				)}
 			</div>
