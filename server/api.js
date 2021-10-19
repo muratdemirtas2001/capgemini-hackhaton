@@ -573,5 +573,24 @@ router.get("/volunteersinfo", authenticateToken, (req, res) => {
 		.catch((e) => res.send(JSON.stringify(e)));
 });
 
+
+router.get("/volunteerspecificskill", authenticateToken, (req, res) => {
+	let skill = req.query.skill;
+
+	pool
+		.query(
+			"SELECT firstname || ' ' || lastname as mentor_name, email,html_css,javascript,react,node,postgresql,mongodb from users where user_type='mentor' "
+		)
+		.then((result) => {
+			let mentors=result.rows;
+			let skilledmentor= mentors.filter((mentor)=>{
+            return mentor[skill]===true;
+			});
+			res.json(skilledmentor);
+		})
+
+		.catch((e) => res.send(JSON.stringify(e)));
+});
+
 export default router;
 
