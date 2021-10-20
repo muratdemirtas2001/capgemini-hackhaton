@@ -46,12 +46,19 @@ export default function Login() {
             })
                 .then((res) => res.json())
                 .then((data) => {
+                      console.log("sdsds",data);
                     localStorage.setItem("users", data.token);
-                    console.log("login recived data.token is", data.token);
-                    console.log("sdsd",data);
                     if (data.auth === "success") {
-                        console.log(data);
-                        history.push("/dashboard");
+                        if(data.usertype === "student"){
+                            history.push("/student");
+                        }
+                        if(data.usertype === "mentor"){
+                            history.push("/mentor");
+                        }
+                        if(data.usertype === "admin"){
+                            history.push("/admin");
+                        }
+
                     } else if (data.auth === "error") {
                         console.log(data);
                         setWarning(true);
@@ -75,7 +82,7 @@ export default function Login() {
         <div>
             <Navbarcomponent />
             <section className="bg-dark text-light p-5 pt-lg-5 text-center text-sm-start">
-                <div className="container">
+                <div className="container animate__animated animate__flipInY">
                     <fieldset className="align-items-center  ">
                     {warning ? <div className="col-lg-12 p-3 mb-2 bg-danger text-white text-center">{error}</div> : null}
                         <div className="justify-content-center align-center d-flex flex-wrap bg-dark p-3">

@@ -12,6 +12,7 @@ export default function Register() {
     const [error, setError] = useState("");
     const [cohort, setCohort] = useState([]);
     let history = useHistory();
+    const skills = ["html_css", "javascript", "react", "node", "postgresql", "mongodb"];
     const [signup, setSignUp] = useState({
         "firstname": "",
         "lastname": "",
@@ -20,6 +21,12 @@ export default function Register() {
         "passwordCheck": "",
         "cohort": "",
         "usertype": "",
+        "html_css": false,
+        "javascript": false,
+        "react": false,
+        "node": false,
+        "postgresql": false,
+        "mongodb": false,
     });
 
     useEffect(() => {
@@ -36,7 +43,7 @@ export default function Register() {
             .catch((err) => {
                 console.error(err);
             });
-    },[]);
+    }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -70,7 +77,7 @@ export default function Register() {
                     if (data.register === "success") {
                         localStorage.setItem("users", requestOptions);
                         setRegisteredPeople(registedPeople.concat(data));
-                        history.push("/dashboard");
+                        history.push("/login");
                     } else if (data.register === "error" || data.register === "error-registereduser") {
                         setError("User already exists");
                         setWarning(true);
@@ -85,20 +92,29 @@ export default function Register() {
             "lastname": lastname ? lastname : "",
             "email": email ? email : "",
             "password": password ? password : "",
+            "passwordCheck": passwordCheck ? passwordCheck : "",
             "cohort": cohort ? cohort : "",
             "usertype": usertype ? usertype : "",
-            "passwordCheck": passwordCheck ? passwordCheck : "",
+            "html_css": false,
+            "javascript": false,
+            "react": false,
+            "node": false,
+            "postgresql": false,
+            "mongodb": false,
         });
     };
     const handleSignUp = (e) => {
-        const newRegistration = { ...signup, [e.target.name]: e.target.value };
+        const target = e.target;
+        const value = target.type === "checkbox" ? target.checked : target.value;
+        const name = target.name;
+        const newRegistration = { ...signup, [name]: value };
         setSignUp(newRegistration);
         const { firstname, lastname, passwordCheck, password, cohort, usertype } = signup;
         if (firstname || lastname || password || passwordCheck || cohort || usertype) {
             setWarning(false);
         }
     };
-
+console.log(signup);
     return (
         <section>
             <Navbarcomponent />
@@ -106,7 +122,7 @@ export default function Register() {
                 <fieldset className="justify-content-center align-center d-flex flex-wrap bg-dark p-1">
                     {warning ? <div className=" justify-content-center align-center  p-3 mb-2 bg-danger text-center  text-white">{error}</div> : null}
                     <legend className="col-12 text-center">Homework Club Sign Up</legend>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} className="animate__animated animate__flipInY">
                         <div className="input-group input-group-md mb-3">
                             <label htmlFor="firstname" className="form-label" >
                                 FirstName:
@@ -178,7 +194,7 @@ export default function Register() {
                             </label>
                         </div>
                         <div className="input-group input-group-md mb-3">
-                            <select value={signup.usertype} onChange={handleSignUp} className="form-select" aria-label="select example" name="usertype">
+                            <select  onChange={handleSignUp} className="form-select" aria-label="select example" name="usertype">
                                 <option>User Type ?</option>
                                 <option value="student" >student</option>
                                 <option value="mentor" >mentor</option>
@@ -186,17 +202,37 @@ export default function Register() {
                         </div>
                         {signup.usertype === "student" ?
                             <div className="input-group input-group-md mb-3">
-                                <select value={signup.usertype} onChange={handleSignUp} className="form-select" aria-label="select example" name="cohort" >
+                                <select  onChange={handleSignUp} className="form-select" aria-label="select example" name="cohort" >
                                     <option>What is your cohort ?</option>
                                     {cohort.map((element, index) => {
                                         return (
-                                            <option value="London-8" key={index}>{element}</option>
+                                            <option value={element} key={index}>{element}</option>
                                         );
                                     })
                                     }
                                 </select>
-                            </div> : null}
-
+                            </div> : signup.usertype === "mentor" ?
+                                <div className="">
+                                    <span>Please Select skills you have?</span>
+                                    <div className="">
+                                        {skills.map((skill, index) => {
+                                            return (
+                                                <div className="input-group input-group-md form-check" key={index}>
+                                                    <label htmlFor={skill} className="form-check-label"  >
+                                                        {skill}
+                                                        <input
+                                                            type="checkbox"
+                                                            name={skill}
+                                                            checked={signup[skill]}
+                                                            id={skill}
+                                                            onChange={handleSignUp}
+                                                            className="form-check-input form-control-md"
+                                                        />
+                                                    </label>
+                                                </div>
+                                            );
+                                        })} </div>
+                                </div> : null}
                         <input
                             className="btn btn-primary form-control form-control-lg"
                             type="submit"
