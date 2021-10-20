@@ -40,8 +40,12 @@ export default function Dashboard() {
 			})
 				.then((res) => res.json())
 				.then((data) => {
-					setBooksession(data);
-					setIsPracticed(true);
+					if(data){
+						setBooksession(data);
+						setIsPracticed(true);
+					}else{
+						console.log("booksession has not been uploaded");
+					}
 				});
 
 
