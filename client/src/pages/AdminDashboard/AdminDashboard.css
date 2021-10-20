@@ -1,0 +1,32 @@
+.admin-main-container {
+	width: 100vw;
+	padding-left: 20px;
+	padding-right: 20px;
+	min-height: 100vh;
+	display: flex;
+	justify-content: space-around;
+	margin-top: 30px;
+	background-color: aliceblue;
+}
+
+.admin-heading {
+	padding-top: 20px;
+	font-weight: bold;
+}
+
+.bold-text {
+	font-weight: bold;
+}
+
+.button-container {
+	display: flex;
+	justify-content: center;
+}
+
+.admin-nav-container {
+	width: 200px;
+}
+
+.admin-container {
+	width: 100%;
+}
