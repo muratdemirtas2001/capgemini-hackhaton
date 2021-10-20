@@ -30,13 +30,11 @@ const displayUpcomingSessionsForAdmin = (upcomingSessions) => {
 							<Button label="Cancel" size="small" mode="secondary" />
 						</div>
 					) : (
-						<>
+						<div>
 							<Button label="Request Volunteers" size="small" mode="primary" />
-							<div>
-								<Button label="Details" size="small" mode="secondary" />
-								<Button label="Cancel" size="small" mode="secondary" />
-							</div>
-						</>
+							<Button label="Details" size="small" mode="secondary" />
+							<Button label="Cancel" size="small" mode="secondary" />
+						</div>
 					)}
 				</td>
 			</tr>

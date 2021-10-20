@@ -33,7 +33,7 @@ const AdminDashboard = () => {
 		useState(attendanceInfo);
 	const pageOptions = ["Sessions", "Attendance", "Mentors", "Cohorts"];
 	const name = "Sarah";
-	const headings = ["Session", "Date", "Students:Mentors", ""];
+	const headings = ["Session", "Date", "Students:Mentor", "Actions"];
 
 	useEffect(() => {
 		if (currentPage === "Attendance") {
@@ -45,16 +45,18 @@ const AdminDashboard = () => {
 	}, [currentPage, currentMonth, currentYear]);
 
 	return (
-		<>
-			<h1 className="center-text"> Welcome {name}!</h1>
+		<div className="admin-body-container">
+			<h1 className="center-text title"> Welcome {name}!</h1>
 			<div className="admin-main-container">
 				<div className="admin-nav-container">
 					{createNavigationLinks(pageOptions, currentPage, setCurrentPage)}
 				</div>
 				{currentPage === "Sessions" && (
 					<div className="admin-container">
-						<h2 className="admin-heading">Upcoming sessions</h2>
-						<Button label="New" mode="primary" size="small" />
+						<div className="admin-heading-container">
+							<h2 className="admin-heading">Upcoming sessions</h2>
+							<Button label="New" mode="primary" size="small" />
+						</div>
 						<ResponsiveTable
 							data={upcomingSessionsAdmin}
 							headings={headings}
@@ -97,12 +99,14 @@ const AdminDashboard = () => {
 				)}
 				{currentPage === "Cohorts" && (
 					<div className="admin-container">
-						<h2 className="admin-heading">Cohorts</h2>
-						<Button label="New" mode="primary" size="small" />
+						<div className="admin-heading-container">
+							<h2 className="admin-heading">Cohorts</h2>
+							<Button label="New" mode="primary" size="small" />
+						</div>
 					</div>
 				)}
 			</div>
-		</>
+		</div>
 	);
 };
 

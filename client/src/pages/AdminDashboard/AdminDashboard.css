@@ -1,3 +1,7 @@
+.admin-body-container {
+	background-color: aliceblue;
+}
+
 .admin-main-container {
 	width: 100vw;
 	padding-left: 20px;
@@ -6,12 +10,17 @@
 	display: flex;
 	justify-content: space-around;
 	margin-top: 30px;
-	background-color: aliceblue;
 }
 
 .admin-heading {
 	padding-top: 20px;
 	font-weight: bold;
+}
+
+.admin-heading-container {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
 }
 
 .bold-text {
@@ -29,4 +38,8 @@
 
 .admin-container {
 	width: 100%;
+}
+
+.title {
+	padding-top: 25px;
 }
