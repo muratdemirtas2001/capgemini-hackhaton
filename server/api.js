@@ -297,6 +297,15 @@ router.post("/booksession", authenticateToken, (req, res) => {
 
 });
 
+router.post("/updateattendance", authenticateToken, (req, res) => {
+	const { club_id } = req.body;
+	const userID = req.user.userid;
+	pool.query(	"UPDATE sessions SET attendance_status = 'true' WHERE club_id = $1 and user_id=$2;",[club_id, userID])
+				.then(() => {
+					res.sendStatus(200);
+				});
+	});
+
 router.get("/graph", authenticateToken, admincheck,(req, res) => {
 let month = req.query.month;
 let year = req.query.year;
