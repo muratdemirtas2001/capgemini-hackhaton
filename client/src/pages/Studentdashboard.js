@@ -8,6 +8,7 @@ export default function Dashboard() {
 	const [isPracticed, setIsPracticed] = useState(false);
 	const [users, setUsers] = useState([]);
 	const [warning, setWarning] = useState(false);
+	const [upcomingsessions, setUpcomingSessions] = useState();
 	const [booksession, setBooksession] = useState(
 		{
 			"club_id": "",
@@ -28,25 +29,26 @@ export default function Dashboard() {
 			.then((res) => res.json())
 			.then((data) => {
 				setUsers(data);
+				setUpcomingSessions(data.upcomingsessions);
 				setIsPracticed(true);
 			});
 
-			fetch("/api/booksession", {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-			})
-				.then((res) => res.json())
-				.then((data) => {
-					if(data){
-						setBooksession(data);
-						setIsPracticed(true);
-					}else{
-						console.log("booksession has not been uploaded");
-					}
-				});
+		fetch("/api/booksession", {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				if (data) {
+					setBooksession(data);
+					setIsPracticed(true);
+				} else {
+					console.log("booksession has not been uploaded");
+				}
+			});
 
 
 
@@ -56,7 +58,10 @@ export default function Dashboard() {
 		e.preventDefault();
 		const requestOptions = {
 			method: "POST",
-			headers: { "Content-Type": "application/json" },
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
 			body: JSON.stringify(booksession),
 		};
 		fetch("/api/booksession", requestOptions)
@@ -68,6 +73,13 @@ export default function Dashboard() {
 			.catch((error) => {
 				console.error("Error:", error);
 			});
+		setBooksession(
+			{
+				"club_id": "",
+				"note": "",
+				"module_id": "",
+			}
+		);
 	};
 
 	const handlebooking = (e) => {
@@ -131,47 +143,57 @@ export default function Dashboard() {
 											<h2>Upcoming session</h2>
 										</div>
 									</div>
-									<form onSubmit={handlesubmit}>
-										<div className="row row gy-3 p-3 mt-2 align-items-center text-center">
-											<div className="col-sm-12 col-md-12 col-lg-3 text-white d-flex flex-column">
-												<span>HW Session 6</span>
-												<span>Date : 04/10/2021 </span>
-												<span>Time :17:00 - 19:00</span>
-											</div>
-											<div className="col-sm-12 col-md-12 col-lg-4">
-												<select  onChange={handlebooking} className="form-select form-control" aria-label="select example" name="module_id">
-													<option>Topic Choice</option>
-													{users.topics.map((topic, index) => {
-														// let value = `${topic.module_name} - week ${topic.week}`;
-														return (
-															<option
-																value={index + 1}
-																key={index}>{topic.module_name} - week {topic.week}
-															</option>
-														);
-													})}
-												</select>
-											</div>
-											<div className="col-sm-12 col-md-12 col-lg-3 text-white text-center" >
-												<label htmlFor="note">
-													<textarea
-														id="note"
-														className="form-control"
-														name="note"
-														rows="5"
-														cols="70"
-														placeholder="please give us some information about your question(s)."
-														minLength="20"
-														onChange={handlebooking}
-														required
-													>
-													</textarea></label>
-											</div>
-											<div className="col-sm-12 col-md-12 col-lg-2  border-white ">
-												<button className="btn btn-primary" type="submit">Register</button>
-											</div>
-										</div>
-									</form>
+									{upcomingsessions.map((session, index) => {
+										const { club_id, club_name, end_date, start_date } = session;
+										return (
+											<form onSubmit={handlesubmit} key={index}>
+												<div className="row row gy-3 p-3 mt-2 align-items-center text-center border">
+													<div className="col-sm-12 col-md-12 col-lg-3 text-white d-flex flex-column">
+														<>
+															<span>{club_name}</span>
+															<span>Date : {start_date}</span>
+															<span>Time : {end_date}</span>
+														</>
+
+													</div>
+													<div className="col-sm-12 col-md-12 col-lg-4">
+														<select onChange={handlebooking} className="form-select form-control" aria-label="select example" name="module_id">
+															<option>Topic Choice</option>
+															{users.topics.map((topic, index) => {
+																// let value = `${topic.module_name} - week ${topic.week}`;
+																return (
+																	<option
+																		value={index + 1}
+																		key={index}
+																	>
+																		{topic.module_name} - week {topic.week}
+																	</option>
+																);
+															})}
+														</select>
+													</div>
+													<div className="col-sm-12 col-md-12 col-lg-3 text-white text-center" >
+														<label htmlFor="note">
+															<textarea
+																id="note"
+																className="form-control"
+																name="note"
+																rows="5"
+																cols="70"
+																placeholder="please give us some information about your question(s)."
+																minLength="20"
+																onChange={handlebooking}
+																required
+															>
+															</textarea></label>
+													</div>
+													<div className="col-sm-12 col-md-12 col-lg-2  border-white ">
+														<button className="btn btn-primary" type="submit" onClick={() => booksession.club_id = club_id}>Register</button>
+													</div>
+												</div>
+											</form>
+										);
+									})}
 								</div>
 							</div>
 						</div>
