@@ -186,7 +186,7 @@ function authenticateToken(req, res, next) {
 		next();
 	});
 }
-
+console.log("hello");
 //verify user is admin middleware
 function admincheck(req, res, next) {
 	const userID = req.user.userid;
@@ -397,8 +397,6 @@ router.get("/upcomingsessions", authenticateToken, admincheck, (req, res) => {
 		.catch((e) => res.send(JSON.stringify(e)));
 });
 
-
-
 router.post("/createnewsession", authenticateToken, admincheck, (req, res) => {
 	const { session_date, start_time, end_time } = req.body;
 	const userID = req.user.userid;
@@ -604,7 +602,6 @@ router.get("/findmentor", authenticateToken, admincheck, (req, res) => {
 
 		.catch((e) => res.send(JSON.stringify(e)));
 });
-
 
 router.get("/studentattendance", authenticateToken, admincheck, (req, res) => {
 	let month = req.query.month;
