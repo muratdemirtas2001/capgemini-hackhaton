@@ -12,12 +12,7 @@ const uuid = require("uuid");
 const passwordValidator = require("password-validator");
 const jwt = require("jsonwebtoken");
 const moment = require("moment");
-// const moment = require("moment-timezone");
 const router = new Router();
-
-router.get("/", (_, res) => {
-	res.json({ message: "Hello, world!" });
-});
 
 router.post("/signup", (req, res) => {
 	console.log("register api");
@@ -208,8 +203,6 @@ function admincheck(req, res, next) {
 }
 
 router.get("/dashboard", authenticateToken, (req, res) => {
-	// console.log(req);
-	console.log("dashboard called");
 	const userID = req.user.userid;
 	let student = {
 		upcomingsessions: "",
@@ -224,14 +217,14 @@ router.get("/dashboard", authenticateToken, (req, res) => {
 
 	pool
 		.query(
-			"select start_date AT TIME ZONE 'Z' as start_date,end_date AT TIME ZONE 'Z' as end_date,club_name,club_id from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where users.id=$1 and sessions.booking_status=false",
+			"select to_char(start_date AT TIME ZONE 'Z','DD-MM-YYYY') as date, to_char(start_date AT TIME ZONE 'Z','HH24:MI') as start_time,to_char(end_date AT TIME ZONE 'Z','HH24:MI') as end_time,club_name,club_id from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where users.id=$1 and sessions.booking_status=false and start_date> now()",
 			[userID]
 		)
 		.then((result) => {
 			student.upcomingsessions = result.rows;
 			pool
 				.query(
-					"select start_date AT TIME ZONE 'Z' as start_date,end_date AT TIME ZONE 'Z' as end_date,club_name,club_id from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where users.id=$1 and sessions.booking_status=true",
+					"select to_char(start_date AT TIME ZONE 'Z','DD-MM-YYYY') as date, to_char(start_date AT TIME ZONE 'Z','HH24:MI') as start_time,to_char(end_date AT TIME ZONE 'Z','HH24:MI') as end_time,club_name,club_id from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where users.id=$1 and sessions.booking_status=true and start_date> now()",
 					[userID]
 				)
 				.then((result) => {
