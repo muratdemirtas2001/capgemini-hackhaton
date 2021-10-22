@@ -620,4 +620,54 @@ router.get("/studentattendance", authenticateToken, admincheck, (req, res) => {
 		.catch((e) => res.send(JSON.stringify(e)));
 });
 
+router.get("/mentor_skills", authenticateToken, (req, res) => {
+	console.log(" mentor skills called  here");
+	const mentorID = req.user.userid;
+	console.log(mentorID);
+	pool
+		.query(
+			"SELECT html_css,  javascript , react , node , postgresql , mongodb FROM users   where users.id=$1 ",
+			[mentorID]
+		)
+		.then((result) => {
+			console.log(result.rows);
+			let skills = result.rows[0];
+			res.json(skills);
+		})
+		.catch((e) => res.send(JSON.stringify(e)));
+});
+
+router.get("/sessions", authenticateToken, (req, res) => {
+	console.log(" sessions end point called");
+	pool
+		.query("SELECT * FROM  clubs ")
+		.then((result) => {
+			console.log(result.rows);
+			let sessions = result.rows;
+			res.json(sessions);
+		})
+		.catch((e) => res.send(JSON.stringify(e)));
+});
+router.post("/mentorbooksession", authenticateToken, (req, res) => {
+	// console.log(req);
+	console.log("mentor booksession called");
+	const { club_id, note, module_id } = req.body;
+	const userID = req.user.userid;
+	pool
+		.query("select * from sessions where user_id=$1 and club_id=$2", [
+			userID,
+			club_id,
+		])
+		.then((result) => {
+			pool
+				.query(
+					"UPDATE sessions SET booking_status = 'true', free_note=$1,module_id=$2 WHERE club_id = $3 and user_id=$4;",
+					[note, module_id, club_id, userID]
+				)
+				.then(() => {
+					res.sendStatus(200);
+				});
+			// }
+		});
+});
 export default router;
