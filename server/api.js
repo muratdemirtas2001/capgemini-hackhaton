@@ -217,7 +217,7 @@ router.get("/dashboard", authenticateToken, (req, res) => {
 
 	pool
 		.query(
-			"select to_char(start_date AT TIME ZONE 'Z','DD-MM-YYYY') as date, to_char(start_date AT TIME ZONE 'Z','HH24:MI') as start_time,to_char(end_date AT TIME ZONE 'Z','HH24:MI') as end_time,to_char(cutoff_date AT TIME ZONE 'Z','DD-MM-YYYY') as cutoff_date,club_name,club_id from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where users.id=$1 and sessions.booking_status=false and start_date> now()",
+			"select to_char(start_date AT TIME ZONE 'Z','DD-MM-YYYY') as date, to_char(start_date AT TIME ZONE 'Z','HH24:MI') as start_time,to_char(end_date AT TIME ZONE 'Z','HH24:MI') as end_time,to_char(cutoff_date AT TIME ZONE 'Z','DD-MM-YYYY') as cutoff_date,club_name,club_id from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where users.id=$1 and sessions.booking_status=false and start_date> now() LIMIT 2",
 			[userID]
 		)
 		.then((result) => {
