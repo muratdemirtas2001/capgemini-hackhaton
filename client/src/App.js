@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import Mentordashboard from "./pages/Mentordashboard";
-import Admindashboard from "./pages/Admindashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 import Studentdashboard from "./pages/Studentdashboard";
 
 const App = () => (
@@ -13,19 +13,19 @@ const App = () => (
 			<Home />
 		</Route>
 		<Route path="/register">
-			<Register  />
+			<Register />
 		</Route>
 		<Route path="/login">
-			<Login  />
+			<Login />
 		</Route>
 		<Route path="/mentor">
-			<Mentordashboard  />
+			<Mentordashboard />
 		</Route>
 		<Route path="/student">
-			<Studentdashboard  />
+			<Studentdashboard />
 		</Route>
 		<Route path="/admin">
-			<Admindashboard  />
+			<AdminDashboard />
 		</Route>
 	</Switch>
 );

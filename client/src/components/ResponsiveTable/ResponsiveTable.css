@@ -1,0 +1,8 @@
+.isRatioAcceptable--true {
+	color: #000000;
+}
+
+.isRatioAcceptable--false {
+	color: #000000;
+	background-color: #faa7a7;
+}
