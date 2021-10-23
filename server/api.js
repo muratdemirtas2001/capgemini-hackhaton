@@ -696,4 +696,19 @@ router.post("/mentorsessiondetails", authenticateToken, (req, res) => {
 
 		.catch((e) => res.send(JSON.stringify(e)));
 });
+
+router.post("/mentorupdateskills", authenticateToken, (req, res) => {
+	const { html_css, javascript, react, node, postgresql, mongodb } = req.body;
+	const userID = req.user.userid;
+	pool
+		.query(
+			"UPDATE users SET html_css=$1,javascript=$2, react=$3, node=$4, postgresql=$5,mongodb=$6 WHERE id = $7;",
+			[html_css, javascript, react, node, postgresql, mongodb, userID]
+		)
+		.then((result) => {
+			res.send(200);
+		})
+
+		.catch((e) => res.send(JSON.stringify(e)));
+});
 export default router;
