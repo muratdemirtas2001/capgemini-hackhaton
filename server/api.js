@@ -670,4 +670,30 @@ router.post("/mentorbooksession", authenticateToken, (req, res) => {
 			// }
 		});
 });
+
+router.post("/mentorsessiondetails", authenticateToken, (req, res) => {
+	const { club_id } = req.body;
+	const userID = req.user.userid;
+	let sessiondetails = {};
+	pool
+		.query(
+			"select clubs.id ,club_name,to_char(start_date,'DD-MM-YYYY') as club_date,to_char(start_date,'HH24:MI') as start_time,to_char(end_date,'HH24:MI') as end_time from clubs where clubs.id=$1",
+			[club_id]
+		)
+		.then((result) => {
+			sessiondetails.session = result.rows;
+			pool
+				.query(
+					"select firstname || ' ' || lastname as student_name,free_note,modules.module_name,modules.week,coursework_link  from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id inner join modules on sessions.module_id=modules.id where clubs.id=$1 and booking_status=true and user_type='student'",
+					[club_id]
+				)
+				.then((result) => {
+					sessiondetails.student = result.rows;
+					sessiondetails.numberofstudents = result.rows.length;
+					res.json(sessiondetails);
+				});
+		})
+
+		.catch((e) => res.send(JSON.stringify(e)));
+});
 export default router;
