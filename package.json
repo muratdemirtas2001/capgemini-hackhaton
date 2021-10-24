@@ -68,8 +68,8 @@
 	},
 	"dependencies": {
 		"@babel/runtime": "^7.14.6",
-		"acorn": "^8.5.0",
 		"@types/react-transition-group": "^4.4.3",
+		"acorn": "^8.5.0",
 		"animate.css": "^4.1.1",
 		"boostrap": "^2.0.0",
 		"bootstrap": "^5.1.1",
@@ -90,9 +90,10 @@
 		"react-accessible-accordion": "^4.0.0",
 		"react-bar-chart": "^0.1.2",
 		"react-bootstrap": "^2.0.0-rc.0",
-		"react-chartjs-2": "^3.0.5",
+		"react-chartjs-2": "^3.1.1",
 		"react-hook-form": "^7.17.2",
 		"react-icons": "^4.2.0",
+		"react-tabs": "^3.2.2",
 		"uuid": "^8.3.2"
 	},
 	"engines": {
