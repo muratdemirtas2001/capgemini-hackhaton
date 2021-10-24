@@ -4,8 +4,8 @@ import checkStudentVolunteerRatio from "./checkStudentVolunteerRatio";
 const displayUpcomingSessionsForAdmin = (upcomingSessions) => {
 	return upcomingSessions.map((session, index) => {
 		const isRatioAcceptable = checkStudentVolunteerRatio(
-			session.numberOfStudents,
-			session.numberOfVolunteers
+			session.registered_student,
+			session.registered_mentor
 		);
 		return (
 			<tr
@@ -15,15 +15,15 @@ const displayUpcomingSessionsForAdmin = (upcomingSessions) => {
 				].join(" ")}
 				key={`${index}-table-row`}
 			>
-				<td key={`${index}-title`}> {session.title}</td>
+				<td key={`${index}-title`}> {session.session_title}</td>
 				<td key={`${index}-date`}>
-					{session.date} {session.time}
+					{session.session_date} {session.start_time} - {session.end_time}
 				</td>
 				<td key={`${index}-ratio`}>
 					{" "}
-					{session.numberOfStudents} : {session.numberOfVolunteers}
+					{session.registered_student} : {session.registered_mentor}
 				</td>
-				<td key={`${index}-actions`} id={session.id}>
+				<td key={`${index}-actions`} id={session.session_id}>
 					{isRatioAcceptable ? (
 						<div>
 							<Button label="Details" size="small" mode="secondary" />
