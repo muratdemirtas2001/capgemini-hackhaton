@@ -23,6 +23,16 @@
 	align-items: center;
 }
 
+.account-management-container {
+	border-style: solid;
+	border-right: none;
+	border-left: none;
+	border-width: 2px;
+	background-color: white;
+	margin-top: 20px;
+	margin-right: 10px;
+}
+
 .bold-text {
 	font-weight: bold;
 }

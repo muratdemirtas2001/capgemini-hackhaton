@@ -20,20 +20,37 @@ import attendanceInfo from "../../data/attendanceInfo";
 import displayMentorsTable from "../../utils/displayMentorsTable";
 import mentorsData from "../../data/mentors";
 import mentorsTableHeadings from "../../constants/mentorsTableHeadings";
+import AdminNavigationItem from "../../components/AdminNavigationItem";
+import AddAdminModal from "../../components/addAdminModal";
+import DeleteUserModal from "../../components/deleteUserModal";
+import CohortsAccordion from "../../components/CohortsAccordion";
 
 const AdminDashboard = () => {
+	const [showModal, setShowModal] = useState(false);
+	const modalContent = "Buttons";
 	const [currentPage, setCurrentPage] = useState("Sessions");
 	const [currentMonth, setCurrentMonth] = useState();
 	const [currentYear, setCurrentYear] = useState();
 	const [month, setMonth] = useState();
 	const [year, setYear] = useState();
 	const [skill, setSkill] = useState();
+	const [modalType, setModalType] = useState();
 	const [mentors, setMentors] = useState(mentorsData);
 	const [attendanceInformation, setAttendanceInformation] =
 		useState(attendanceInfo);
 	const pageOptions = ["Sessions", "Attendance", "Mentors", "Cohorts"];
 	const name = "Sarah";
 	const headings = ["Session", "Date", "Students:Mentor", "Actions"];
+
+	const displayDeleteUserModal = () => {
+		setModalType("delete user");
+		setShowModal(true);
+	};
+
+	const displayAddAdminModal = () => {
+		setModalType("add admin");
+		setShowModal(true);
+	};
 
 	useEffect(() => {
 		if (currentPage === "Attendance") {
@@ -50,12 +67,26 @@ const AdminDashboard = () => {
 			<div className="admin-main-container">
 				<div className="admin-nav-container">
 					{createNavigationLinks(pageOptions, currentPage, setCurrentPage)}
+					<div className="account-management-container">
+						<p> Manage accounts </p>
+						<AdminNavigationItem
+							page={"Add admin"}
+							active={true}
+							onClick={displayAddAdminModal}
+						/>
+						<AdminNavigationItem
+							page={"Delete user"}
+							active={true}
+							onClick={displayDeleteUserModal}
+						/>
+					</div>
 				</div>
 				{currentPage === "Sessions" && (
 					<div className="admin-container">
 						<div className="admin-heading-container">
 							<h2 className="admin-heading">Upcoming sessions</h2>
-							<Button label="New" mode="primary" size="small" />
+							<Button label="New session" mode="primary" size="small" />
+							<Button label="Update zoom link" mode="primary" size="small" />
 						</div>
 						<ResponsiveTable
 							data={upcomingSessionsAdmin}
@@ -67,7 +98,6 @@ const AdminDashboard = () => {
 				{currentPage === "Attendance" && (
 					<div className="admin-container">
 						<h2 className="admin-heading">Attendance</h2>
-
 						<AttendanceDateFilters
 							month={month}
 							setMonth={setMonth}
@@ -103,7 +133,14 @@ const AdminDashboard = () => {
 							<h2 className="admin-heading">Cohorts</h2>
 							<Button label="New" mode="primary" size="small" />
 						</div>
+						<CohortsAccordion />
 					</div>
+				)}
+				{modalType === "delete user" && (
+					<DeleteUserModal setShowModal={setShowModal} show={showModal} />
+				)}
+				{modalType === "add admin" && (
+					<AddAdminModal setShowModal={setShowModal} show={showModal} />
 				)}
 			</div>
 		</div>
