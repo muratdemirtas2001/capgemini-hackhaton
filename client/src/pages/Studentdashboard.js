@@ -9,14 +9,18 @@ export default function Dashboard() {
 	const [users, setUsers] = useState([]);
 	const [warning, setWarning] = useState(false);
 	const [upcomingsessions, setUpcomingSessions] = useState();
-	const [booksession, setBooksession] = useState(
-		{
-			"club_id": "",
-			"note": "",
-			"module_id": "",
+	const [bookedsessions, setBookedSesions] = useState();
+	const [render, setRender] = useState(true);
 
-		}
-	);
+	const [booksession, setBooksession] = useState({
+		club_id: "",
+		note: "",
+		module_id: "",
+	});
+
+	const [cancelsession, setCancelSession] = useState({
+		club_id: "",
+	});
 
 	useEffect(() => {
 		fetch("/api/dashboard", {
@@ -30,29 +34,27 @@ export default function Dashboard() {
 			.then((data) => {
 				setUsers(data);
 				setUpcomingSessions(data.upcomingsessions);
+				setBookedSesions(data.bookedsessions);
 				setIsPracticed(true);
 			});
 
-		fetch("/api/booksession", {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${token}`,
-			},
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				if (data) {
-					setBooksession(data);
-					setIsPracticed(true);
-				} else {
-					console.log("booksession has not been uploaded");
-				}
-			});
-
-
-
-	}, [token]);
+		// fetch("/api/booksession", {
+		// 	method: "GET",
+		// 	headers: {
+		// 		"Content-Type": "application/json",
+		// 		Authorization: `Bearer ${token}`,
+		// 	},
+		// })
+		// 	.then((res) => res.json())
+		// 	.then((data) => {
+		// 		if (data) {
+		// 			setBooksession(data);
+		// 			setIsPracticed(true);
+		// 		} else {
+		// 			console.log("booksession has not been uploaded");
+		// 		}
+		// 	});
+	}, [token, render]);
 
 	const handlesubmit = (e) => {
 		e.preventDefault();
@@ -66,20 +68,46 @@ export default function Dashboard() {
 		};
 		fetch("/api/booksession", requestOptions)
 			.then((response) => response.json())
-			.then((data) => {
+			.then(() => {
+				console.log("hello book session");
+				setRender(!render);
 				setWarning(true);
-				setBooksession(booksession.concat(data));
-			})
-			.catch((error) => {
-				console.error("Error:", error);
+				// setBooksession(booksession.concat(data));
 			});
-		setBooksession(
-			{
-				"club_id": "",
-				"note": "",
-				"module_id": "",
-			}
-		);
+		// .catch((error) => {
+		// 	console.error("Error:", error);
+		// });
+		setBooksession({
+			club_id: "",
+			note: "",
+			module_id: "",
+		});
+	};
+
+	const handleCancel = (e) => {
+		e.preventDefault();
+		const requestOptions = {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+			body: JSON.stringify({ club_id: e.target.id }),
+		};
+
+		fetch("/api/cancelbooking", requestOptions)
+			.then((response) => response.json())
+			.then((data) => {
+				setRender(!render);
+				setWarning(true);
+				// setBooksession(booksession.concat(data));
+			});
+		// .catch((error) => {
+		// 	console.error("Error:", error);
+		// });
+		setCancelSession({
+			club_id: "",
+		});
 	};
 
 	const handlebooking = (e) => {
@@ -92,7 +120,7 @@ export default function Dashboard() {
 	console.log(booksession);
 	return (
 		<>
-			{isPracticed ?
+			{isPracticed ? (
 				<div className="position-relative">
 					<Logout />
 					<CSSTransition
@@ -111,30 +139,64 @@ export default function Dashboard() {
 							<div className="row p-2 m-2">
 								<div className="col-10 text-white">
 									<div>
-										<p>Welcome {users.firstname} {users.lastname} </p>
+										<p>
+											Welcome {users.firstname} {users.lastname}{" "}
+										</p>
 										<span>{users.cohort} - </span>
-										<span>{users.usertype.charAt(0).toUpperCase() + users.usertype.slice(1)} </span>
+										<span>
+											{users.usertype.charAt(0).toUpperCase() +
+												users.usertype.slice(1)}{" "}
+										</span>
 									</div>
 								</div>
 								<div className="col-2">
-									<button className="btn btn-success pr-3"><a href={users.zoom_link} target="_blank" rel="noreferrer">Join</a> </button>
+									<button className="btn btn-success pr-3">
+										<a href={users.zoom_link} target="_blank" rel="noreferrer">
+											Join
+										</a>{" "}
+									</button>
 								</div>
 							</div>
 							<div className="row gx-5">
 								{/* left side of the grid */}
 								<div className="col-lg-4 col-md-4 col-sm-4 text-white text-center p-3">
 									<h1>Booked Session</h1>
-									<div>
-										<h3>HW Session 7 ARRAYS</h3>
-										<h4>04/10/2021  17:00 - 19:00</h4>
-										<p>notes: loren impsum  loren impsum loren impsum loren
-											impsum loren impsum loren impsum loren impsum loren
-											impsum loren impsum loren impsum loren impsum</p>
-									</div>
-									<div className="d-flex justify-content-between">
+									{bookedsessions.map((session, index) => {
+										const { club_id, club_name, date, start_time, end_time } =
+											session;
+										return (
+											<form onSubmit={handleCancel} key={index}>
+												<div className="row row gy-3 p-3 mt-2 align-items-center text-center border">
+													<div className="text-white d-flex flex-column">
+														<>
+															<span>{club_name}</span>
+															<span>Date : {date}</span>
+															<span>
+																Time : {start_time}-{end_time}
+															</span>
+														</>
+													</div>
+													<div className="d-flex justify-content-between">
+														<button className="btn btn-warning pr-3">
+															Edit
+														</button>
+														<button
+															className="btn btn-danger pr-3"
+															id={club_id}
+															type="submit"
+															onClick={handleCancel}
+														>
+															Cancel
+														</button>
+													</div>
+												</div>
+											</form>
+										);
+									})}
+									{/* <div className="d-flex justify-content-between">
 										<button className="btn btn-warning pr-3">Edit</button>
 										<button className="btn btn-danger pr-3">Cancel</button>
-									</div>
+									</div> */}
 								</div>
 								{/* right side of the grid */}
 								<div className="col-lg-8 col-md-8 col-sm-8">
@@ -144,35 +206,39 @@ export default function Dashboard() {
 										</div>
 									</div>
 									{upcomingsessions.map((session, index) => {
-										const { club_id, club_name, end_date, start_date } = session;
+										const { club_id, club_name, date, start_time, end_time } =
+											session;
 										return (
 											<form onSubmit={handlesubmit} key={index}>
 												<div className="row row gy-3 p-3 mt-2 align-items-center text-center border">
 													<div className="col-sm-12 col-md-12 col-lg-3 text-white d-flex flex-column">
 														<>
 															<span>{club_name}</span>
-															<span>Date : {start_date}</span>
-															<span>Time : {end_date}</span>
+															<span>Date : {date}</span>
+															<span>
+																Time : {start_time}-{end_time}
+															</span>
 														</>
-
 													</div>
 													<div className="col-sm-12 col-md-12 col-lg-4">
-														<select onChange={handlebooking} className="form-select form-control" aria-label="select example" name="module_id">
+														<select
+															onChange={handlebooking}
+															className="form-select form-control"
+															aria-label="select example"
+															name="module_id"
+														>
 															<option>Topic Choice</option>
 															{users.topics.map((topic, index) => {
 																// let value = `${topic.module_name} - week ${topic.week}`;
 																return (
-																	<option
-																		value={index + 1}
-																		key={index}
-																	>
+																	<option value={index + 1} key={index}>
 																		{topic.module_name} - week {topic.week}
 																	</option>
 																);
 															})}
 														</select>
 													</div>
-													<div className="col-sm-12 col-md-12 col-lg-3 text-white text-center" >
+													<div className="col-sm-12 col-md-12 col-lg-3 text-white text-center">
 														<label htmlFor="note">
 															<textarea
 																id="note"
@@ -184,11 +250,17 @@ export default function Dashboard() {
 																minLength="20"
 																onChange={handlebooking}
 																required
-															>
-															</textarea></label>
+															></textarea>
+														</label>
 													</div>
 													<div className="col-sm-12 col-md-12 col-lg-2  border-white ">
-														<button className="btn btn-primary" type="submit" onClick={() => booksession.club_id = club_id}>Register</button>
+														<button
+															className="btn btn-primary"
+															type="submit"
+															onClick={() => (booksession.club_id = club_id)}
+														>
+															Register
+														</button>
 													</div>
 												</div>
 											</form>
@@ -200,7 +272,7 @@ export default function Dashboard() {
 					</section>
 					<Footer />
 				</div>
-				: null}
+			) : null}
 		</>
 	);
 }
