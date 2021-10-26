@@ -8,6 +8,7 @@ export default function Dashboard() {
 	const [isPracticed, setIsPracticed] = useState(false);
 	const [users, setUsers] = useState([]);
 	const [warning, setWarning] = useState(false);
+	const [cancelWarning, setCancelWarning] = useState(false);
 	const [upcomingsessions, setUpcomingSessions] = useState();
 	const [bookedsessions, setBookedSesions] = useState();
 	const [render, setRender] = useState(true);
@@ -17,11 +18,6 @@ export default function Dashboard() {
 		note: "",
 		module_id: "",
 	});
-
-	const [cancelsession, setCancelSession] = useState({
-		club_id: "",
-	});
-
 	useEffect(() => {
 		fetch("/api/dashboard", {
 			method: "GET",
@@ -37,23 +33,6 @@ export default function Dashboard() {
 				setBookedSesions(data.bookedsessions);
 				setIsPracticed(true);
 			});
-
-		// fetch("/api/booksession", {
-		// 	method: "GET",
-		// 	headers: {
-		// 		"Content-Type": "application/json",
-		// 		Authorization: `Bearer ${token}`,
-		// 	},
-		// })
-		// 	.then((res) => res.json())
-		// 	.then((data) => {
-		// 		if (data) {
-		// 			setBooksession(data);
-		// 			setIsPracticed(true);
-		// 		} else {
-		// 			console.log("booksession has not been uploaded");
-		// 		}
-		// 	});
 	}, [token, render]);
 
 	const handlesubmit = (e) => {
@@ -72,11 +51,10 @@ export default function Dashboard() {
 				console.log("hello book session");
 				setRender(!render);
 				setWarning(true);
-				// setBooksession(booksession.concat(data));
+			})
+			.catch((error) => {
+				console.error("Error:", error);
 			});
-		// .catch((error) => {
-		// 	console.error("Error:", error);
-		// });
 		setBooksession({
 			club_id: "",
 			note: "",
@@ -97,22 +75,22 @@ export default function Dashboard() {
 
 		fetch("/api/cancelbooking", requestOptions)
 			.then((response) => response.json())
-			.then((data) => {
+			.then(() => {
 				setRender(!render);
-				setWarning(true);
-				// setBooksession(booksession.concat(data));
+				setCancelWarning(true);
+			}).catch((error) => {
+				console.error("Error:", error);
 			});
-		// .catch((error) => {
-		// 	console.error("Error:", error);
-		// });
-		setCancelSession({
-			club_id: "",
-		});
 	};
 
 	const handlebooking = (e) => {
 		const newBooking = { ...booksession, [e.target.name]: e.target.value };
 		setBooksession(newBooking);
+	};
+
+
+	const joinsession = () => {
+		console.log("hello");
 	};
 
 	console.log(isPracticed ? users : "loading users");
@@ -125,13 +103,24 @@ export default function Dashboard() {
 					<Logout />
 					<CSSTransition
 						in={warning}
-						timeout={2000}
+						timeout={3000}
 						classNames="alert"
 						unmountOnExit
 						onEnter={() => setWarning(false)}
 					>
-						<div className="col-lg-6 col-md-6 col-sm-7 offset-sm-2 text-white text-center bg-success m-3 position-absolute top-20 start-50 translate-middle border rounded-bottom">
+						<div className="col-lg-6 col-md-6 col-sm-7 offset-sm-2 text-white text-center bg-success m-3 position-absolute top-20 start-50 translate-middle  rounded-bottom">
 							<h4 className="mt-3">Session has been succesfully booked.</h4>
+						</div>
+					</CSSTransition>
+					<CSSTransition
+						in={cancelWarning}
+						timeout={3000}
+						classNames="alert"
+						unmountOnExit
+						onEnter={() => setCancelWarning(false)}
+					>
+						<div className="col-lg-6 col-md-6 col-sm-7 offset-sm-2 text-white text-center bg-success m-3 position-absolute top-20 start-50 translate-middle  rounded-bottom">
+							<h4 className="mt-3">Session has been succesfully Cancelled.</h4>
 						</div>
 					</CSSTransition>
 					<section>
@@ -150,7 +139,7 @@ export default function Dashboard() {
 									</div>
 								</div>
 								<div className="col-2">
-									<button className="btn btn-success pr-3">
+									<button className="btn btn-success pr-3" onClick={joinsession}>
 										<a href={users.zoom_link} target="_blank" rel="noreferrer">
 											Join
 										</a>{" "}
@@ -166,37 +155,30 @@ export default function Dashboard() {
 											session;
 										return (
 											<form onSubmit={handleCancel} key={index}>
-												<div className="row row gy-3 p-3 mt-2 align-items-center text-center border">
-													<div className="text-white d-flex flex-column">
-														<>
+												<div className="d-flex row row gy-3 p-3 mt-2 align-items-center text-center">
+													<div className="text-white d-flex flex-row justify-content-between">
+														<div className="d-flex flex-column">
 															<span>{club_name}</span>
 															<span>Date : {date}</span>
 															<span>
 																Time : {start_time}-{end_time}
 															</span>
-														</>
-													</div>
-													<div className="d-flex justify-content-between">
-														<button className="btn btn-warning pr-3">
-															Edit
-														</button>
-														<button
-															className="btn btn-danger pr-3"
-															id={club_id}
-															type="submit"
-															onClick={handleCancel}
-														>
-															Cancel
-														</button>
+														</div>
+														<div>
+															<button
+																className="btn btn-danger p-3"
+																id={club_id}
+																type="submit"
+																onClick={handleCancel}
+															>
+																Cancel
+															</button>
+														</div>
 													</div>
 												</div>
 											</form>
 										);
 									})}
-									{/* <div className="d-flex justify-content-between">
-										<button className="btn btn-warning pr-3">Edit</button>
-										<button className="btn btn-danger pr-3">Cancel</button>
-									</div> */}
 								</div>
 								{/* right side of the grid */}
 								<div className="col-lg-8 col-md-8 col-sm-8">
@@ -210,7 +192,7 @@ export default function Dashboard() {
 											session;
 										return (
 											<form onSubmit={handlesubmit} key={index}>
-												<div className="row row gy-3 p-3 mt-2 align-items-center text-center border">
+												<div className="row row gy-3 p-3 mt-2 align-items-center text-center ">
 													<div className="col-sm-12 col-md-12 col-lg-3 text-white d-flex flex-column">
 														<>
 															<span>{club_name}</span>
@@ -253,7 +235,7 @@ export default function Dashboard() {
 															></textarea>
 														</label>
 													</div>
-													<div className="col-sm-12 col-md-12 col-lg-2  border-white ">
+													<div className="col-sm-12 col-md-12 col-lg-2">
 														<button
 															className="btn btn-primary"
 															type="submit"
