@@ -135,7 +135,7 @@ export default function Dashboard() {
 						unmountOnExit
 						onEnter={() => setCancelWarning(false)}
 					>
-						<div className="col-lg-6 col-md-6 col-sm-7 offset-sm-2  text-center bg-success m-3 position-absolute top-20 start-50 translate-middle  rounded-bottom">
+						<div className="col-lg-6 col-md-6 col-sm-7 offset-sm-2  text-center bg-warning m-3 position-absolute top-20 start-50 translate-middle  rounded-bottom">
 							<h4 className="mt-3">Session has been succesfully Cancelled.</h4>
 						</div>
 					</CSSTransition>
@@ -155,14 +155,18 @@ export default function Dashboard() {
 									</div>
 								</div>
 								<div className="col-2">
-									<form>
-										<button
-											className="btn btn-success p-2"
-											type="submit"
-											onClick={joinsession}>
-											<a href={users.zoom_link} target="_blank" rel="noreferrer" id={upcomingsessions[0].club_id}>
+									<form onSubmit={joinsession}>
+										<button >
+											<a
+												onClick={joinsession}
+												className="btn btn-success p-3"
+												href={users.zoom_link}
+												target="_blank"
+												rel="noreferrer"
+												id={upcomingsessions[0].club_id}
+											>
 												Join
-											</a>{" "}
+											</a>
 										</button>
 									</form>
 								</div>

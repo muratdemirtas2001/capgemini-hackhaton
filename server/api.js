@@ -346,7 +346,7 @@ router.post("/cancelbooking", authenticateToken, (req, res) => {
 			[club_id, userID]
 		)
 		.then(() => {
-		res.json({ message: "done" });
+			res.json({ message: "done" });
 		});
 });
 
