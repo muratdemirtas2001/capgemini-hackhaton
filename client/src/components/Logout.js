@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { Navbar , Nav, Container } from "react-bootstrap";
+import { Navbar, Nav, Container } from "react-bootstrap";
 const Logout = () => {
     const history = useHistory();
 
@@ -10,7 +10,7 @@ const Logout = () => {
     };
 
     return (
-        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+        <Navbar collapseOnSelect expand="lg" bg="" variant="dark">
             <Container>
                 {/* <Navbar.Brand href="#home">Welcome to Homework Club</Navbar.Brand> */}
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -19,7 +19,7 @@ const Logout = () => {
                         {/* <Nav.Link><Link to="/dashboard" className="nav-link">DashBoard</Link></Nav.Link> */}
                     </Nav>
                     <Nav>
-                        <Nav.Link onClick={logout} to="/login"className="nav-link">Logout</Nav.Link>
+                        <Nav.Link onClick={logout} to="/login" className="nav-link text-dark">Logout</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

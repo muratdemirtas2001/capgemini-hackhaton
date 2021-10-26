@@ -88,18 +88,34 @@ export default function Dashboard() {
 		setBooksession(newBooking);
 	};
 
+	const joinsession = (e) => {
+		e.preventDefault();
+		console.log(e.target.id);
+		const requestOptions = {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+			body: JSON.stringify({ club_id: e.target.id }),
+		};
 
-	const joinsession = () => {
-		console.log("hello");
+		fetch("/api/updateattendance", requestOptions)
+			.then((response) => response.json())
+			.then(() => {
+				setRender(!render);
+			}).catch((error) => {
+				console.error("Error:", error);
+			});
 	};
 
 	console.log(isPracticed ? users : "loading users");
-	console.log(isPracticed ? booksession : "loading booksession");
+	console.log(isPracticed ? upcomingsessions[0].club_id : "loading booksession");
 	console.log(booksession);
 	return (
 		<>
 			{isPracticed ? (
-				<div className="position-relative">
+				<div className="position-relative studentbackground">
 					<Logout />
 					<CSSTransition
 						in={warning}
@@ -108,7 +124,7 @@ export default function Dashboard() {
 						unmountOnExit
 						onEnter={() => setWarning(false)}
 					>
-						<div className="col-lg-6 col-md-6 col-sm-7 offset-sm-2 text-white text-center bg-success m-3 position-absolute top-20 start-50 translate-middle  rounded-bottom">
+						<div className="col-lg-6 col-md-6 col-sm-7 offset-sm-2 text-center bg-success m-3 position-absolute top-20 start-50 translate-middle  rounded-bottom">
 							<h4 className="mt-3">Session has been succesfully booked.</h4>
 						</div>
 					</CSSTransition>
@@ -119,14 +135,14 @@ export default function Dashboard() {
 						unmountOnExit
 						onEnter={() => setCancelWarning(false)}
 					>
-						<div className="col-lg-6 col-md-6 col-sm-7 offset-sm-2 text-white text-center bg-success m-3 position-absolute top-20 start-50 translate-middle  rounded-bottom">
+						<div className="col-lg-6 col-md-6 col-sm-7 offset-sm-2  text-center bg-success m-3 position-absolute top-20 start-50 translate-middle  rounded-bottom">
 							<h4 className="mt-3">Session has been succesfully Cancelled.</h4>
 						</div>
 					</CSSTransition>
 					<section>
-						<div className="px-3 overflow-hidden bg-dark">
+						<div className="px-3 overflow-hidden">
 							<div className="row p-2 m-2">
-								<div className="col-10 text-white">
+								<div className="col-10">
 									<div>
 										<p>
 											Welcome {users.firstname} {users.lastname}{" "}
@@ -139,16 +155,21 @@ export default function Dashboard() {
 									</div>
 								</div>
 								<div className="col-2">
-									<button className="btn btn-success pr-3" onClick={joinsession}>
-										<a href={users.zoom_link} target="_blank" rel="noreferrer">
-											Join
-										</a>{" "}
-									</button>
+									<form>
+										<button
+											className="btn btn-success pr-3"
+											type="submit"
+											onClick={joinsession}>
+											<a href={users.zoom_link} target="_blank" rel="noreferrer" id={upcomingsessions[0].club_id}>
+												Join
+											</a>{" "}
+										</button>
+									</form>
 								</div>
 							</div>
 							<div className="row gx-5">
 								{/* left side of the grid */}
-								<div className="col-lg-4 col-md-4 col-sm-4 text-white text-center p-3">
+								<div className="col-lg-4 col-md-4 col-sm-4  text-center p-3">
 									<h1>Booked Session</h1>
 									{bookedsessions.map((session, index) => {
 										const { club_id, club_name, date, start_time, end_time } =
@@ -156,7 +177,7 @@ export default function Dashboard() {
 										return (
 											<form onSubmit={handleCancel} key={index}>
 												<div className="d-flex row row gy-3 p-3 mt-2 align-items-center text-center">
-													<div className="text-white d-flex flex-row justify-content-between">
+													<div className="d-flex flex-row justify-content-between">
 														<div className="d-flex flex-column">
 															<span>{club_name}</span>
 															<span>Date : {date}</span>
@@ -183,7 +204,7 @@ export default function Dashboard() {
 								{/* right side of the grid */}
 								<div className="col-lg-8 col-md-8 col-sm-8">
 									<div className="row">
-										<div className="col text-white text-center ">
+										<div className="col text-center ">
 											<h2>Upcoming session</h2>
 										</div>
 									</div>
@@ -193,7 +214,7 @@ export default function Dashboard() {
 										return (
 											<form onSubmit={handlesubmit} key={index}>
 												<div className="row row gy-3 p-3 mt-2 align-items-center text-center ">
-													<div className="col-sm-12 col-md-12 col-lg-3 text-white d-flex flex-column">
+													<div className="col-sm-12 col-md-12 col-lg-3  d-flex flex-column">
 														<>
 															<span>{club_name}</span>
 															<span>Date : {date}</span>
@@ -220,7 +241,7 @@ export default function Dashboard() {
 															})}
 														</select>
 													</div>
-													<div className="col-sm-12 col-md-12 col-lg-3 text-white text-center">
+													<div className="col-sm-12 col-md-12 col-lg-3 text-center">
 														<label htmlFor="note">
 															<textarea
 																id="note"
