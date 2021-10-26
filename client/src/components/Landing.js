@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import showcase from "../assets/showcase.svg";
 export default function Landing() {
     return (
-        <section className="bg-dark text-light p-5 p-lg-0 pt-lg-5 text-center text-sm-start">
+        <section className=" text-dark p-5 p-lg-0 pt-lg-5 text-center text-sm-start">
             <div className="container">
                 <div className="d-sm-flex align-items-center justify-content-between">
                     <div className="animate__animated animate__backInLeft">

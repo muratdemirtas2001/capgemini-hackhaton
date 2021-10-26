@@ -114,13 +114,13 @@ export default function Register() {
             setWarning(false);
         }
     };
-console.log(signup);
+    console.log(signup);
     return (
         <section>
             <Navbarcomponent />
-            <div className="justify-content-center bg-dark p-3 text-white">
-                <fieldset className="justify-content-center align-center d-flex flex-wrap bg-dark p-1">
-                    {warning ? <div className=" justify-content-center align-center  p-3 mb-2 bg-danger text-center  text-white">{error}</div> : null}
+            <div className="justify-content-center p-3 text-dark">
+                <fieldset className="justify-content-center align-center d-flex flex-wrap p-1">
+                    {warning ? <div className=" justify-content-center align-center  p-3 mb-2 bg-danger text-center  text-dark">{error}</div> : null}
                     <legend className="col-12 text-center">Homework Club Sign Up</legend>
                     <form onSubmit={handleSubmit} className="animate__animated animate__flipInY">
                         <div className="input-group input-group-md mb-3">
@@ -194,7 +194,7 @@ console.log(signup);
                             </label>
                         </div>
                         <div className="input-group input-group-md mb-3">
-                            <select  onChange={handleSignUp} className="form-select" aria-label="select example" name="usertype">
+                            <select onChange={handleSignUp} className="form-select" aria-label="select example" name="usertype">
                                 <option>User Type ?</option>
                                 <option value="student" >student</option>
                                 <option value="mentor" >mentor</option>
@@ -202,7 +202,7 @@ console.log(signup);
                         </div>
                         {signup.usertype === "student" ?
                             <div className="input-group input-group-md mb-3">
-                                <select  onChange={handleSignUp} className="form-select" aria-label="select example" name="cohort" >
+                                <select onChange={handleSignUp} className="form-select" aria-label="select example" name="cohort" >
                                     <option>What is your cohort ?</option>
                                     {cohort.map((element, index) => {
                                         return (
