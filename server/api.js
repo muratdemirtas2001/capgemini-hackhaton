@@ -85,17 +85,17 @@ router.post("/signup", (req, res) => {
 							newUser.postgresql,
 							newUser.mongodb,
 						]
-				).then((result)=>{
-                     pool.query("SELECT id from clubs").then((result)=>{
-												console.log(result.rows);
-												result.rows.forEach((id) => {
-													pool.query(
-														"insert into sessions (club_id,user_id,booking_status,attendance_status,free_note) values ($1,$2,false,false,'')",
-														[id.id, newUser.id]
-													);
-												});
-													res.json({ register: "success" });
-											});
+					).then((result) => {
+						pool.query("SELECT id from clubs").then((result) => {
+							console.log(result.rows);
+							result.rows.forEach((id) => {
+								pool.query(
+									"insert into sessions (club_id,user_id,booking_status,attendance_status,free_note) values ($1,$2,false,false,'')",
+									[id.id, newUser.id]
+								);
+							});
+							res.json({ register: "success" });
+						});
 					});
 				}
 			}
@@ -179,17 +179,17 @@ function authenticateToken(req, res, next) {
 
 //verify user is admin middleware
 function admincheck(req, res, next) {
-const userID = req.user.userid;
-pool
-	.query("SELECT user_type from users where id=$1;", [userID])
-	.then((result) => {
-		let user_type = result.rows[0].user_type;
-		if (user_type === "admin") {
-		next();
-		} else {
-			res.sendStatus(403);
-		}
-	});
+	const userID = req.user.userid;
+	pool
+		.query("SELECT user_type from users where id=$1;", [userID])
+		.then((result) => {
+			let user_type = result.rows[0].user_type;
+			if (user_type === "admin") {
+				next();
+			} else {
+				res.sendStatus(403);
+			}
+		});
 
 }
 
@@ -220,25 +220,25 @@ router.get("/dashboard", authenticateToken, (req, res) => {
 				student.bookedsessions = result.rows;
 				pool.query(
 					"select *  from modules",
-				).then((result)=>{
-            student.topics=result.rows;
-			pool.query("select firstname,lastname,cohort,user_type  from users where id=$1",[userID])
-			.then((result)=>{
-				console.log(result.rows);
-			student.firstname = result.rows[0].firstname;
-			student.lastname = result.rows[0].lastname;
-			student.cohort = result.rows[0].cohort;
-			student.usertype = result.rows[0].user_type;
-			pool.query("select zoom_link from zoom")
-			.then((result)=>{
-			student.zoom_link = result.rows[0].zoom_link;
-			res.json(student);
+				).then((result) => {
+					student.topics = result.rows;
+					pool.query("select firstname,lastname,cohort,user_type  from users where id=$1", [userID])
+						.then((result) => {
+							console.log(result.rows);
+							student.firstname = result.rows[0].firstname;
+							student.lastname = result.rows[0].lastname;
+							student.cohort = result.rows[0].cohort;
+							student.usertype = result.rows[0].user_type;
+							pool.query("select zoom_link from zoom")
+								.then((result) => {
+									student.zoom_link = result.rows[0].zoom_link;
+									res.json(student);
+								});
+						});
+				});
 			});
-			});
-		});
-	});
-			})
-			.catch((e) => res.send(JSON.stringify(e)));
+		})
+		.catch((e) => res.send(JSON.stringify(e)));
 });
 
 router.get("/cohorts", (req, res) => {
@@ -275,9 +275,9 @@ router.post("/booksession", authenticateToken, (req, res) => {
 		club_id,
 		note,
 		module_id,
-		} = req.body;
+	} = req.body;
 	const userID = req.user.userid;
-
+	console.log(club_id);
 	pool
 		.query(
 			"select * from sessions where user_id=$1 and club_id=$2",
@@ -285,9 +285,9 @@ router.post("/booksession", authenticateToken, (req, res) => {
 			[userID, club_id]
 		)
 		.then((result) => {
-		pool.query("UPDATE sessions SET booking_status = 'true', free_note=$1,module_id=$2 WHERE club_id = $3 and user_id=$4;",
-					[note, module_id,club_id, userID]
-				)
+			pool.query("UPDATE sessions SET booking_status = 'true', free_note=$1,module_id=$2 WHERE club_id = $3 and user_id=$4;",
+				[note, module_id, club_id, userID]
+			)
 				.then(() => {
 					res.sendStatus(200);
 				});
@@ -296,21 +296,21 @@ router.post("/booksession", authenticateToken, (req, res) => {
 
 });
 
-router.get("/graph", authenticateToken, admincheck,(req, res) => {
-let month = req.query.month;
-let year = req.query.year;
-let startdate = moment(month + year, "MM-YYYY");
-let enddate = moment(startdate).add(1,"M");
+router.get("/graph", authenticateToken, admincheck, (req, res) => {
+	let month = req.query.month;
+	let year = req.query.year;
+	let startdate = moment(month + year, "MM-YYYY");
+	let enddate = moment(startdate).add(1, "M");
 
 	pool
 		.query(
-			"SELECT club_name, count(club_name) as total_attendance FROM (sessions inner join clubs on sessions.club_id=clubs.id ) where start_date >$1 and end_date<$2 group by club_name",[startdate,enddate]
+			"SELECT club_name, count(club_name) as total_attendance FROM (sessions inner join clubs on sessions.club_id=clubs.id ) where start_date >$1 and end_date<$2 group by club_name", [startdate, enddate]
 		)
 		.then((result) => {
-			if(result.rows.length>0){
-		res.json(result.rows);
-			} else{
-				res.json({ "message":"no-club" });
+			if (result.rows.length > 0) {
+				res.json(result.rows);
+			} else {
+				res.json({ "message": "no-club" });
 			}
 
 		})
@@ -322,6 +322,7 @@ let enddate = moment(startdate).add(1,"M");
 router.post("/cancelbooking", authenticateToken, (req, res) => {
 	const { club_id } = req.body;
 	const userID = req.user.userid;
+
 	pool
 		.query(
 			"UPDATE sessions SET booking_status = 'false',free_note='' WHERE club_id = $1 and user_id=$2;",
@@ -332,34 +333,34 @@ router.post("/cancelbooking", authenticateToken, (req, res) => {
 		});
 });
 
-router.post("/changezoomlink", authenticateToken,admincheck, (req, res) => {
+router.post("/changezoomlink", authenticateToken, admincheck, (req, res) => {
 	const { zoom_link } = req.body;
-	pool.query("UPDATE zoom SET zoom_link=$1;", [zoom_link]).then(()=>{
+	pool.query("UPDATE zoom SET zoom_link=$1;", [zoom_link]).then(() => {
 		res.sendStatus(200);
 	});
 
 });
 
-router.post("/assignadmin", authenticateToken,admincheck, (req, res) => {
+router.post("/assignadmin", authenticateToken, admincheck, (req, res) => {
 	const { email } = req.body;
-	pool.query("UPDATE users SET user_type='admin' WHERE email=$1;", [email]).then(()=>{
-	res.sendStatus(200);
+	pool.query("UPDATE users SET user_type='admin' WHERE email=$1;", [email]).then(() => {
+		res.sendStatus(200);
 	});
 });
 
-router.post("/deleteaccount", authenticateToken,admincheck, (req, res) => {
+router.post("/deleteaccount", authenticateToken, admincheck, (req, res) => {
 	const { email } = req.body;
-	pool.query("SELECT email from users WHERE email=$1;", [email]).then((result)=>{
-    if (result.rows.length>0) {
-        pool.query("DELETE from users WHERE email=$1;", [email]);
-		res.sendStatus(200);
-    } else{
-		res.sendStatus(400);
-	}
+	pool.query("SELECT email from users WHERE email=$1;", [email]).then((result) => {
+		if (result.rows.length > 0) {
+			pool.query("DELETE from users WHERE email=$1;", [email]);
+			res.sendStatus(200);
+		} else {
+			res.sendStatus(400);
+		}
 	});
 });
-router.get("/upcomingsessions",authenticateToken,admincheck, (req, res) => {
-	let currentTime=new Date();
+router.get("/upcomingsessions", authenticateToken, admincheck, (req, res) => {
+	let currentTime = new Date();
 	pool
 		.query(
 			"select clubs.id as session_id,club_name as session_title,to_char(start_date,'DD-MM-YYYY') as session_date,to_char(start_date,'HH24:MI') as start_time,to_char(end_date,'HH24:MI') as end_time,sum(case when user_type  = 'student' then 1 else 0 end) as registered_student,sum(case when user_type  = 'mentor' then 1 else 0 end) as registered_mentor from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where sessions.booking_status=true and start_date>$1 group by clubs.id",
@@ -372,19 +373,19 @@ router.get("/upcomingsessions",authenticateToken,admincheck, (req, res) => {
 		.catch((e) => res.send(JSON.stringify(e)));
 });
 
-router.get("/sessiondetails", authenticateToken,admincheck, (req, res) => {
+router.get("/sessiondetails", authenticateToken, admincheck, (req, res) => {
 	let club_id = req.query.session_id;
-	let sessiondetails={ "session":{},"student":{},"mentor":{} };
+	let sessiondetails = { "session": {}, "student": {}, "mentor": {} };
 	pool
-		.query("select clubs.id as session_id,club_name as session_title,to_char(start_date,'DD-MM-YYYY') as session_date,to_char(start_date,'HH24:MI') as start_time,to_char(end_date,'HH24:MI') as end_time from clubs where clubs.id=$1",[club_id]
+		.query("select clubs.id as session_id,club_name as session_title,to_char(start_date,'DD-MM-YYYY') as session_date,to_char(start_date,'HH24:MI') as start_time,to_char(end_date,'HH24:MI') as end_time from clubs where clubs.id=$1", [club_id]
 
 		)
 		.then((result) => {
-			sessiondetails.session=result.rows;
-				pool.query("select firstname || ' ' || lastname as student_name,free_note,modules.module_name,modules.week  from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id inner join modules on sessions.module_id=modules.id where clubs.id=$1 and booking_status=true and user_type='student'",
-					[club_id]
-				).then((result)=>{
-			sessiondetails.student = result.rows;
+			sessiondetails.session = result.rows;
+			pool.query("select firstname || ' ' || lastname as student_name,free_note,modules.module_name,modules.week  from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id inner join modules on sessions.module_id=modules.id where clubs.id=$1 and booking_status=true and user_type='student'",
+				[club_id]
+			).then((result) => {
+				sessiondetails.student = result.rows;
 				pool
 					.query("select firstname || ' ' || lastname as mentor_name,html_css,javascript,react,node,postgresql,mongodb  from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id inner join modules on sessions.module_id=modules.id where clubs.id=$1 and booking_status=true and user_type='mentor'",
 						[club_id]
@@ -393,7 +394,7 @@ router.get("/sessiondetails", authenticateToken,admincheck, (req, res) => {
 						sessiondetails.mentor = result.rows;
 						res.json(sessiondetails);
 					});
-				});
+			});
 		})
 
 		.catch((e) => res.send(JSON.stringify(e)));
@@ -420,14 +421,14 @@ router.get("/sessiondetails", authenticateToken,admincheck, (req, res) => {
 // });
 
 
-router.post("/createnewsession", authenticateToken,admincheck, (req, res) => {
-	const { session_date,start_time,end_time } = req.body;
+router.post("/createnewsession", authenticateToken, admincheck, (req, res) => {
+	const { session_date, start_time, end_time } = req.body;
 	const userID = req.user.userid;
-	let start_date=moment(session_date+" "+start_time);
-	console.log("start date",start_date);
+	let start_date = moment(session_date + " " + start_time);
+	console.log("start date", start_date);
 	let end_date = moment(session_date + " " + end_time);
-	let club_name="";
-	let cutoff_date=start_date.clone();
+	let club_name = "";
+	let cutoff_date = start_date.clone();
 	cutoff_date = cutoff_date.subtract(5, "days");
 	let users;
 	let clubid;
@@ -437,22 +438,22 @@ router.post("/createnewsession", authenticateToken,admincheck, (req, res) => {
 		.then((result) => {
 			let user_type = result.rows[0].user_type;
 			if (user_type === "admin") {
-				pool.query("SELECT id from clubs ORDER BY id DESC  LIMIT 1").then((result)=>{
-                     clubid=result.rows[0].id+1;
+				pool.query("SELECT id from clubs ORDER BY id DESC  LIMIT 1").then((result) => {
+					clubid = result.rows[0].id + 1;
 					club_name = `HCW-${result.rows[0].id + 1}`;
 					pool
-						.query("INSERT INTO clubs (start_date,end_date,club_name,cutoff_date) values($1,$2,$3,$4);", [start_date,end_date,club_name,cutoff_date])
+						.query("INSERT INTO clubs (start_date,end_date,club_name,cutoff_date) values($1,$2,$3,$4);", [start_date, end_date, club_name, cutoff_date])
 						.then((result) => {
-							     pool.query("SELECT id from users").then((result) => {
-											users=result.rows;
-											users.forEach((user) => {
-												pool.query(
-													"insert into sessions (club_id,user_id,booking_status,attendance_status,free_note) values ($1,$2,false,false,'')",
-													[clubid, user.id]
-												);
-											});
-										});
-						res.sendStatus(200);
+							pool.query("SELECT id from users").then((result) => {
+								users = result.rows;
+								users.forEach((user) => {
+									pool.query(
+										"insert into sessions (club_id,user_id,booking_status,attendance_status,free_note) values ($1,$2,false,false,'')",
+										[clubid, user.id]
+									);
+								});
+							});
+							res.sendStatus(200);
 						});
 				});
 
@@ -462,39 +463,39 @@ router.post("/createnewsession", authenticateToken,admincheck, (req, res) => {
 		});
 });
 
-router.get("/allcohorts", authenticateToken, admincheck,async (req, res) => {
+router.get("/allcohorts", authenticateToken, admincheck, async (req, res) => {
 	const userID = req.user.userid;
-	let cohortlist=[];
-	let data={};
+	let cohortlist = [];
+	let data = {};
 	await pool.query(" SELECT firstname || ' ' || lastname as student_name,email,cohort from users where user_type='student' "
-					)
-					.then((result) => {
-						cohortlist = result.rows.map((info) => {
-							return info.cohort;
-						});
-						cohortlist = cohortlist.filter(
-							(item, i, ar) => ar.indexOf(item) === i
-							);
-});
-let listlength=0;
-cohortlist.forEach((cohort) => {
-pool .query(
-						"SELECT firstname || ' ' || lastname as student_name,email from users where user_type='student' and cohort=$1",
-						[cohort]
-					)
-					.then((result) => {
-						data[cohort] = [result.rows];
-						listlength+=1;
-						if (listlength === cohortlist.length) {
-							res.json(data);
-						}
-
-					});
+	)
+		.then((result) => {
+			cohortlist = result.rows.map((info) => {
+				return info.cohort;
 			});
+			cohortlist = cohortlist.filter(
+				(item, i, ar) => ar.indexOf(item) === i
+			);
+		});
+	let listlength = 0;
+	cohortlist.forEach((cohort) => {
+		pool.query(
+			"SELECT firstname || ' ' || lastname as student_name,email from users where user_type='student' and cohort=$1",
+			[cohort]
+		)
+			.then((result) => {
+				data[cohort] = [result.rows];
+				listlength += 1;
+				if (listlength === cohortlist.length) {
+					res.json(data);
+				}
+
+			});
+	});
 
 });
 
-router.post("/createcohort", authenticateToken,admincheck, (req, res) => {
+router.post("/createcohort", authenticateToken, admincheck, (req, res) => {
 	const { cohort_name } = req.body;
 	const userID = req.user.userid;
 	pool
@@ -503,9 +504,9 @@ router.post("/createcohort", authenticateToken,admincheck, (req, res) => {
 			let user_type = result.rows[0].user_type;
 			if (user_type === "admin") {
 				pool
-					.query("INSERT INTO  cohorts (cohort) values($1)",[cohort_name])
+					.query("INSERT INTO  cohorts (cohort) values($1)", [cohort_name])
 					.then(() => {
-					res.sendStatus(200);
+						res.sendStatus(200);
 					});
 			} else {
 				res.sendStatus(401);
@@ -513,7 +514,7 @@ router.post("/createcohort", authenticateToken,admincheck, (req, res) => {
 		});
 });
 
-router.get("/studentattendance",authenticateToken, admincheck, (req, res) => {
+router.get("/studentattendance", authenticateToken, admincheck, (req, res) => {
 	let month = req.query.month;
 	let year = req.query.year;
 	let startdate = moment(month + year, "MM-YYYY");
@@ -530,24 +531,24 @@ router.get("/studentattendance",authenticateToken, admincheck, (req, res) => {
 		.catch((e) => res.send(JSON.stringify(e)));
 });
 
-router.get("/volunteersinfo", authenticateToken,admincheck, (req, res) => {
+router.get("/volunteersinfo", authenticateToken, admincheck, (req, res) => {
 	pool
 		.query(
 			"SELECT firstname || ' ' || lastname as mentor_name, email,html_css,javascript,react,node,postgresql,mongodb from users where user_type='mentor' "
 		)
 		.then((result) => {
-			let data=[];
-			let mentors=result.rows;
-			let skills=["html_css","javascript","react","node","postgresql","mongodb"];
-			mentors.forEach((mentor)=>{
+			let data = [];
+			let mentors = result.rows;
+			let skills = ["html_css", "javascript", "react", "node", "postgresql", "mongodb"];
+			mentors.forEach((mentor) => {
 				let skillmentor = [];
-				skills.forEach((skill)=>{
-            if (mentor[skill]){
-             skillmentor=[...skillmentor, skill];
-			}
-		});
-		mentor.skills=skillmentor;
-		console.log(mentors);
+				skills.forEach((skill) => {
+					if (mentor[skill]) {
+						skillmentor = [...skillmentor, skill];
+					}
+				});
+				mentor.skills = skillmentor;
+				console.log(mentors);
 			});
 			res.json(mentors);
 		})
@@ -556,7 +557,7 @@ router.get("/volunteersinfo", authenticateToken,admincheck, (req, res) => {
 });
 
 
-router.get("/volunteerspecificskill", authenticateToken, admincheck,(req, res) => {
+router.get("/volunteerspecificskill", authenticateToken, admincheck, (req, res) => {
 	let skill = req.query.skill;
 
 	pool
@@ -564,9 +565,9 @@ router.get("/volunteerspecificskill", authenticateToken, admincheck,(req, res) =
 			"SELECT firstname || ' ' || lastname as mentor_name, email,html_css,javascript,react,node,postgresql,mongodb from users where user_type='mentor' "
 		)
 		.then((result) => {
-			let mentors=result.rows;
-			let skilledmentor= mentors.filter((mentor)=>{
-            return mentor[skill]===true;
+			let mentors = result.rows;
+			let skilledmentor = mentors.filter((mentor) => {
+				return mentor[skill] === true;
 			});
 			res.json(skilledmentor);
 		})

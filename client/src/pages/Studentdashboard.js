@@ -8,7 +8,7 @@ export default function Dashboard() {
 	const [isPracticed, setIsPracticed] = useState(false);
 	const [users, setUsers] = useState([]);
 	const [warning, setWarning] = useState(false);
-	const [upcomingsessions, setUpcomingSessions] = useState();
+	const [upcomingsessions, setUpcomingSessions] = useState([]);
 	const [booksession, setBooksession] = useState(
 		{
 			"club_id": "",
@@ -67,8 +67,9 @@ export default function Dashboard() {
 		fetch("/api/booksession", requestOptions)
 			.then((response) => response.json())
 			.then((data) => {
+				console.log("gulen az", data);
 				setWarning(true);
-				setBooksession(booksession.concat(data));
+				setUpcomingSessions(upcomingsessions.filter((session) => session.club_id !== data.club_id));
 			})
 			.catch((error) => {
 				console.error("Error:", error);
@@ -87,9 +88,24 @@ export default function Dashboard() {
 		setBooksession(newBooking);
 	};
 
-	console.log(isPracticed ? users : "loading users");
-	console.log(isPracticed ? booksession : "loading booksession");
-	console.log(booksession);
+	const cancelsession = (id) => {
+		const requestOptions = {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+			body: JSON.stringify(id),
+		};
+		fetch("/api/cancelbooking", requestOptions)
+			.then((response) => response.json())
+			.then((data) => {
+				console.log("hellow", data);
+			})
+			.catch((error) => {
+				console.error("Error:", error);
+			});
+	};
 	return (
 		<>
 			{isPracticed ?
@@ -124,17 +140,20 @@ export default function Dashboard() {
 								{/* left side of the grid */}
 								<div className="col-lg-4 col-md-4 col-sm-4 text-white text-center p-3">
 									<h1>Booked Session</h1>
-									<div>
-										<h3>HW Session 7 ARRAYS</h3>
-										<h4>04/10/2021  17:00 - 19:00</h4>
-										<p>notes: loren impsum  loren impsum loren impsum loren
-											impsum loren impsum loren impsum loren impsum loren
-											impsum loren impsum loren impsum loren impsum</p>
-									</div>
-									<div className="d-flex justify-content-between">
-										<button className="btn btn-warning pr-3">Edit</button>
-										<button className="btn btn-danger pr-3">Cancel</button>
-									</div>
+									{users.bookedsessions.map((session) => {
+										const { start_date, end_date, club_name, club_id } = session;
+										return (
+											<>
+												<div>
+													<h3>{club_name}</h3>
+													<h4>{start_date} - {end_date}</h4>
+												</div>
+												<div className="">
+													<button className="btn btn-danger pr-3" onClick={() => cancelsession(club_id)}>Cancel</button>
+												</div>
+											</>
+										);
+									})}
 								</div>
 								{/* right side of the grid */}
 								<div className="col-lg-8 col-md-8 col-sm-8">
