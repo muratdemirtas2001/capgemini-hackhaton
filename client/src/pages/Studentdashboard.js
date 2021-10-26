@@ -3,6 +3,9 @@ import React, { useEffect, useState } from "react";
 import Logout from "../components/Logout";
 import Footer from "../components/Footer";
 import { CSSTransition } from "react-transition-group";
+import { now } from "moment";
+const moment = require("moment");
+
 export default function Dashboard() {
 	const token = localStorage.getItem("users");
 	const [isPracticed, setIsPracticed] = useState(false);
@@ -78,9 +81,33 @@ export default function Dashboard() {
 			.then(() => {
 				setRender(!render);
 				setCancelWarning(true);
-			}).catch((error) => {
+			})
+			.catch((error) => {
 				console.error("Error:", error);
 			});
+	};
+
+	const handleJoin = (e) => {
+		e.preventDefault();
+		const requestOptions = {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+			body: JSON.stringify({ club_id: e.target.id }),
+		};
+
+		fetch("/api/updateattendance", requestOptions)
+			.then((response) => response.json())
+			.then(() => {
+				// setRender(!render);
+			})
+			.catch((error) => {
+				console.error("Error:", error);
+			});
+		const link = users.zoom_link;
+		window.open(link, "_blank");
 	};
 
 	const handlebooking = (e) => {
@@ -104,7 +131,8 @@ export default function Dashboard() {
 			.then((response) => response.json())
 			.then(() => {
 				setRender(!render);
-			}).catch((error) => {
+			})
+			.catch((error) => {
 				console.error("Error:", error);
 			});
 		const link = users.zoom_link;
@@ -112,8 +140,12 @@ export default function Dashboard() {
 	};
 
 	console.log(isPracticed ? users : "loading users");
-	console.log(isPracticed ? upcomingsessions[0].club_id : "loading booksession");
+	console.log(
+		isPracticed ? upcomingsessions[0].club_id : "loading booksession"
+	);
 	console.log(booksession);
+
+
 	return (
 		<>
 			{isPracticed ? (
@@ -156,21 +188,23 @@ export default function Dashboard() {
 										</span>
 									</div>
 								</div>
-								<div className="col-2">
-									<form onSubmit={joinsession}>
-										<button className="btn btn-success p-2" onClick={joinsession} id={upcomingsessions[0].club_id}>
-											Go To Lesson
-										</button>
-									</form>
-								</div>
 							</div>
 							<div className="row gx-5">
 								{/* left side of the grid */}
 								<div className="col-lg-4 col-md-4 col-sm-4  text-center p-3">
-									<h1>Booked Session</h1>
+									<h2>Booked Session</h2>
 									{bookedsessions.map((session, index) => {
-										const { club_id, club_name, date, start_time, end_time } =
-											session;
+										const {
+											club_id,
+											club_name,
+											date,
+											start_time,
+											end_time,
+											starttime_in_full,
+										} = session;
+										let timedifference=(starttime_in_full - moment().unix())/3600>2;
+
+
 										return (
 											<form onSubmit={handleCancel} key={index}>
 												<div className="d-flex row row gy-3 p-3 mt-2 align-items-center text-center">
@@ -183,6 +217,19 @@ export default function Dashboard() {
 															</span>
 														</div>
 														<div>
+															<button
+																className={
+																	timedifference
+																		? "btn btn-info p-3"
+																		: "btn btn-primary p-3"
+																}
+																id={club_id}
+																type="submit"
+																onClick={handleJoin}
+																disabled={timedifference ? true : false}
+															>
+																Join the lesson
+															</button>
 															<button
 																className="btn btn-danger p-3"
 																id={club_id}
@@ -202,7 +249,7 @@ export default function Dashboard() {
 								<div className="col-lg-8 col-md-8 col-sm-8">
 									<div className="row">
 										<div className="col text-center ">
-											<h2>Upcoming session</h2>
+											<h2>Sessions to register</h2>
 										</div>
 									</div>
 									{upcomingsessions.map((session, index) => {
