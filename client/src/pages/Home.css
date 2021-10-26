@@ -6,7 +6,7 @@
 
 body {
 	box-sizing: border-box;
-	/* background-color: #212529; */
+	background-color: #F0F8FF;
 }
 
 h2 {
@@ -50,4 +50,9 @@ nav{
 
 .studentbackground{
 	background-color: #F0F8FF;
+	width: 100%;
+}
+
+footer{
+	width:100%;
 }

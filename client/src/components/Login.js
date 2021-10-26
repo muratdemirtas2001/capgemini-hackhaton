@@ -46,16 +46,16 @@ export default function Login() {
             })
                 .then((res) => res.json())
                 .then((data) => {
-                      console.log("sdsds",data);
+                    console.log("sdsds", data);
                     localStorage.setItem("users", data.token);
                     if (data.auth === "success") {
-                        if(data.usertype === "student"){
+                        if (data.usertype === "student") {
                             history.push("/student");
                         }
-                        if(data.usertype === "mentor"){
+                        if (data.usertype === "mentor") {
                             history.push("/mentor");
                         }
-                        if(data.usertype === "admin"){
+                        if (data.usertype === "admin") {
                             history.push("/admin");
                         }
 
@@ -67,7 +67,7 @@ export default function Login() {
                         history.push("/login");
                     }
 
-                    console.log("login localstoragedaki token is",localStorage.users);
+                    console.log("login localstoragedaki token is", localStorage.users);
                 });
             // console.log(result);
             // localStorage.setItem("users", result);
@@ -81,11 +81,11 @@ export default function Login() {
     return (
         <div>
             <Navbarcomponent />
-            <section className="bg-dark text-light p-5 pt-lg-5 text-center text-sm-start">
+            <section className="text-dark p-5 pt-lg-5 text-center text-sm-start">
                 <div className="container animate__animated animate__flipInY">
                     <fieldset className="align-items-center  ">
-                    {warning ? <div className="col-lg-12 p-3 mb-2 bg-danger text-white text-center">{error}</div> : null}
-                        <div className="justify-content-center align-center d-flex flex-wrap bg-dark p-3">
+                        {warning ? <div className="col-lg-12 p-3 mb-2 bg-danger text-dark text-center">{error}</div> : null}
+                        <div className="justify-content-center align-center d-flex flex-wrap  p-3">
                             <legend className="col-12 text-center" >Homework Club Login</legend>
                             <form onSubmit={handleSubmit}>
                                 <div>

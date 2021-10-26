@@ -157,7 +157,7 @@ export default function Dashboard() {
 								<div className="col-2">
 									<form>
 										<button
-											className="btn btn-success pr-3"
+											className="btn btn-success p-2"
 											type="submit"
 											onClick={joinsession}>
 											<a href={users.zoom_link} target="_blank" rel="noreferrer" id={upcomingsessions[0].club_id}>
