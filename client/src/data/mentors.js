@@ -1,15 +1,25 @@
 const mentorsData = [
 	{
-		name: "Billy Smith",
-		email: "billly.smith@email.com",
-		skills: ["jquery", "html"],
-		attendedSessions: 10,
+		mentor_name: "Murat Demirtas",
+		email: "muratdemirtas88888@gmail.com",
+		html_css: true,
+		javascript: true,
+		react: false,
+		node: false,
+		postgresql: false,
+		mongodb: false,
+		skills: ["html_css", "javascript"],
 	},
 	{
-		name: "John Smith",
-		email: "john.smith@email.com",
-		skills: ["jquery", "html"],
-		attendedSessions: 6,
+		mentor_name: "muratti murattii",
+		email: "a@gmail.com",
+		html_css: true,
+		javascript: true,
+		react: true,
+		node: true,
+		postgresql: false,
+		mongodb: false,
+		skills: ["html_css", "javascript", "react", "node"],
 	},
 ];
 
