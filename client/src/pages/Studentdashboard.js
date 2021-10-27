@@ -40,36 +40,40 @@ export default function Dashboard() {
 
 	const handlesubmit = (e) => {
 		e.preventDefault();
-		const requestOptions = {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${token}`,
-			},
-			body: JSON.stringify(booksession),
-		};
-		fetch("/api/booksession", requestOptions)
-			.then((response) => response.json())
-			.then(() => {
-				console.log("hello book session");
-				setRender(!render);
-				setWarning(true);
-			})
-			.catch((error) => {
-				console.error("Error:", error);
+		if (confirm("Are you sure you want to register the session ?")) {
+			const requestOptions = {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify(booksession),
+			};
+			fetch("/api/booksession", requestOptions)
+				.then((response) => response.json())
+				.then(() => {
+					console.log("hello book session");
+					setRender(!render);
+					setWarning(true);
+				})
+				.catch((error) => {
+					console.error("Error:", error);
+				});
+			setBooksession({
+				club_id: "",
+				note: "",
+				module_id: "",
 			});
-		setBooksession({
-			club_id: "",
-			note: "",
-			module_id: "",
-		});
+			console.log(booksession);
+		} else {
+			// Do nothing!
+			console.log("Thing was not saved to the database.");
+		}
 	};
 
 	const handleCancel = (e) => {
 		e.preventDefault();
 		if (confirm("Are you sure you want to cancel the session ?")) {
-			// Save it!
-			console.log("Thing was saved to the database.");
 			const requestOptions = {
 				method: "POST",
 				headers: {
@@ -128,9 +132,9 @@ export default function Dashboard() {
 	};
 
 
-	console.log(isPracticed ? users : "loading users");
-	console.log(isPracticed ? upcomingsessions[0].club_id : "loading booksession");
-	console.log(booksession);
+	// console.log(isPracticed ? users : "loading users");
+	// console.log(isPracticed ? upcomingsessions[0].club_id : "loading booksession");
+	// console.log(booksession);
 
 
 	return (
@@ -145,7 +149,7 @@ export default function Dashboard() {
 						unmountOnExit
 						onEnter={() => setWarning(false)}
 					>
-						<div className="col-lg-6 col-md-6 col-sm-7 offset-sm-2 text-center bg-success m-3 position-absolute top-20 start-50 translate-middle  rounded-bottom">
+						<div className="col-lg-6 col-md-6 col-sm-7 offset-sm-2 text-center bg-success m-3 position-absolute top-20 start-50 translate-middle  rounded-bottom p-3">
 							<h4 className="mt-3">Session has been succesfully booked.</h4>
 						</div>
 					</CSSTransition>
@@ -156,7 +160,7 @@ export default function Dashboard() {
 						unmountOnExit
 						onEnter={() => setCancelWarning(false)}
 					>
-						<div className="col-lg-6 col-md-6 col-sm-7 offset-sm-2  text-center bg-info m-3 position-absolute top-20 start-50 translate-middle  rounded-bottom">
+						<div className="col-lg-6 col-md-6 col-sm-7 offset-sm-2 text-danger  text-center bg-info m-3 position-absolute top-20 start-50 translate-middle  rounded-bottom">
 							<h4 className="mt-3">Session has been succesfully Cancelled.</h4>
 						</div>
 					</CSSTransition>
