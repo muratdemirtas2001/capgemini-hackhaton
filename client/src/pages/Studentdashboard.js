@@ -60,11 +60,7 @@ export default function Dashboard() {
 				.catch((error) => {
 					console.error("Error:", error);
 				});
-			setBooksession({
-				club_id: "",
-				note: "please Type here",
-				module_id: "",
-			});
+			window.location.reload();
 		} else {
 			alert("please make sure you have added topic choice and note");
 		}
@@ -131,7 +127,7 @@ export default function Dashboard() {
 	};
 
 
-	// console.log(isPracticed ? users : "loading users");
+	console.log(isPracticed ? users : "loading users");
 	// console.log(isPracticed ? upcomingsessions[0].club_id : "loading booksession");
 	// console.log(booksession);
 
