@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Logout from "../components/Logout";
 import Footer from "../components/Footer";
 import { CSSTransition } from "react-transition-group";
-import { now } from "moment";
+// import { now } from "moment";
 const moment = require("moment");
 
 export default function Dashboard() {
@@ -40,55 +40,71 @@ export default function Dashboard() {
 
 	const handlesubmit = (e) => {
 		e.preventDefault();
-		const requestOptions = {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${token}`,
-			},
-			body: JSON.stringify(booksession),
-		};
-		fetch("/api/booksession", requestOptions)
-			.then((response) => response.json())
-			.then(() => {
-				console.log("hello book session");
-				setRender(!render);
-				setWarning(true);
-			})
-			.catch((error) => {
-				console.error("Error:", error);
+		if (confirm("Are you sure you want to register the session ?")) {
+			const requestOptions = {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify(booksession),
+			};
+			fetch("/api/booksession", requestOptions)
+				.then((response) => response.json())
+				.then(() => {
+					console.log("hello book session");
+					setRender(!render);
+					setWarning(true);
+				})
+				.catch((error) => {
+					console.error("Error:", error);
+				});
+			setBooksession({
+				club_id: "",
+				note: "",
+				module_id: "",
 			});
-		setBooksession({
-			club_id: "",
-			note: "",
-			module_id: "",
-		});
+			console.log(booksession);
+		} else {
+			// Do nothing!
+			console.log("Thing was not saved to the database.");
+		}
 	};
 
 	const handleCancel = (e) => {
 		e.preventDefault();
-		const requestOptions = {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${token}`,
-			},
-			body: JSON.stringify({ club_id: e.target.id }),
-		};
-
-		fetch("/api/cancelbooking", requestOptions)
-			.then((response) => response.json())
-			.then(() => {
-				setRender(!render);
-				setCancelWarning(true);
-			})
-			.catch((error) => {
-				console.error("Error:", error);
+		if (confirm("Are you sure you want to cancel the session ?")) {
+			const requestOptions = {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({ club_id: e.target.id }),
+			};
+			fetch("/api/cancelbooking", requestOptions)
+				.then((response) => response.json())
+				.then(() => {
+					setRender(!render);
+					setCancelWarning(true);
+				})
+				.catch((error) => {
+					console.error("Error:", error);
+				});
+			setBooksession({
+				club_id: "",
+				note: "",
+				module_id: "",
 			});
+		} else {
+			// Do nothing!
+			console.log("Thing was not saved to the database.");
+		}
 	};
 
 	const handleJoin = (e) => {
 		e.preventDefault();
+		console.log("hello zoom");
 		const requestOptions = {
 			method: "POST",
 			headers: {
@@ -115,35 +131,10 @@ export default function Dashboard() {
 		setBooksession(newBooking);
 	};
 
-	const joinsession = (e) => {
-		e.preventDefault();
-		console.log(e.target.id);
-		const requestOptions = {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${token}`,
-			},
-			body: JSON.stringify({ club_id: e.target.id }),
-		};
 
-		fetch("/api/updateattendance", requestOptions)
-			.then((response) => response.json())
-			.then(() => {
-				setRender(!render);
-			})
-			.catch((error) => {
-				console.error("Error:", error);
-			});
-		const link = users.zoom_link;
-		window.open(link, "_blank");
-	};
-
-	console.log(isPracticed ? users : "loading users");
-	console.log(
-		isPracticed ? upcomingsessions[0].club_id : "loading booksession"
-	);
-	console.log(booksession);
+	// console.log(isPracticed ? users : "loading users");
+	// console.log(isPracticed ? upcomingsessions[0].club_id : "loading booksession");
+	// console.log(booksession);
 
 
 	return (
@@ -158,7 +149,7 @@ export default function Dashboard() {
 						unmountOnExit
 						onEnter={() => setWarning(false)}
 					>
-						<div className="col-lg-6 col-md-6 col-sm-7 offset-sm-2 text-center bg-success m-3 position-absolute top-20 start-50 translate-middle  rounded-bottom">
+						<div className="col-lg-6 col-md-6 col-sm-7 offset-sm-2 text-center bg-success m-3 position-absolute top-20 start-50 translate-middle  rounded-bottom p-3">
 							<h4 className="mt-3">Session has been succesfully booked.</h4>
 						</div>
 					</CSSTransition>
@@ -169,7 +160,7 @@ export default function Dashboard() {
 						unmountOnExit
 						onEnter={() => setCancelWarning(false)}
 					>
-						<div className="col-lg-6 col-md-6 col-sm-7 offset-sm-2  text-center bg-success m-3 position-absolute top-20 start-50 translate-middle  rounded-bottom">
+						<div className="col-lg-6 col-md-6 col-sm-7 offset-sm-2 text-danger  text-center bg-info m-3 position-absolute top-20 start-50 translate-middle  rounded-bottom">
 							<h4 className="mt-3">Session has been succesfully Cancelled.</h4>
 						</div>
 					</CSSTransition>
@@ -194,6 +185,7 @@ export default function Dashboard() {
 								<div className="col-lg-4 col-md-4 col-sm-4  text-center p-3">
 									<h2>Booked Session</h2>
 									{bookedsessions.map((session, index) => {
+										console.log(starttime_in_full);
 										const {
 											club_id,
 											club_name,
@@ -202,11 +194,11 @@ export default function Dashboard() {
 											end_time,
 											starttime_in_full,
 										} = session;
-										let timedifference=(starttime_in_full - moment().unix())/3600>2;
+										let timedifference = (starttime_in_full - moment().unix()) / 3600 > 2;
 
 
 										return (
-											<form onSubmit={handleCancel} key={index}>
+											<form key={index}>
 												<div className="d-flex row row gy-3 p-3 mt-2 align-items-center text-center">
 													<div className="d-flex flex-row justify-content-between">
 														<div className="d-flex flex-column">
