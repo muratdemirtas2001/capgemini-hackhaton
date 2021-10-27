@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { Modal } from "react-bootstrap";
 import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
@@ -18,7 +17,7 @@ const NewSessionModal = ({ show, setShowModal }) => {
 	return (
 		<Modal show={show} onHide={handleClose}>
 			<Modal.Header closeButton>
-				<Modal.Title>Add a new admin</Modal.Title>
+				<Modal.Title>Create a new session</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<p>
