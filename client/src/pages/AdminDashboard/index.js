@@ -5,7 +5,6 @@ import "./AdminDashboard.css";
 // components
 import Button from "../../components/Button";
 import AttendanceGraph from "../../components/AttendanceGraph";
-import Navbarcomponent from "../../components/Navbarcomponent";
 import upcomingSessionsAdmin from "../../data/upcomingSessionsAdmin";
 import ResponsiveTable from "../../components/ResponsiveTable";
 import AttendanceDateFilters from "../../components/AttendanceDateFilters";
@@ -24,10 +23,10 @@ import AdminNavigationItem from "../../components/AdminNavigationItem";
 import AddAdminModal from "../../components/addAdminModal";
 import DeleteUserModal from "../../components/deleteUserModal";
 import CohortsAccordion from "../../components/CohortsAccordion";
+import NewSessionModal from "../../components/NewSessionModal";
 
 const AdminDashboard = () => {
 	const [showModal, setShowModal] = useState(false);
-	const modalContent = "Buttons";
 	const [currentPage, setCurrentPage] = useState("Sessions");
 	const [currentMonth, setCurrentMonth] = useState();
 	const [currentYear, setCurrentYear] = useState();
@@ -49,6 +48,11 @@ const AdminDashboard = () => {
 
 	const displayAddAdminModal = () => {
 		setModalType("add admin");
+		setShowModal(true);
+	};
+
+	const displayNewSessionModal = () => {
+		setModalType("new session");
 		setShowModal(true);
 	};
 
@@ -85,7 +89,12 @@ const AdminDashboard = () => {
 					<div className="admin-container">
 						<div className="admin-heading-container">
 							<h2 className="admin-heading">Upcoming sessions</h2>
-							<Button label="New session" mode="primary" size="small" />
+							<Button
+								label="New session"
+								mode="primary"
+								size="small"
+								onClick={displayNewSessionModal}
+							/>
 							<Button label="Update zoom link" mode="primary" size="small" />
 						</div>
 						<ResponsiveTable
@@ -141,6 +150,9 @@ const AdminDashboard = () => {
 				)}
 				{modalType === "add admin" && (
 					<AddAdminModal setShowModal={setShowModal} show={showModal} />
+				)}
+				{modalType === "new session" && (
+					<NewSessionModal setShowModal={setShowModal} show={showModal} />
 				)}
 			</div>
 		</div>
