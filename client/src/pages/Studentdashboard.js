@@ -39,8 +39,9 @@ export default function Dashboard() {
 	}, [token, render]);
 
 	const handlesubmit = (e) => {
+		const { club_id, note, module_id } = booksession;
 		e.preventDefault();
-		if (confirm("Are you sure you want to register the session ?")) {
+		if (club_id && note && module_id) {
 			const requestOptions = {
 				method: "POST",
 				headers: {
@@ -61,13 +62,11 @@ export default function Dashboard() {
 				});
 			setBooksession({
 				club_id: "",
-				note: "",
+				note: "please Type here",
 				module_id: "",
 			});
-			console.log(booksession);
 		} else {
-			// Do nothing!
-			console.log("Thing was not saved to the database.");
+			alert("please make sure you have added topic choice and note");
 		}
 	};
 
@@ -185,7 +184,6 @@ export default function Dashboard() {
 								<div className="col-lg-4 col-md-4 col-sm-4  text-center p-3">
 									<h2>Booked Session</h2>
 									{bookedsessions.map((session, index) => {
-										console.log(starttime_in_full);
 										const {
 											club_id,
 											club_name,
@@ -195,8 +193,6 @@ export default function Dashboard() {
 											starttime_in_full,
 										} = session;
 										let timedifference = (starttime_in_full - moment().unix()) / 3600 > 2;
-
-
 										return (
 											<form key={index}>
 												<div className="d-flex row row gy-3 p-3 mt-2 align-items-center text-center">
