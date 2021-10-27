@@ -24,6 +24,7 @@ import AddAdminModal from "../../components/addAdminModal";
 import DeleteUserModal from "../../components/deleteUserModal";
 import CohortsAccordion from "../../components/CohortsAccordion";
 import NewSessionModal from "../../components/NewSessionModal";
+import NewZoomLinkModal from "../../components/NewZoomLinkModal";
 
 const AdminDashboard = () => {
 	const [showModal, setShowModal] = useState(false);
@@ -53,6 +54,11 @@ const AdminDashboard = () => {
 
 	const displayNewSessionModal = () => {
 		setModalType("new session");
+		setShowModal(true);
+	};
+
+	const displayNewZoomLinkModal = () => {
+		setModalType("new zoom link");
 		setShowModal(true);
 	};
 
@@ -95,7 +101,12 @@ const AdminDashboard = () => {
 								size="small"
 								onClick={displayNewSessionModal}
 							/>
-							<Button label="Update zoom link" mode="primary" size="small" />
+							<Button
+								label="Update zoom link"
+								mode="primary"
+								size="small"
+								onClick={displayNewZoomLinkModal}
+							/>
 						</div>
 						<ResponsiveTable
 							data={upcomingSessionsAdmin}
@@ -153,6 +164,9 @@ const AdminDashboard = () => {
 				)}
 				{modalType === "new session" && (
 					<NewSessionModal setShowModal={setShowModal} show={showModal} />
+				)}
+				{modalType === "new zoom link" && (
+					<NewZoomLinkModal setShowModal={setShowModal} show={showModal} />
 				)}
 			</div>
 		</div>
