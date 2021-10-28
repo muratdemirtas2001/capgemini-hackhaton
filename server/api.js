@@ -217,14 +217,14 @@ router.get("/dashboard", authenticateToken, (req, res) => {
 
 	pool
 		.query(
-			"select to_char(start_date AT TIME ZONE 'Z','DD-MM-YYYY') as date, to_char(start_date AT TIME ZONE 'Z','HH24:MI') as start_time,to_char(end_date AT TIME ZONE 'Z','HH24:MI') as end_time,to_char(cutoff_date AT TIME ZONE 'Z','DD-MM-YYYY') as cutoff_date,club_name,club_id from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where users.id=$1 and sessions.booking_status=false and start_date> now() LIMIT 2",
+			"select  to_char(start_date AT TIME ZONE 'Z','DD-MM-YYYY') as date, to_char(start_date AT TIME ZONE 'Z','HH24:MI') as start_time,to_char(end_date AT TIME ZONE 'Z','HH24:MI') as end_time,to_char(cutoff_date AT TIME ZONE 'Z','DD-MM-YYYY') as cutoff_date,club_name,club_id from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where users.id=$1 and sessions.booking_status=false and start_date> now() ORDER BY start_date ASC",
 			[userID]
 		)
 		.then((result) => {
 			student.upcomingsessions = result.rows;
 			pool
 				.query(
-					"select to_char(start_date AT TIME ZONE 'Z','DD-MM-YYYY') as date, to_char(start_date AT TIME ZONE 'Z','HH24:MI') as start_time,to_char(end_date AT TIME ZONE 'Z','HH24:MI') as end_time,club_name,club_id from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where users.id=$1 and sessions.booking_status=true and start_date> now()",
+					"select EXTRACT(EPOCH FROM start_date) as starttime_in_full,to_char(start_date AT TIME ZONE 'Z','DD-MM-YYYY') as date, to_char(start_date AT TIME ZONE 'Z','HH24:MI') as start_time,to_char(end_date AT TIME ZONE 'Z','HH24:MI') as end_time,club_name,club_id from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where users.id=$1 and sessions.booking_status=true and start_date> now() ORDER BY start_date ASC",
 					[userID]
 				)
 				.then((result) => {
@@ -296,7 +296,7 @@ router.post("/booksession", authenticateToken, (req, res) => {
 					[note, module_id, club_id, userID]
 				)
 				.then(() => {
-					res.sendStatus(200);
+					res.json({ message: "done" });
 				});
 			// }
 		});
@@ -311,7 +311,7 @@ router.post("/updateattendance", authenticateToken, (req, res) => {
 			[club_id, userID]
 		)
 		.then(() => {
-			res.sendStatus(200);
+			res.json({ message: "done" });
 		});
 });
 
@@ -346,7 +346,7 @@ router.post("/cancelbooking", authenticateToken, (req, res) => {
 			[club_id, userID]
 		)
 		.then(() => {
-			res.sendStatus(200);
+			res.json({ message: "done" });
 		});
 });
 

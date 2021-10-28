@@ -6,7 +6,8 @@
 
 body {
 	box-sizing: border-box;
-	/* background-color: #212529; */
+	background-color: #F0F8FF;
+	font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
 }
 
 h2 {
@@ -39,4 +40,20 @@ p {
 a {
 	color: #fff;
 	text-decoration: none;
+}
+
+.footerbg {
+	background-color: #F0F8FF;
+}
+nav{
+	background-color: #F0F8FF;
+}
+
+.studentbackground{
+	background-color: #F0F8FF;
+	width: 100%;
+}
+
+footer{
+	width:100%;
 }
