@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import "./AdminDashboard.css";
 
@@ -25,6 +25,7 @@ import DeleteUserModal from "../../components/deleteUserModal";
 import CohortsAccordion from "../../components/CohortsAccordion";
 import NewSessionModal from "../../components/NewSessionModal";
 import NewZoomLinkModal from "../../components/NewZoomLinkModal";
+import NewCohortModal from "../../components/NewCohortModal";
 
 const AdminDashboard = () => {
 	const [showModal, setShowModal] = useState(false);
@@ -42,25 +43,10 @@ const AdminDashboard = () => {
 	const name = "Sarah";
 	const headings = ["Session", "Date", "Students:Mentor", "Actions"];
 
-	const displayDeleteUserModal = () => {
-		setModalType("delete user");
+	const displayModal = useCallback((newModalType) => {
+		setModalType(newModalType);
 		setShowModal(true);
-	};
-
-	const displayAddAdminModal = () => {
-		setModalType("add admin");
-		setShowModal(true);
-	};
-
-	const displayNewSessionModal = () => {
-		setModalType("new session");
-		setShowModal(true);
-	};
-
-	const displayNewZoomLinkModal = () => {
-		setModalType("new zoom link");
-		setShowModal(true);
-	};
+	}, []);
 
 	useEffect(() => {
 		if (currentPage === "Attendance") {
@@ -82,12 +68,12 @@ const AdminDashboard = () => {
 						<AdminNavigationItem
 							page={"Add admin"}
 							active={true}
-							onClick={displayAddAdminModal}
+							onClick={() => displayModal("add admin")}
 						/>
 						<AdminNavigationItem
 							page={"Delete user"}
 							active={true}
-							onClick={displayDeleteUserModal}
+							onClick={() => displayModal("delete user")}
 						/>
 					</div>
 				</div>
@@ -99,13 +85,13 @@ const AdminDashboard = () => {
 								label="New session"
 								mode="primary"
 								size="small"
-								onClick={displayNewSessionModal}
+								onClick={() => displayModal("new session")}
 							/>
 							<Button
 								label="Update zoom link"
 								mode="primary"
 								size="small"
-								onClick={displayNewZoomLinkModal}
+								onClick={() => displayModal("new zoom link")}
 							/>
 						</div>
 						<ResponsiveTable
@@ -151,7 +137,12 @@ const AdminDashboard = () => {
 					<div className="admin-container">
 						<div className="admin-heading-container">
 							<h2 className="admin-heading">Cohorts</h2>
-							<Button label="New" mode="primary" size="small" />
+							<Button
+								label="New"
+								mode="primary"
+								size="small"
+								onClick={() => displayModal("new cohort")}
+							/>
 						</div>
 						<CohortsAccordion />
 					</div>
@@ -167,6 +158,9 @@ const AdminDashboard = () => {
 				)}
 				{modalType === "new zoom link" && (
 					<NewZoomLinkModal setShowModal={setShowModal} show={showModal} />
+				)}
+				{modalType === "new cohort" && (
+					<NewCohortModal setShowModal={setShowModal} show={showModal} />
 				)}
 			</div>
 		</div>

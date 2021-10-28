@@ -3,7 +3,6 @@ import { Modal } from "react-bootstrap";
 
 import Button from "../components/Button";
 import ResponsiveTable from "../components/ResponsiveTable";
-import mentorsTableHeadings from "../constants/mentorsTableHeadings";
 import mentorsData from "../data/mentors";
 import checkStudentVolunteerRatio from "./checkStudentVolunteerRatio";
 import displayMentorsTableForSession from "./displayMentorsTableForSession";
@@ -17,6 +16,7 @@ const displayUpcomingSessionsForAdmin = (upcomingSessions) => {
 
 		const cancelSession = () => {
 			console.log(id);
+			// request to api to cancel session
 		};
 
 		const getSessionDetails = () => {
@@ -43,10 +43,7 @@ const displayUpcomingSessionsForAdmin = (upcomingSessions) => {
 		return (
 			<>
 				<tr
-					className={[
-						`isRatioAcceptable--${isRatioAcceptable}`,
-						"upcoming-session-container",
-					].join(" ")}
+					className={[`isRatioAcceptable--${isRatioAcceptable}`].join(" ")}
 					key={`${index}-table-row`}
 				>
 					<td key={`${index}-title`}> {session.session_title}</td>
@@ -99,7 +96,7 @@ const displayUpcomingSessionsForAdmin = (upcomingSessions) => {
 				</tr>
 				<Modal show={show} onHide={handleClose} key={`${index}-details-modal`}>
 					<Modal.Header closeButton>
-						<Modal.Title>Session details</Modal.Title>
+						<Modal.Title>Session Details</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>{modalContent}</Modal.Body>
 				</Modal>

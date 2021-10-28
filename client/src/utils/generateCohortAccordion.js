@@ -1,3 +1,4 @@
+import { BsChevronCompactDown } from "react-icons/bs";
 import {
 	AccordionItem,
 	AccordionItemHeading,
@@ -15,7 +16,10 @@ const generateCohortAccordion = (cohorts) => {
 			<AccordionItem key={`${index}--cohort-accordion`} uuid={index + 1}>
 				<AccordionItemHeading>
 					<AccordionItemButton>
-						<h4>{cohort[0]} </h4>
+						<div className="accordion-item-container">
+							<h4>{cohort[0]} </h4>
+							<BsChevronCompactDown size={24} />
+						</div>
 					</AccordionItemButton>
 				</AccordionItemHeading>
 				<AccordionItemPanel>

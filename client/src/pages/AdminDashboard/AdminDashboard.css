@@ -1,3 +1,7 @@
+.link:hover {
+	cursor: pointer;
+}
+
 .admin-body-container {
 	background-color: aliceblue;
 }

@@ -1,3 +1,4 @@
+import { BsChevronCompactDown } from "react-icons/bs";
 import {
 	AccordionItem,
 	AccordionItemHeading,
@@ -8,14 +9,16 @@ import ResponsiveTable from "../components/ResponsiveTable";
 import displayAttendanceTable from "./displayAttendanceTable";
 
 const generateAttendanceAccordion = (sessions) => {
-	console.log(sessions);
 	const headings = ["Full name", "Role", "Cohort", "Attendance status"];
 	return sessions.map((session, index) => {
 		return (
 			<AccordionItem key={`${index}--attendance-accordion`} uuid={index + 1}>
 				<AccordionItemHeading>
 					<AccordionItemButton>
-						<h4>Session | 10 registered </h4>
+						<div className="accordion-item-container">
+							<h4>Session | 10 registered </h4>
+							<BsChevronCompactDown size={24} />
+						</div>
 					</AccordionItemButton>
 				</AccordionItemHeading>
 				<AccordionItemPanel>

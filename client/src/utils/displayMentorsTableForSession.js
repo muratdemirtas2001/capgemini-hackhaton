@@ -9,7 +9,7 @@ const displayMentorsTableForSession = (mentors) => {
 		return (
 			<tr key={`${index}-mentors-to-request`}>
 				<td key={`${index}-mentor--name-r`}>{mentor.mentor_name}</td>
-				<td key={`${index}-mentor-skills-r`}>{mentor.skills.join(", ")}</td>
+				<td key={`${index}-mentor-skills-r`}>{mentor.skills.join(" | ")}</td>
 				<td key={`${index}-mentor-request-btn`}>
 					<Button
 						label="Request"
