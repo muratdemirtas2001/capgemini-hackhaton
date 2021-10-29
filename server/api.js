@@ -620,6 +620,67 @@ router.get("/studentattendance", authenticateToken, admincheck, (req, res) => {
 		.catch((e) => res.send(JSON.stringify(e)));
 });
 
+router.get("/attendance", authenticateToken, admincheck, (req, res) => {
+	let month = req.query.month;
+	let year = req.query.year;
+	let startdate = moment(month + year, "MM-YYYY");
+	let enddate = moment(startdate).add(1, "M");
+	let sessiondetails = { session: {}, student: {}, mentor: {} };
+
+	pool
+		.query("SELECT club_name FROM clubs where start_date>$1 and end_date<$2", [
+			startdate,
+			enddate,
+		])
+		.then((result) => {
+			result.rows.forEach((club) => {
+				pool
+					.query(
+						"select clubs.id as session_id,club_name as session_title,to_char(start_date,'DD-MM-YYYY') as session_date,to_char(start_date,'HH24:MI') as start_time,to_char(end_date,'HH24:MI') as end_time from clubs where clubs.club_name=$1",
+						[club.club_name]
+					)
+					.then((result) => {
+						sessiondetails.session = [...result.rows];
+						console.log("hi");
+						// console.log(sessiondetails);
+					});
+			});
+			console.log(sessiondetails);
+		})
+		.then(() => {
+			res.json(sessiondetails);
+		});
+
+	// .catch((e) => res.send(JSON.stringify(e)));
+
+	// let club_id = req.query.session_id;
+	// let sessiondetails = { session: {}, student: {}, mentor: {} };
+	// pool
+	// 	.query(
+	// 		"select clubs.id as session_id,club_name as session_title,to_char(start_date,'DD-MM-YYYY') as session_date,to_char(start_date,'HH24:MI') as start_time,to_char(end_date,'HH24:MI') as end_time from clubs where clubs.id=$1",
+	// 		[club_id]
+	// 	)
+	// 	.then((result) => {
+	// 		sessiondetails.session = result.rows;
+	// 		pool
+	// 			.query(
+	// 				"select firstname || ' ' || lastname as student_name,free_note,modules.module_name,modules.week  from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id inner join modules on sessions.module_id=modules.id where clubs.id=$1 and booking_status=true and user_type='student'",
+	// 				[club_id]
+	// 			)
+	// 			.then((result) => {
+	// 				sessiondetails.student = result.rows;
+	// 				pool
+	// 					.query(
+	// 						"select firstname || ' ' || lastname as mentor_name,html_css,javascript,react,node,postgresql,mongodb  from ( sessions inner join users on sessions.user_id=users.id ) inner join clubs on sessions.club_id=clubs.id where clubs.id=$1 and booking_status=true and user_type='mentor'",
+	// 						[club_id]
+	// 					)
+	// 					.then((result) => {
+	// 						sessiondetails.mentor = result.rows;
+	// 						res.json(sessiondetails);
+	// 					});
+	// 			});
+	// 	});
+});
 router.get("/mentor_skills", authenticateToken, (req, res) => {
 	console.log(" mentor skills called  here");
 	const mentorID = req.user.userid;
@@ -651,7 +712,7 @@ router.get("/sessions", authenticateToken, (req, res) => {
 router.post("/mentorbooksession", authenticateToken, (req, res) => {
 	// console.log(req);
 	console.log("mentor booksession called");
-	const { club_id, note, module_id } = req.body;
+	const { club_id } = req.body;
 	const userID = req.user.userid;
 	pool
 		.query("select * from sessions where user_id=$1 and club_id=$2", [
@@ -661,11 +722,11 @@ router.post("/mentorbooksession", authenticateToken, (req, res) => {
 		.then((result) => {
 			pool
 				.query(
-					"UPDATE sessions SET booking_status = 'true', free_note=$1,module_id=$2 WHERE club_id = $3 and user_id=$4;",
-					[note, module_id, club_id, userID]
+					"UPDATE sessions SET booking_status = 'true', free_note='NULL',module_id='NULL' WHERE club_id = $1 and user_id=$2;",
+					[club_id, userID]
 				)
 				.then(() => {
-					res.sendStatus(200);
+					res.json({ message: "done" });
 				});
 			// }
 		});
