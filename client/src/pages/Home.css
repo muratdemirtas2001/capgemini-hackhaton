@@ -57,3 +57,7 @@ nav{
 footer{
 	width:100%;
 }
+
+section{
+	min-height: 530px;
+}
