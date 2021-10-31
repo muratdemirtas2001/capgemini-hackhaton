@@ -1,0 +1,8 @@
+h4 {
+	padding-right: 10px;
+}
+
+.accordion-item-container {
+	display: flex;
+	justify-content: flex-start;
+}

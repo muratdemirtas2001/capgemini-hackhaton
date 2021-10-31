@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import Mentordashboard from "./pages/Mentordashboard";
-import AdminDashboard from "./pages/AdminDashboard";
+import AdminDashboard from "./pages/AdminDashboard/";
 import Studentdashboard from "./pages/Studentdashboard";
 
 const App = () => (
