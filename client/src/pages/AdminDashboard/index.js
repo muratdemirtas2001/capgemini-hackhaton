@@ -28,18 +28,29 @@ import NewZoomLinkModal from "../../components/NewZoomLinkModal";
 import NewCohortModal from "../../components/NewCohortModal";
 
 const AdminDashboard = () => {
+	const getCurrentDate = () => {
+		return new Date();
+	};
+
+	const getCurrentMonth = () => {
+		const date = new Date();
+		const newMonth = date.getMonth() + 1;
+		const month = convertMonthToString(newMonth);
+		return month;
+	};
+
 	const [showModal, setShowModal] = useState(false);
 	const [currentPage, setCurrentPage] = useState("Sessions");
-	const [currentMonth, setCurrentMonth] = useState();
-	const [currentYear, setCurrentYear] = useState();
-	const [month, setMonth] = useState();
-	const [year, setYear] = useState();
+	const [sessions, setSessions] = useState(upcomingSessionsAdmin);
+	const [month, setMonth] = useState(getCurrentMonth);
+	const [year, setYear] = useState(getCurrentDate().getFullYear());
 	const [skill, setSkill] = useState();
 	const [modalType, setModalType] = useState();
 	const [mentors, setMentors] = useState(mentorsData);
 	const [attendanceInformation, setAttendanceInformation] =
 		useState(attendanceInfo);
 	const pageOptions = ["Sessions", "Attendance", "Mentors", "Cohorts"];
+	// get this from api token
 	const name = "Sarah";
 	const headings = ["Session", "Date", "Students:Mentor", "Actions"];
 
@@ -49,13 +60,23 @@ const AdminDashboard = () => {
 	}, []);
 
 	useEffect(() => {
-		if (currentPage === "Attendance") {
-			let newDate = new Date();
-			const month = newDate.getMonth() + 1;
-			setCurrentYear(newDate.getFullYear());
-			setCurrentMonth(convertMonthToString(month));
+		if (currentPage === "Sessions") {
+			//call api to get sessions info
+			//setSessions to api response
+			// delete upcomingSessionsAdmin var
 		}
-	}, [currentPage, currentMonth, currentYear]);
+		if (currentPage === "Attendance") {
+			//call api to get attendance info, pass the year and and month
+			//setAttendanceInformation to api response
+			// delete attendanceInfo var
+		}
+		if (currentPage === "Mentors") {
+			// check if skill has been selected
+			// call api here to get mentors info passing (or not) the selected skill
+			// setMentors with what is retrieved from api
+			// get rid of mentorsData import
+		}
+	}, [currentPage]);
 
 	return (
 		<div className="admin-body-container">
@@ -95,7 +116,7 @@ const AdminDashboard = () => {
 							/>
 						</div>
 						<ResponsiveTable
-							data={upcomingSessionsAdmin}
+							data={sessions}
 							headings={headings}
 							displayFunction={displayUpcomingSessionsForAdmin}
 						/>
@@ -109,8 +130,6 @@ const AdminDashboard = () => {
 							setMonth={setMonth}
 							year={year}
 							setYear={setYear}
-							currentMonth={currentMonth}
-							currentYear={currentYear}
 						/>
 						<div>
 							<AttendanceGraph />

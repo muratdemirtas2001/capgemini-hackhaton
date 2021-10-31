@@ -8,6 +8,7 @@ const NewZoomLinkModal = ({ show, setShowModal }) => {
 	const zoomLink = useRef();
 
 	const updateZoomLink = () => {
+		//call api to update zoom link
 		console.log(zoomLink.current.value);
 	};
 

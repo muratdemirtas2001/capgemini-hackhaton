@@ -3,13 +3,13 @@ import { useRef } from "react";
 
 import Button from "../Button";
 
-const NewCohortModal = () => {
+const NewCohortModal = ({ setShowModal, show }) => {
 	const handleClose = () => setShowModal(false);
 	const cohortName = useRef();
 
 	const createCohort = () => {
 		console.log(cohortName.current.value);
-		//call api
+		//call api to create cohort
 	};
 
 	return (
@@ -21,7 +21,7 @@ const NewCohortModal = () => {
 				<p>Enter the name of the new cohort below.</p>
 				<input ref={cohortName}></input>
 				<Button
-					label="Update link"
+					label="Create cohort"
 					onClick={createCohort}
 					size="medium"
 					mode="primary"

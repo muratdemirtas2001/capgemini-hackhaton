@@ -1,19 +1,8 @@
-import { useEffect } from "react";
-
 import "./AttendanceDateFilters.css";
 
 import generateOptions from "../../utils/generateOptions";
 
-const AttendanceDateFilters = ({
-	month,
-	setMonth,
-	year,
-	setYear,
-	currentMonth,
-	currentYear,
-}) => {
-	const activeMonthFilter = month ? month : currentMonth;
-	const activeYearFilter = year ? year : currentYear;
+const AttendanceDateFilters = ({ month, setMonth, year, setYear }) => {
 	const months = [
 		"January",
 		"February",
@@ -30,10 +19,6 @@ const AttendanceDateFilters = ({
 	];
 	const years = [2020, 2021];
 
-	useEffect(() => {
-		console.log("data fetching for", activeYearFilter, activeMonthFilter);
-	});
-
 	const applyMonthFilter = (event) => {
 		setMonth(event.target.value);
 	};
@@ -44,10 +29,10 @@ const AttendanceDateFilters = ({
 
 	return (
 		<div className="filters-container">
-			<select value={activeMonthFilter} onChange={applyMonthFilter}>
+			<select value={month} onBlur={applyMonthFilter}>
 				{generateOptions(months)}
 			</select>
-			<select value={activeYearFilter} onChange={applyYearFilter}>
+			<select value={year} onBlur={applyYearFilter}>
 				{generateOptions(years)}
 			</select>
 		</div>

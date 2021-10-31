@@ -7,6 +7,7 @@ const DeleteUserModal = ({ show, setShowModal }) => {
 	const userEmail = useRef();
 
 	const deleteUser = () => {
+		//call api to delete user
 		console.log(userEmail.current.value);
 	};
 

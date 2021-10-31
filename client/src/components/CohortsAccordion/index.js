@@ -3,7 +3,8 @@ import cohortsInfo from "../../data/cohortsInfo";
 import generateCohortAccordion from "../../utils/generateCohortAccordion";
 
 const CohortsAccordion = () => {
-	// fetch cohort info here
+	// call api to fetch cohort info here
+	// replace 'cohortsInfo' with what comes back from api
 
 	const cohorts = Object.entries(cohortsInfo);
 

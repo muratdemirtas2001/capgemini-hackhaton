@@ -14,18 +14,15 @@ const displayUpcomingSessionsForAdmin = (upcomingSessions) => {
 		const handleClose = () => setShow(false);
 		const id = session.session_id;
 
-		const cancelSession = () => {
-			console.log(id);
-			// request to api to cancel session
-		};
-
 		const getSessionDetails = () => {
-			//make request to get details of session
+			console.log(id);
+			//make api request to get details of session and pass id of the session
 			setModalContent("Details");
 			setShow(true);
 		};
 
 		const getVolunteers = () => {
+			// make api call to get mentors and replace the mentorsData var with fetched data
 			setModalContent(
 				<ResponsiveTable
 					data={mentorsData}
@@ -63,21 +60,9 @@ const displayUpcomingSessionsForAdmin = (upcomingSessions) => {
 									mode="secondary"
 									onClick={getSessionDetails}
 								/>
-								<Button
-									label="Cancel"
-									size="small"
-									mode="secondary"
-									onClick={cancelSession}
-								/>
 							</div>
 						) : (
 							<div>
-								<Button
-									label="Request Volunteers"
-									size="small"
-									mode="primary"
-									onClick={getVolunteers}
-								/>
 								<Button
 									label="Details"
 									size="small"
@@ -85,10 +70,10 @@ const displayUpcomingSessionsForAdmin = (upcomingSessions) => {
 									onClick={getSessionDetails}
 								/>
 								<Button
-									label="Cancel"
+									label="Request Volunteers"
 									size="small"
-									mode="secondary"
-									onClick={cancelSession}
+									mode="primary"
+									onClick={getVolunteers}
 								/>
 							</div>
 						)}
@@ -96,9 +81,13 @@ const displayUpcomingSessionsForAdmin = (upcomingSessions) => {
 				</tr>
 				<Modal show={show} onHide={handleClose} key={`${index}-details-modal`}>
 					<Modal.Header closeButton>
-						<Modal.Title>Session Details</Modal.Title>
+						<Modal.Title>{session.session_title}</Modal.Title>
 					</Modal.Header>
-					<Modal.Body>{modalContent}</Modal.Body>
+					<Modal.Body>
+						<div id="session-container" data={id}>
+							{modalContent}
+						</div>
+					</Modal.Body>
 				</Modal>
 			</>
 		);

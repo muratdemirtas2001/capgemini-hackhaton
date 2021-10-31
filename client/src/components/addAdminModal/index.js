@@ -7,6 +7,7 @@ const AddAdminModal = ({ show, setShowModal }) => {
 	const adminEmail = useRef();
 
 	const addAdmin = () => {
+		//call api to add amin
 		console.log(adminEmail.current.value);
 	};
 

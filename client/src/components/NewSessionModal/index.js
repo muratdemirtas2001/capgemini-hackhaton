@@ -10,6 +10,7 @@ const NewSessionModal = ({ show, setShowModal }) => {
 	const handleClose = () => setShowModal(false);
 
 	const createNewSession = () => {
+		//call api to create session
 		const dateTimeUnformatted = $(".form-control").attr("value");
 		console.log(dateTimeUnformatted);
 	};
