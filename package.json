@@ -80,6 +80,7 @@
 		"express": "^4.17.1",
 		"helmet": "^4.6.0",
 		"i": "^0.3.7",
+		"jquery": "^3.6.0",
 		"jsonwebtoken": "^8.5.1",
 		"moment": "^2.29.1",
 		"morgan": "^1.10.0",
@@ -91,9 +92,11 @@
 		"react-bar-chart": "^0.1.2",
 		"react-bootstrap": "^2.0.0-rc.0",
 		"react-chartjs-2": "^3.1.1",
+		"react-datetime": "^3.1.1",
 		"react-hook-form": "^7.17.2",
-		"react-icons": "^4.2.0",
+		"react-icons": "^4.3.1",
 		"react-tabs": "^3.2.2",
+		"sendmail": "^1.6.1",
 		"uuid": "^8.3.2"
 	},
 	"engines": {

@@ -4,5 +4,7 @@
 
 .isRatioAcceptable--false {
 	color: #000000;
-	background-color: #faa7a7;
+	border-width: 2px;
+	border-color: crimson;
+	background-color: rgb(255, 246, 248);
 }

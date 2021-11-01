@@ -1,14 +1,17 @@
 const AdminNavigationItem = ({ page, onClick, active }) => {
-    return (
-        active ? (
-            <div>
-
-                <p onClick={onClick} className="bold-text"> {page} </p>
-            </div>
-        ) : (
-        <p onClick={onClick}> {page} </p>
-        )
-    );
+	return active ? (
+		<div>
+			<p className="link bold-text" onClick={onClick}>
+				{" "}
+				{page}{" "}
+			</p>
+		</div>
+	) : (
+		<p className="link" onClick={onClick}>
+			{" "}
+			{page}{" "}
+		</p>
+	);
 };
 
 export default AdminNavigationItem;

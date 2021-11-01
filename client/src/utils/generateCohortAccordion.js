@@ -6,26 +6,27 @@ import {
 	AccordionItemPanel,
 } from "react-accessible-accordion";
 import ResponsiveTable from "../components/ResponsiveTable";
-import displayAttendanceTable from "./displayAttendanceTable";
+import displayCohortsTable from "./displayCohortsTable";
 
-const generateAttendanceAccordion = (sessions) => {
-	const headings = ["Full name", "Role", "Cohort", "Attendance status"];
-	return sessions.map((session, index) => {
+const generateCohortAccordion = (cohorts) => {
+	console.log(cohorts);
+	const headings = ["Full name", "Email"];
+	return cohorts.map((cohort, index) => {
 		return (
-			<AccordionItem key={`${index}--attendance-accordion`} uuid={index + 1}>
+			<AccordionItem key={`${index}--cohort-accordion`} uuid={index + 1}>
 				<AccordionItemHeading>
 					<AccordionItemButton>
 						<div className="accordion-item-container">
-							<h4>Session | 10 registered </h4>
+							<h4>{cohort[0]} </h4>
 							<BsChevronCompactDown size={24} />
 						</div>
 					</AccordionItemButton>
 				</AccordionItemHeading>
 				<AccordionItemPanel>
 					<ResponsiveTable
-						data={sessions}
+						data={cohort[1]}
 						headings={headings}
-						displayFunction={displayAttendanceTable}
+						displayFunction={displayCohortsTable}
 					/>
 				</AccordionItemPanel>
 			</AccordionItem>
@@ -33,4 +34,4 @@ const generateAttendanceAccordion = (sessions) => {
 	});
 };
 
-export default generateAttendanceAccordion;
+export default generateCohortAccordion;

@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import "./AdminDashboard.css";
 
 // components
 import Button from "../../components/Button";
 import AttendanceGraph from "../../components/AttendanceGraph";
-import Navbarcomponent from "../../components/Navbarcomponent";
 import upcomingSessionsAdmin from "../../data/upcomingSessionsAdmin";
 import ResponsiveTable from "../../components/ResponsiveTable";
 import AttendanceDateFilters from "../../components/AttendanceDateFilters";
@@ -20,43 +19,104 @@ import attendanceInfo from "../../data/attendanceInfo";
 import displayMentorsTable from "../../utils/displayMentorsTable";
 import mentorsData from "../../data/mentors";
 import mentorsTableHeadings from "../../constants/mentorsTableHeadings";
+import AdminNavigationItem from "../../components/AdminNavigationItem";
+import AddAdminModal from "../../components/addAdminModal";
+import DeleteUserModal from "../../components/deleteUserModal";
+import CohortsAccordion from "../../components/CohortsAccordion";
+import NewSessionModal from "../../components/NewSessionModal";
+import NewZoomLinkModal from "../../components/NewZoomLinkModal";
+import NewCohortModal from "../../components/NewCohortModal";
 
 const AdminDashboard = () => {
+	const getCurrentDate = () => {
+		return new Date();
+	};
+
+	const getCurrentMonth = () => {
+		const date = new Date();
+		const newMonth = date.getMonth() + 1;
+		const month = convertMonthToString(newMonth);
+		return month;
+	};
+
+	const [showModal, setShowModal] = useState(false);
 	const [currentPage, setCurrentPage] = useState("Sessions");
-	const [currentMonth, setCurrentMonth] = useState();
-	const [currentYear, setCurrentYear] = useState();
-	const [month, setMonth] = useState();
-	const [year, setYear] = useState();
+	const [sessions, setSessions] = useState(upcomingSessionsAdmin);
+	const [month, setMonth] = useState(getCurrentMonth);
+	const [year, setYear] = useState(getCurrentDate().getFullYear());
 	const [skill, setSkill] = useState();
+	const [modalType, setModalType] = useState();
 	const [mentors, setMentors] = useState(mentorsData);
 	const [attendanceInformation, setAttendanceInformation] =
 		useState(attendanceInfo);
 	const pageOptions = ["Sessions", "Attendance", "Mentors", "Cohorts"];
+	// get this from api token
 	const name = "Sarah";
-	const headings = ["Session", "Date", "Students:Mentors", ""];
+	const headings = ["Session", "Date", "Students:Mentor", "Actions"];
+
+	const displayModal = useCallback((newModalType) => {
+		setModalType(newModalType);
+		setShowModal(true);
+	}, []);
 
 	useEffect(() => {
-		if (currentPage === "Attendance") {
-			let newDate = new Date();
-			const month = newDate.getMonth() + 1;
-			setCurrentYear(newDate.getFullYear());
-			setCurrentMonth(convertMonthToString(month));
+		if (currentPage === "Sessions") {
+			//call api to get sessions info
+			//setSessions to api response
+			// delete upcomingSessionsAdmin var
 		}
-	}, [currentPage, currentMonth, currentYear]);
+		if (currentPage === "Attendance") {
+			//call api to get attendance info, pass the year and and month
+			//setAttendanceInformation to api response
+			// delete attendanceInfo var
+		}
+		if (currentPage === "Mentors") {
+			// check if skill has been selected
+			// call api here to get mentors info passing (or not) the selected skill
+			// setMentors with what is retrieved from api
+			// get rid of mentorsData import
+		}
+	}, [currentPage]);
 
 	return (
-		<>
-			<h1 className="center-text"> Welcome {name}!</h1>
+		<div className="admin-body-container">
+			<h1 className="center-text title"> Welcome {name}!</h1>
 			<div className="admin-main-container">
 				<div className="admin-nav-container">
 					{createNavigationLinks(pageOptions, currentPage, setCurrentPage)}
+					<div className="account-management-container">
+						<p> Manage accounts </p>
+						<AdminNavigationItem
+							page={"Add admin"}
+							active={true}
+							onClick={() => displayModal("add admin")}
+						/>
+						<AdminNavigationItem
+							page={"Delete user"}
+							active={true}
+							onClick={() => displayModal("delete user")}
+						/>
+					</div>
 				</div>
 				{currentPage === "Sessions" && (
 					<div className="admin-container">
-						<h2 className="admin-heading">Upcoming sessions</h2>
-						<Button label="New" mode="primary" size="small" />
+						<div className="admin-heading-container">
+							<h2 className="admin-heading">Upcoming sessions</h2>
+							<Button
+								label="New session"
+								mode="primary"
+								size="small"
+								onClick={() => displayModal("new session")}
+							/>
+							<Button
+								label="Update zoom link"
+								mode="primary"
+								size="small"
+								onClick={() => displayModal("new zoom link")}
+							/>
+						</div>
 						<ResponsiveTable
-							data={upcomingSessionsAdmin}
+							data={sessions}
 							headings={headings}
 							displayFunction={displayUpcomingSessionsForAdmin}
 						/>
@@ -65,14 +125,11 @@ const AdminDashboard = () => {
 				{currentPage === "Attendance" && (
 					<div className="admin-container">
 						<h2 className="admin-heading">Attendance</h2>
-
 						<AttendanceDateFilters
 							month={month}
 							setMonth={setMonth}
 							year={year}
 							setYear={setYear}
-							currentMonth={currentMonth}
-							currentYear={currentYear}
 						/>
 						<div>
 							<AttendanceGraph />
@@ -97,12 +154,35 @@ const AdminDashboard = () => {
 				)}
 				{currentPage === "Cohorts" && (
 					<div className="admin-container">
-						<h2 className="admin-heading">Cohorts</h2>
-						<Button label="New" mode="primary" size="small" />
+						<div className="admin-heading-container">
+							<h2 className="admin-heading">Cohorts</h2>
+							<Button
+								label="New"
+								mode="primary"
+								size="small"
+								onClick={() => displayModal("new cohort")}
+							/>
+						</div>
+						<CohortsAccordion />
 					</div>
 				)}
+				{modalType === "delete user" && (
+					<DeleteUserModal setShowModal={setShowModal} show={showModal} />
+				)}
+				{modalType === "add admin" && (
+					<AddAdminModal setShowModal={setShowModal} show={showModal} />
+				)}
+				{modalType === "new session" && (
+					<NewSessionModal setShowModal={setShowModal} show={showModal} />
+				)}
+				{modalType === "new zoom link" && (
+					<NewZoomLinkModal setShowModal={setShowModal} show={showModal} />
+				)}
+				{modalType === "new cohort" && (
+					<NewCohortModal setShowModal={setShowModal} show={showModal} />
+				)}
 			</div>
-		</>
+		</div>
 	);
 };
 

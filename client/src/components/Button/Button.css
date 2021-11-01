@@ -1,5 +1,5 @@
 .button--primary {
-	background-color: #ed4343;
+	background-color: #12abdb;
 	color: #f8f9fa;
 	margin: auto;
 }
@@ -17,8 +17,8 @@
 }
 
 .button--small {
-	font-size: 14px;
-	padding: 8px;
+	font-size: 13px;
+	padding: 5px;
 	margin: 4px;
 	border-radius: 7px;
 	border: none;
