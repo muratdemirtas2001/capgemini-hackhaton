@@ -52,7 +52,7 @@ const AdminDashboard = () => {
 		useState(attendanceInfo);
 	const pageOptions = ["Sessions", "Attendance", "Mentors", "Cohorts"];
 	// get this from api token
-	const name = "Sarah";
+	const name = "";
 	const headings = ["Session", "Date", "Students:Mentor", "Actions"];
 
 	const displayModal = useCallback((newModalType) => {
@@ -65,18 +65,18 @@ const AdminDashboard = () => {
 			//call api to get sessions info
 			//setSessions to api response
 			// delete upcomingSessionsAdmin var
-				fetch("/api/upcomingsessions", {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${token}`,
-					},
-				})
-					.then((res) => res.json())
-					.then((data) => {
-						console.log(data);
-						setSessions(data);
-					});
+			fetch("/api/upcomingsessions", {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			})
+				.then((res) => res.json())
+				.then((data) => {
+					console.log(data);
+					setSessions(data);
+				});
 		}
 		// if (currentPage === "Attendance") {
 		// 	//call api to get attendance info, pass the year and and month
@@ -88,20 +88,20 @@ const AdminDashboard = () => {
 			// call api here to get mentors info passing (or not) the selected skill
 			// setMentors with what is retrieved from api
 			// get rid of mentorsData import
-				fetch("/api/volunteersinfo", {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${token}`,
-					},
-				})
-					.then((res) => res.json())
-					.then((data) => {
-						console.log(data);
-						setMentors(data);
-					});
+			fetch("/api/volunteersinfo", {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			})
+				.then((res) => res.json())
+				.then((data) => {
+					console.log(data);
+					setMentors(data);
+				});
 		}
-	}, [currentPage,token]);
+	}, [currentPage, token]);
 
 	return (
 		<div className="admin-body-container">

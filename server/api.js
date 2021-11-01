@@ -139,6 +139,7 @@ router.post("/signin", (req, res) => {
 						email: email,
 						userid: result.rows[0].id,
 						usertype: result.rows[0].user_type,
+						firstName: result.rows[0].firstname,
 					};
 					console.log(user);
 					const token = jwt.sign(user, process.env.TOKEN_SECRET, {
@@ -148,6 +149,7 @@ router.post("/signin", (req, res) => {
 						token: token,
 						auth: "success",
 						usertype: user.usertype,
+						firstName:user.firstName
 					});
 				} else {
 					return res.status(400).json({
