@@ -1,5 +1,6 @@
 const displayMentorsTable = (mentors) => {
 	return mentors.map((mentor, index) => {
+		console.log(mentor);
 		return (
 			<tr key={`${index}-mentors-table-row`}>
 				<td key={`${index}-mentor--name`}>{mentor.mentor_name}</td>

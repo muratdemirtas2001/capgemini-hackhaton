@@ -21,7 +21,7 @@ import mentorsData from "../../data/mentors";
 import mentorsTableHeadings from "../../constants/mentorsTableHeadings";
 import AdminNavigationItem from "../../components/AdminNavigationItem";
 import AddAdminModal from "../../components/addAdminModal";
-import DeleteUserModal from "../../components/deleteUserModal";
+import DeleteUserModal from "../../components/DeleteUserModal";
 import CohortsAccordion from "../../components/CohortsAccordion";
 import NewSessionModal from "../../components/NewSessionModal";
 import NewZoomLinkModal from "../../components/NewZoomLinkModal";
@@ -31,6 +31,7 @@ const AdminDashboard = () => {
 	const getCurrentDate = () => {
 		return new Date();
 	};
+	const token = localStorage.getItem("users");
 
 	const getCurrentMonth = () => {
 		const date = new Date();
@@ -41,7 +42,7 @@ const AdminDashboard = () => {
 
 	const [showModal, setShowModal] = useState(false);
 	const [currentPage, setCurrentPage] = useState("Sessions");
-	const [sessions, setSessions] = useState(upcomingSessionsAdmin);
+	const [sessions, setSessions] = useState();
 	const [month, setMonth] = useState(getCurrentMonth);
 	const [year, setYear] = useState(getCurrentDate().getFullYear());
 	const [skill, setSkill] = useState();
@@ -64,19 +65,43 @@ const AdminDashboard = () => {
 			//call api to get sessions info
 			//setSessions to api response
 			// delete upcomingSessionsAdmin var
+				fetch("/api/upcomingsessions", {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				})
+					.then((res) => res.json())
+					.then((data) => {
+						console.log(data);
+						setSessions(data);
+					});
 		}
-		if (currentPage === "Attendance") {
-			//call api to get attendance info, pass the year and and month
-			//setAttendanceInformation to api response
-			// delete attendanceInfo var
-		}
+		// if (currentPage === "Attendance") {
+		// 	//call api to get attendance info, pass the year and and month
+		// 	//setAttendanceInformation to api response
+		// 	// delete attendanceInfo var
+		// }
 		if (currentPage === "Mentors") {
 			// check if skill has been selected
 			// call api here to get mentors info passing (or not) the selected skill
 			// setMentors with what is retrieved from api
 			// get rid of mentorsData import
+				fetch("/api/volunteersinfo", {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				})
+					.then((res) => res.json())
+					.then((data) => {
+						console.log(data);
+						setMentors(data);
+					});
 		}
-	}, [currentPage]);
+	}, [currentPage,token]);
 
 	return (
 		<div className="admin-body-container">
@@ -98,7 +123,7 @@ const AdminDashboard = () => {
 						/>
 					</div>
 				</div>
-				{currentPage === "Sessions" && (
+				{currentPage === "Sessions" && sessions && (
 					<div className="admin-container">
 						<div className="admin-heading-container">
 							<h2 className="admin-heading">Upcoming sessions</h2>
@@ -141,7 +166,7 @@ const AdminDashboard = () => {
 						</div>
 					</div>
 				)}
-				{currentPage === "Mentors" && (
+				{currentPage === "Mentors" && mentors && (
 					<div className="admin-container">
 						<h2 className="admin-heading">Mentors</h2>
 						<MentorSkillFilter skill={skill} setSkill={setSkill} />

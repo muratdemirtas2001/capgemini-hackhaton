@@ -8,29 +8,69 @@ import checkStudentVolunteerRatio from "./checkStudentVolunteerRatio";
 import displayMentorsTableForSession from "./displayMentorsTableForSession";
 
 const displayUpcomingSessionsForAdmin = (upcomingSessions) => {
+		const token = localStorage.getItem("users");
+
 	return upcomingSessions.map((session, index) => {
 		const [show, setShow] = useState();
 		const [modalContent, setModalContent] = useState();
-		const handleClose = () => setShow(false);
-		const id = session.session_id;
+		const handleClose = () =>    (false);
+		const session_id = session.session_id;
 
 		const getSessionDetails = () => {
-			console.log(id);
+			// console.log(id);
 			//make api request to get details of session and pass id of the session
-			setModalContent("Details");
-			setShow(true);
+			// fetch(
+			// 	"https://example.com?" +
+			// 		new URLSearchParams({
+			// 			foo: "value",
+			// 			bar: 2,
+			// 		})
+			// );
+			// 	fetch("/api/sessiondetails?" + new URLSearchParams( { session_id:session_id }) ,{
+			// 		method: "GET",
+			// 		headers: {
+			// 			"Content-Type": "application/json",
+			// 			Authorization: `Bearer ${token}`,
+			// 		},
+			// 	})
+			// 		.then((res) => res.json())
+			// 		.then((data) => {
+			// 			console.log(data);
+			// 			setModalContent(data);
+			// 			setShow(true);
+					// });
+			// setModalContent("Details");
+			// setShow(true);
 		};
 
 		const getVolunteers = () => {
 			// make api call to get mentors and replace the mentorsData var with fetched data
-			setModalContent(
-				<ResponsiveTable
-					data={mentorsData}
-					displayFunction={displayMentorsTableForSession}
-					headings={["Name", "Skills", "Contact"]}
-				/>
-			);
-			setShow(true);
+				fetch("/api/volunteersinfo", {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				})
+					.then((res) => res.json())
+					.then((mentorsData) => {
+							setModalContent(
+								<ResponsiveTable
+									data={mentorsData}
+									displayFunction={displayMentorsTableForSession}
+									headings={["Name", "Skills", "Contact"]}
+								/>
+							);
+							setShow(true);
+					});
+			// setModalContent(
+			// 	<ResponsiveTable
+			// 		data={mentorsData}
+			// 		displayFunction={displayMentorsTableForSession}
+			// 		headings={["Name", "Skills", "Contact"]}
+			// 	/>
+			// );
+			// setShow(true);
 		};
 
 		const isRatioAcceptable = checkStudentVolunteerRatio(
@@ -84,7 +124,7 @@ const displayUpcomingSessionsForAdmin = (upcomingSessions) => {
 						<Modal.Title>{session.session_title}</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
-						<div id="session-container" data={id}>
+						<div id="session-container" data={session_id}>
 							{modalContent}
 						</div>
 					</Modal.Body>
