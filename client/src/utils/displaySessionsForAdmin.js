@@ -7,12 +7,12 @@ import mentorsData from "../data/mentors";
 import checkStudentVolunteerRatio from "./checkStudentVolunteerRatio";
 import displayMentorsTableForSession from "./displayMentorsTableForSession";
 
-const displayUpcomingSessionsForAdmin = (upcomingSessions) => {
+const DisplayUpcomingSessionsForAdmin = (upcomingSessions) => {
 	const token = localStorage.getItem("users");
+	const [show, setShow] = useState();
+	const [modalContent, setModalContent] = useState();
 
 	return upcomingSessions.map((session, index) => {
-		const [show, setShow] = useState();
-		const [modalContent, setModalContent] = useState();
 		// const handleClose = () => false;
 			const handleClose = () => setShow(false);
 
@@ -130,4 +130,4 @@ const displayUpcomingSessionsForAdmin = (upcomingSessions) => {
 	});
 };
 
-export default displayUpcomingSessionsForAdmin;
+export default DisplayUpcomingSessionsForAdmin;

@@ -13,7 +13,7 @@ import MentorSkillFilter from "../../components/MentorSkillFilter/MentorSkillFil
 
 // utils, data and constants
 import createNavigationLinks from "../../utils/createNavigationLinks";
-import displayUpcomingSessionsForAdmin from "../../utils/displaySessionsForAdmin";
+import DisplayUpcomingSessionsForAdmin from "../../utils/displaySessionsForAdmin";
 import convertMonthToString from "../../utils/convertMonthToString";
 import attendanceInfo from "../../data/attendanceInfo";
 import displayMentorsTable from "../../utils/displayMentorsTable";
@@ -145,7 +145,7 @@ const AdminDashboard = () => {
 						<ResponsiveTable
 							data={sessions}
 							headings={headings}
-							displayFunction={displayUpcomingSessionsForAdmin}
+							displayFunction={DisplayUpcomingSessionsForAdmin}
 						/>
 					</div>
 				)}
@@ -206,7 +206,12 @@ const AdminDashboard = () => {
 					<AddAdminModal setShowModal={setShowModal} show={showModal} />
 				)}
 				{modalType === "new session" && (
-					<NewSessionModal setShowModal={setShowModal} show={showModal} />
+					<NewSessionModal
+						setShowModal={setShowModal}
+						show={showModal}
+						render={render}
+						setRender={setRender}
+					/>
 				)}
 				{modalType === "new zoom link" && (
 					<NewZoomLinkModal setShowModal={setShowModal} show={showModal} />

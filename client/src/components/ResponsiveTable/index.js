@@ -2,7 +2,12 @@ import { Table } from "react-bootstrap";
 
 import "./ResponsiveTable.css";
 
-const ResponsiveTable = ({ headings, displayFunction, data }) => {
+const ResponsiveTable = ({
+	headings,
+	displayFunction,
+	data,
+
+}) => {
 	return (
 		<Table responsive size="sm" className="900px">
 			<thead>

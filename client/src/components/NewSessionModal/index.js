@@ -7,7 +7,7 @@ const moment = require("moment");
 import Button from "../Button";
 import validateFutureDates from "../../utils/validateFutureDates";
 
-const NewSessionModal = ({ show, setShowModal }) => {
+const NewSessionModal = ({ show, setShowModal, render, setRender }) => {
 	const handleClose = () => setShowModal(false);
 
 	const createNewSession = () => {
@@ -39,6 +39,7 @@ const NewSessionModal = ({ show, setShowModal }) => {
 				console.log("hello new create session");
 				console.log(data);
 				setShowModal(false);
+				setRender(!render);
 			})
 			.catch((error) => {
 				console.error("Error:", error);
