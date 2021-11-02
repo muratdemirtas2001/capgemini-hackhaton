@@ -8,7 +8,30 @@ const AddAdminModal = ({ show, setShowModal }) => {
 
 	const addAdmin = () => {
 		//call api to add amin
+		const token = localStorage.getItem("users");
+
 		console.log(adminEmail.current.value);
+		let info = {
+			email: adminEmail.current.value,
+		};
+
+		const requestOptions = {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+			body: JSON.stringify(info),
+		};
+		fetch("/api/assignadmin", requestOptions)
+			.then((response) => response.json())
+			.then((data) => {
+				console.log(data);
+				setShowModal(false);
+			})
+			.catch((error) => {
+				console.error("Error:", error);
+			});
 	};
 
 	return (

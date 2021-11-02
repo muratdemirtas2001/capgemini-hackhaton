@@ -149,7 +149,7 @@ router.post("/signin", (req, res) => {
 						token: token,
 						auth: "success",
 						usertype: user.usertype,
-						firstName:user.firstName
+						firstName: user.firstName,
 					});
 				} else {
 					return res.status(400).json({
@@ -355,7 +355,7 @@ router.post("/cancelbooking", authenticateToken, (req, res) => {
 router.post("/changezoomlink", authenticateToken, admincheck, (req, res) => {
 	const { zoom_link } = req.body;
 	pool.query("UPDATE zoom SET zoom_link=$1;", [zoom_link]).then(() => {
-		res.json({"message":"link is updated"});
+		res.json({ message: "link is updated" });
 	});
 });
 
@@ -364,7 +364,7 @@ router.post("/assignadmin", authenticateToken, admincheck, (req, res) => {
 	pool
 		.query("UPDATE users SET user_type='admin' WHERE email=$1;", [email])
 		.then(() => {
-			res.sendStatus(200);
+			res.json({message:"Assigned as admin"});
 		});
 });
 
@@ -378,10 +378,10 @@ router.post("/deleteaccount", authenticateToken, admincheck, (req, res) => {
 				.query("delete from sessions where user_id=$1;", [userID])
 				.then((result) => {
 					pool.query("DELETE from users WHERE email=$1;", [email]);
-					res.sendStatus(200);
+					res.json({ message: "deleted" });
 				});
 		} else {
-			res.sendStatus(400);
+			res.json({ message: "error" });
 		}
 	});
 });
@@ -440,7 +440,7 @@ router.post("/createnewsession", authenticateToken, admincheck, (req, res) => {
 							});
 					});
 			} else {
-								res.json({ message: "done" });
+				res.json({ message: "done" });
 			}
 		});
 });
@@ -472,6 +472,7 @@ router.get("/allcohorts", authenticateToken, admincheck, async (req, res) => {
 });
 router.post("/createcohort", authenticateToken, admincheck, (req, res) => {
 	const { cohort_name } = req.body;
+	console.log(cohort_name);
 	const userID = req.user.userid;
 	pool
 		.query("SELECT user_type from users where id=$1;", [userID])
@@ -481,10 +482,10 @@ router.post("/createcohort", authenticateToken, admincheck, (req, res) => {
 				pool
 					.query("INSERT INTO  cohorts (cohort) values($1)", [cohort_name])
 					.then(() => {
-						res.sendStatus(200);
+						res.json({ message: "done" });
 					});
 			} else {
-				res.sendStatus(401);
+				res.json({ error: "error" });
 			}
 		});
 });

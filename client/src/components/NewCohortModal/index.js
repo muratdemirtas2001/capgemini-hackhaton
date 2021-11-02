@@ -10,6 +10,30 @@ const NewCohortModal = ({ setShowModal, show }) => {
 	const createCohort = () => {
 		console.log(cohortName.current.value);
 		//call api to create cohort
+			const token = localStorage.getItem("users");
+
+		let info = {
+			cohort_name: cohortName.current.value,
+		};
+
+		const requestOptions = {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+			body: JSON.stringify(info),
+		};
+		fetch("/api/createcohort", requestOptions)
+			.then((response) => response.json())
+			.then((data) => {
+				console.log("hello new create cohort");
+				console.log(data);
+				setShowModal(false);
+			})
+			.catch((error) => {
+				console.error("Error:", error);
+			});
 	};
 
 	return (

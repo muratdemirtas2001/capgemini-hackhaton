@@ -8,8 +8,33 @@ const DeleteUserModal = ({ show, setShowModal }) => {
 
 	const deleteUser = () => {
 		//call api to delete user
+		const token = localStorage.getItem("users");
+
 		console.log(userEmail.current.value);
+		let info = {
+			email: userEmail.current.value,
+		};
+
+		const requestOptions = {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+			body: JSON.stringify(info),
+		};
+		fetch("/api/deleteaccount", requestOptions)
+			.then((response) => response.json())
+			.then((data) => {
+				console.log("hello new create cohort");
+				console.log(data);
+				setShowModal(false);
+			})
+			.catch((error) => {
+				console.error("Error:", error);
+			});
 	};
+
 
 	return (
 		<Modal show={show} onHide={handleClose}>
