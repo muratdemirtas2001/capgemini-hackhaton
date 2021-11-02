@@ -1,15 +1,14 @@
 
 import React, { useEffect, useState } from "react";
-
 import Logout from "../../components/Logout";
 import "./Mentordashboard.css";
-import Footer from "../../components/Footer";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import MentorUpdateSkills from "./MentorUpdateSkills";
 import UpcomingSessionDetails from "./UpcomingSessionsDetails";
 import SingingUpConfirmation from "./SigningUpConfirmation";
 import Moment from 'react-moment';
+
 export default function Mentordashboard() {
 	const token = localStorage.getItem("users");
 	const [openModal, setOpenModal] = useState(false);
@@ -31,22 +30,7 @@ export default function Mentordashboard() {
 	
 	
 	useEffect(() => {
-    //       fetch("/api/zoom")
-    //  .then((res) => {
-    //    if (!res.ok) {
-    //      throw new Error(res.statusText);
-    //    }
-    //    return res.json();
-    //  })
-    //  .then((body) => {
-    //    setZoom(body);
-	//    console.loog(zoom);
-    //  })
-    //  .catch((err) => {
-    //    console.error(err);
-    //  });
-
-
+    
 		fetch("/api/dashboard", {
 			method: "GET",
 			headers: {
