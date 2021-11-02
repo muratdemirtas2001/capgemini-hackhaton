@@ -544,8 +544,9 @@ router.get(
 			.catch((e) => res.send(JSON.stringify(e)));
 	}
 );
-router.get("/sessiondetails", authenticateToken, (req, res) => {
-	let club_id = req.query.session_id;
+router.post("/sessiondetails", authenticateToken, (req, res) => {
+		const { club_id } = req.body;
+		const userID = req.user.userid;
 	let sessiondetails = { session: {}, student: {}, mentor: {} };
 	pool
 		.query(

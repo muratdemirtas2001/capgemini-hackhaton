@@ -47,10 +47,11 @@ const AdminDashboard = () => {
 	const [year, setYear] = useState(getCurrentDate().getFullYear());
 	const [skill, setSkill] = useState();
 	const [modalType, setModalType] = useState();
-	const [mentors, setMentors] = useState(mentorsData);
+	const [mentors, setMentors] = useState();
 	const [attendanceInformation, setAttendanceInformation] =
 		useState(attendanceInfo);
-	const [filteredMentor, setFilteredMentor] = useState(mentorsData);
+	const [filteredMentor, setFilteredMentor] = useState();
+	const [render, setRender] = useState(false);
 	const pageOptions = ["Sessions", "Attendance", "Mentors", "Cohorts"];
 	// get this from api token
 	const name = "";
@@ -102,7 +103,7 @@ const AdminDashboard = () => {
 					setMentors(data);
 				});
 		}
-	}, [currentPage, token]);
+	}, [currentPage, token, render]);
 
 	return (
 		<div className="admin-body-container">
@@ -178,7 +179,7 @@ const AdminDashboard = () => {
 							setFilteredMentor={setFilteredMentor}
 						/>
 						<ResponsiveTable
-							data={filteredMentor}
+							data={filteredMentor ? filteredMentor : mentors}
 							displayFunction={displayMentorsTable}
 							headings={mentorsTableHeadings}
 						/>
@@ -195,7 +196,7 @@ const AdminDashboard = () => {
 								onClick={() => displayModal("new cohort")}
 							/>
 						</div>
-						<CohortsAccordion />
+						<CohortsAccordion render={render} setRender={setRender} />
 					</div>
 				)}
 				{modalType === "delete user" && (
@@ -211,7 +212,12 @@ const AdminDashboard = () => {
 					<NewZoomLinkModal setShowModal={setShowModal} show={showModal} />
 				)}
 				{modalType === "new cohort" && (
-					<NewCohortModal setShowModal={setShowModal} show={showModal} />
+					<NewCohortModal
+						setShowModal={setShowModal}
+						show={showModal}
+						render={render}
+						setRender={setRender}
+					/>
 				)}
 			</div>
 		</div>

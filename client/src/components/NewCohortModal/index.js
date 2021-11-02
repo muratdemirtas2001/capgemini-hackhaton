@@ -1,16 +1,16 @@
 import { Modal } from "react-bootstrap";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import Button from "../Button";
 
-const NewCohortModal = ({ setShowModal, show }) => {
+const NewCohortModal = ({ setShowModal, show, render, setRender }) => {
 	const handleClose = () => setShowModal(false);
 	const cohortName = useRef();
 
 	const createCohort = () => {
 		console.log(cohortName.current.value);
 		//call api to create cohort
-			const token = localStorage.getItem("users");
+		const token = localStorage.getItem("users");
 
 		let info = {
 			cohort_name: cohortName.current.value,
@@ -24,12 +24,14 @@ const NewCohortModal = ({ setShowModal, show }) => {
 			},
 			body: JSON.stringify(info),
 		};
+
 		fetch("/api/createcohort", requestOptions)
 			.then((response) => response.json())
 			.then((data) => {
 				console.log("hello new create cohort");
 				console.log(data);
 				setShowModal(false);
+				setRender(!render);
 			})
 			.catch((error) => {
 				console.error("Error:", error);
