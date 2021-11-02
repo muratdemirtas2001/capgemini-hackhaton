@@ -50,6 +50,7 @@ const AdminDashboard = () => {
 	const [mentors, setMentors] = useState(mentorsData);
 	const [attendanceInformation, setAttendanceInformation] =
 		useState(attendanceInfo);
+	const [filteredMentor, setFilteredMentor] = useState(mentorsData);
 	const pageOptions = ["Sessions", "Attendance", "Mentors", "Cohorts"];
 	// get this from api token
 	const name = "";
@@ -169,9 +170,15 @@ const AdminDashboard = () => {
 				{currentPage === "Mentors" && mentors && (
 					<div className="admin-container">
 						<h2 className="admin-heading">Mentors</h2>
-						<MentorSkillFilter skill={skill} setSkill={setSkill} />
+						<MentorSkillFilter
+							skill={skill}
+							setSkill={setSkill}
+							mentors={mentors}
+							setMentors={setMentors}
+							setFilteredMentor={setFilteredMentor}
+						/>
 						<ResponsiveTable
-							data={mentors}
+							data={filteredMentor}
 							displayFunction={displayMentorsTable}
 							headings={mentorsTableHeadings}
 						/>

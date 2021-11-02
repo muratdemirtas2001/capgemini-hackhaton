@@ -1,3 +1,3 @@
-const skills = ["Jquery", "Javascript", "Reactjs", "HTML"];
+const skills = ["html_css", "javascript", "react", "postgresql","mongodb","node"];
 
 export default skills;

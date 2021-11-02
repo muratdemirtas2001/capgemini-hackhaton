@@ -30,6 +30,7 @@ const NewZoomLinkModal = ({ show, setShowModal }) => {
 			.then((data) => {
 				console.log("hello new zoom");
 				console.log(data);
+				setShowModal(false);
 			})
 			.catch((error) => {
 				console.error("Error:", error);

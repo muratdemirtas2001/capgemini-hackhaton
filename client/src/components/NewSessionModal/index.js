@@ -38,6 +38,7 @@ const NewSessionModal = ({ show, setShowModal }) => {
 			.then((data) => {
 				console.log("hello new create session");
 				console.log(data);
+				setShowModal(false);
 			})
 			.catch((error) => {
 				console.error("Error:", error);
