@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./pages/Home";
 import Register from "./components/Register";
 import Login from "./components/Login";
-import Mentordashboard from "./pages/Mentordashboard";
+import Mentordashboard from "./pages/MentorDashBoard/Mentordashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import Studentdashboard from "./pages/Studentdashboard";
 

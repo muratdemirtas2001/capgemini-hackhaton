@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import "./Modal.css";
+
 function MentorUpdateSkills({
 	closeModal,
 	currentSkills,
 	updateCurrentSkills,
 }) {
+	const token = localStorage.getItem("users");
 	const [skills, setSkills] = useState(currentSkills);
 	const [knowsHTML_CSS, setKnowsHTML_CSS] = useState(
 		currentSkills.includes("HTML_CSS".toLowerCase())
@@ -25,14 +27,45 @@ function MentorUpdateSkills({
 		currentSkills.includes("MongoDB".toLowerCase())
 	);
 	const [updatedSkills, setUpdatedSkills] = useState([]);
-	console.log(updatedSkills);
+	console.log(currentSkills);
+	console.log(skills);
 	function handelCheckBox(event) {
 		if (!skills.includes(event.target.value)) {
 			setSkills(skills.concat([event.target.value]));
 		}
 		console.log(event.target.value);
 	}
-	console.log(skills);
+
+
+
+
+	function updateSkillsRecord (){
+		
+			const requestOptions = {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({html_css:knowsHTML_CSS, javascript:knowsJavaScript, react:knowsReact, node:knowsNode, postgresql:knowsPostgres, mongodb:knowsMongoDB }),
+			};
+
+			fetch("/api/mentorupdateskills",requestOptions )
+				.then((res) => res.json())
+				.then((result) => {
+
+					console.log(result);
+				
+				});
+		
+
+		
+
+
+	}
+			
+		
+
 	return (
 		<div className="modalBackground">
 			<div className="modalContainer">
@@ -67,7 +100,7 @@ function MentorUpdateSkills({
 					<label>
 						<input
 							type="checkbox"
-							value="#javaScript"
+							value="javaScript"
 							name="javaScript"
 							checked={knowsJavaScript}
 							onClick={(event) => {
@@ -138,8 +171,9 @@ function MentorUpdateSkills({
 					<button
 						type="button"
 						className="btn btn-success"
-						onClick={() => {
+						onClick={(e) => {
 							updateCurrentSkills(skills);
+                            updateSkillsRecord(e);
 							closeModal(false);
 						}}
 					>
@@ -151,3 +185,4 @@ function MentorUpdateSkills({
 	);
 }
 export default MentorUpdateSkills;
+
