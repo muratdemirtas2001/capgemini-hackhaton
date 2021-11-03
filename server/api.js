@@ -1,5 +1,3 @@
-
-
 import { Router } from "express";
 import "dotenv/config";
 import SHA256 from "crypto-js/sha256";
@@ -93,7 +91,6 @@ router.post("/signup", (req, res) => {
 						)
 						.then((result) => {
 							pool.query("SELECT id from clubs").then((result) => {
-								
 								result.rows.forEach((id) => {
 									pool.query(
 										"insert into sessions (club_id,user_id,booking_status,attendance_status,free_note) values ($1,$2,false,false,'')",
@@ -112,10 +109,9 @@ router.post("/signup", (req, res) => {
 });
 
 router.post("/signin", (req, res) => {
-	
 	//take email and password from front end
 	const { email, password } = req.body;
-	
+
 	//hash and salt the password
 	const hashedPassword = SHA256(password).toString();
 	const saltedPassword = SHA256(
@@ -131,14 +127,14 @@ router.post("/signin", (req, res) => {
 			.then((result) => {
 				if (result.rows.length > 0) {
 					//create token and return as a json object
-				
+
 					const user = {
 						email: email,
 						userid: result.rows[0].id,
 						usertype: result.rows[0].user_type,
 						firstName: result.rows[0].firstname,
 					};
-					
+
 					const token = jwt.sign(user, process.env.TOKEN_SECRET, {
 						expiresIn: "7 days",
 					});
@@ -168,7 +164,6 @@ router.post("/signin", (req, res) => {
 
 //verify token middleware
 function authenticateToken(req, res, next) {
-
 	const authHeader = req.headers["authorization"];
 
 	const token = authHeader && authHeader.split(" ")[1];
@@ -236,7 +231,6 @@ router.get("/dashboard", authenticateToken, (req, res) => {
 								[userID]
 							)
 							.then((result) => {
-							
 								student.firstname = result.rows[0].firstname;
 								student.lastname = result.rows[0].lastname;
 								student.cohort = result.rows[0].cohort;
@@ -302,7 +296,6 @@ router.post("/booksession", authenticateToken, (req, res) => {
 });
 
 router.post("/updateattendance", authenticateToken, (req, res) => {
-
 	const { club_id } = req.body;
 	const userID = req.user.userid;
 	pool
@@ -371,7 +364,7 @@ router.post("/deleteaccount", authenticateToken, admincheck, (req, res) => {
 	pool.query("SELECT id from users WHERE email=$1;", [email]).then((result) => {
 		if (result.rows.length > 0) {
 			let userID = result.rows[0].id;
-		
+
 			pool
 				.query("delete from sessions where user_id=$1;", [userID])
 				.then((result) => {
@@ -399,9 +392,11 @@ router.get("/upcomingsessions", authenticateToken, admincheck, (req, res) => {
 
 router.post("/createnewsession", authenticateToken, admincheck, (req, res) => {
 	const { session_date, start_time, end_time } = req.body;
+	console.log(req.body);
 	const userID = req.user.userid;
 	let start_date = moment(session_date + " " + start_time);
-	
+	let end_date = moment(session_date + " " + end_time);
+
 	let club_name = "";
 	let cutoff_date = start_date.clone();
 	cutoff_date = cutoff_date.subtract(5, "days");
@@ -511,7 +506,6 @@ router.get("/volunteersinfo", authenticateToken, admincheck, (req, res) => {
 					}
 				});
 				mentor.skills = skillmentor;
-			
 			});
 			res.json(mentors);
 		})
@@ -595,7 +589,6 @@ router.get("/findmentor", authenticateToken, admincheck, (req, res) => {
 						let newskilledmentor = mentors.filter((mentor) => {
 							return mentor[skill.module_subject] === true;
 						});
-						
 					});
 					res.json(skilledmentor);
 				});
@@ -663,7 +656,6 @@ router.get("/attendance", authenticateToken, admincheck, (req, res) => {
 });
 
 router.get("/mentor_skills", authenticateToken, (req, res) => {
-	
 	const mentorID = req.user.userid;
 
 	pool
@@ -672,7 +664,6 @@ router.get("/mentor_skills", authenticateToken, (req, res) => {
 			[mentorID]
 		)
 		.then((result) => {
-		
 			let skills = result.rows[0];
 			res.json(skills);
 		})
@@ -680,11 +671,9 @@ router.get("/mentor_skills", authenticateToken, (req, res) => {
 });
 
 router.get("/sessions", authenticateToken, (req, res) => {
-	
 	pool
 		.query("SELECT * FROM  clubs ")
 		.then((result) => {
-			
 			let sessions = result.rows;
 			res.json(sessions);
 		})
@@ -692,7 +681,6 @@ router.get("/sessions", authenticateToken, (req, res) => {
 });
 
 router.post("/mentorbooksession", authenticateToken, (req, res) => {
-
 	const { club_id } = req.body;
 	const userID = req.user.userid;
 
@@ -704,27 +692,23 @@ router.post("/mentorbooksession", authenticateToken, (req, res) => {
 		.then((result) => {
 			pool
 				.query(
-
 					"UPDATE sessions SET booking_status = 'true', free_note='NULL',module_id=1 WHERE club_id = $1 and user_id=$2;",
-				
+
 					[club_id, userID]
 				)
 				.then(() => {
 					res.json({ message: "done" });
 				});
-			
 		});
 });
 
-
 router.post("/mentorsessiondetails/", authenticateToken, (req, res) => {
-
 	//const club_id  = req.params.club_id;
-	const {club_id,userID} =req.body;
+	const { club_id, userID } = req.body;
 	//const  = req.user.userid;
-	console.log( "club id :"+club_id);
-	console.log( "user id :"+userID);
-	
+	console.log("club id :" + club_id);
+	console.log("user id :" + userID);
+
 	pool
 		.query(
 			"select modules.coursework_link ,clubs.id ,club_name,to_char(start_date,'DD-MM-YYYY') as club_date,to_char(start_date,'HH24:MI') as start_time,to_char(end_date,'HH24:MI') as end_time from clubs inner join modules on modules.id = clubs.id where clubs.id=$1",
@@ -746,9 +730,7 @@ router.post("/mentorupdateskills", authenticateToken, (req, res) => {
 			[html_css, javascript, react, node, postgresql, mongodb, userID]
 		)
 		.then((result) => {
-
-			res.json({"message":"updated"});
-
+			res.json({ message: "updated" });
 		})
 
 		.catch((e) => res.send(JSON.stringify(e)));
@@ -757,15 +739,15 @@ router.post("/mentorupdateskills", authenticateToken, (req, res) => {
 router.get("/mentorconfirmedbookedsessions", authenticateToken, (req, res) => {
 	console.log("mentor confirmed booked sessions called");
 	const userID = req.user.userid;
-	
+
 	pool
-		.query("select clubs.club_name, clubs.start_date ,sessions.free_note from clubs  inner join sessions on clubs.id =sessions.club_id where user_id=$1 and booking_status = true ORDER BY clubs.start_date ASC", 
-		[userID	]).then((result) => {
-						
-					res.json( result.rows);
-				})
-			
+		.query(
+			"select clubs.club_name, clubs.start_date ,sessions.free_note from clubs  inner join sessions on clubs.id =sessions.club_id where user_id=$1 and booking_status = true ORDER BY clubs.start_date ASC",
+			[userID]
+		)
+		.then((result) => {
+			res.json(result.rows);
 		});
-	
+});
 
 export default router;
